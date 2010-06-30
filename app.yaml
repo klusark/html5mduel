@@ -1,0 +1,19 @@
+application: html5mduel
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /
+  static_files: mduel.html
+  upload: mduel.html
+
+- url: /manifest.cache
+  static_files: manifest.cache
+  upload: manifest.cache
+
+- url: /images
+  static_dir: images
+
+- url: /js
+  static_dir: js

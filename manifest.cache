@@ -1,0 +1,12 @@
+CACHE MANIFEST
+js/core.js
+js/player.js
+js/animation.js
+js/platform.js
+js/rope.js
+js/mallow.js
+js/emitter.js
+js/effect.js
+images/sprites.png
+images/newplayer.png
+images/newplayerflipped.png

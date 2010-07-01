@@ -1,22 +1,38 @@
 
-const FPS = 60;
+const FPS = 30;
 
 //var objects = new Array();
-var platforms = new Array();
-var ropes = new Array();
-var players = new Array();
-var mallows = new Array();
-var emitters = new Array();
-var effects = new Array();
+var platforms
+var ropes
+var players
+var mallows
+var emitters
+var effects
+var debug
 
 var timescale = 1
 
+var timeAjust = 0;
+
+var gameOver = false;
+
 function GetTime() {
-	return new Date().getTime() * timescale
+	return new Date().getTime() * timescale + timeAjust
+}
+
+function SetTimeScale(scale) {
+	timeAjust += GetTime()-GetTime()*scale
+	timescale = scale
+	console.log("timescale is now " + timescale);
 }
 
 function CreateEffect(name, x, y) {
 	effects.push(new Effect(x, y, name))
+}
+
+function DebugLog(message) {
+	if (debug)
+		console.log(message)
 }
 
 function Draw() {
@@ -44,21 +60,21 @@ function Update() {
 		effects[i].Update()
 		if (!effects[i].IsDraw())
 			effects.splice(i--, 1)
-		
-			
 	}
-	if (players[0].IsDead() || players[1].IsDead()){
+	if ((players[0].IsDead() || players[1].IsDead()) && !gameOver){
+		
 		if(players[0].IsDead() && players[1].IsDead()){
 			console.log("tie");
 		}
-		else if (players[0].IsDead() && players[1].IsInPositionToWin() && !players[1].IsWinning()){
+		else if (players[0].IsDead() && players[1].IsInPositionToWin()){
 			console.log("Player 2 wins");
 			players[1].Win()
 		}
-		else if (players[1].IsDead() && players[0].IsInPositionToWin() && !players[0].IsWinning()){
+		else if (players[1].IsDead() && players[0].IsInPositionToWin()){
 			console.log("Player 1 wins");
 			players[0].Win()
 		}
+		gameOver = true
 	}
 }
 
@@ -71,6 +87,18 @@ function ArrayUpdate(array) {
 function init() {
 	window.canvas = document.getElementById('canvas')
 	window.ctx = window.canvas.getContext('2d');
+	
+	platforms = new Array()
+	ropes = new Array()
+	players = new Array()
+	mallows = new Array()
+	emitters = new Array()
+	effects = new Array()
+	debug = false
+	
+	var params = location.href.split("?")
+	if (params[1] == "debug")
+		debug = true
 	
 	SetupPlatforms()
 	SetupRopes()

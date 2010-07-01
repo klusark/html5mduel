@@ -12,8 +12,19 @@ handlers:
   static_files: manifest.cache
   upload: manifest.cache
 
-- url: /images
-  static_dir: images
+- url: /images/player.png
+  static_files: images/player.png
+  upload: images/player.png
+
+- url: /player.png
+  script: player.png
+ 
+- url: /images/sprites.png
+  static_files: images/sprites.png
+  upload: images/sprites.png
 
 - url: /js
   static_dir: js
+  
+- url: /test
+  script: test.py

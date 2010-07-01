@@ -1,18 +1,19 @@
 function Animation(image, flippedYOffset, startX, frameTime, numFrames, w, h){
-	var image = image;
+	var image = image
 
-	var frameTime = frameTime;
-	var numFrames = numFrames;
-	var NextFrameTime = GetTime() + frameTime;
-	var frame = 0;
-	var x = 0;
-	var y = 0;
-	var w = w;
-	var h = h;
-	var repeat = true;
-	var reverse = false;
-	var xOffset = 0;
-	var flipped = false;
+	var frameTime = frameTime
+	var numFrames = numFrames
+	var NextFrameTime = GetTime() + frameTime
+	var frame = 0
+	var x = 0
+	var y = 0
+	var w = w
+	var h = h
+	var repeat = true
+	var reverse = false
+	var xOffset = 0
+	var flipped = false
+	var numLoops = 0
 	
 	//only usefull if repeat is off
 	var isAnimationDone = false;
@@ -25,9 +26,10 @@ function Animation(image, flippedYOffset, startX, frameTime, numFrames, w, h){
 			NextFrameTime += frameTime;
 			++frame;
 			if (frame == numFrames){
-				if (repeat)
+				if (repeat){
 					frame = 0;
-				else{
+					++numLoops;
+				}else{
 					frame = numFrames-1;
 					isAnimationDone = true;
 				}
@@ -69,6 +71,10 @@ function Animation(image, flippedYOffset, startX, frameTime, numFrames, w, h){
 	
 	this.SetNextFrameTime = function(time) {
 		NextFrameTime = time;
+	}
+	
+	this.GetNumLoops = function() {
+		return numLoops
 	}
 	
 	this.Draw = function(){

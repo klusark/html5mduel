@@ -58,6 +58,8 @@ function Player(x, y){
 	
 	animations["jumpup"] = new Animation(img, 25, 725, 100, 2, 24, 24);
 	animations["jumpup"].Repeat(false);
+
+	animations["land"] = new Animation(img, 25, 300, 50, 1, 24, 24);
 	
 	var keyCodes = new Array();
 	keyCodes["right"] = 68;
@@ -145,12 +147,14 @@ function Player(x, y){
 			
 			
 		}else if (onGround){
-			xVelocity = RUNSPEED * (runningRight-runningLeft);
+			
 			if (runningRight && !keys["right"] && !isRolling)
 				runningRight = false
 				
 			if (runningLeft && !keys["left"] && !isRolling)
 				runningLeft = false
+				
+			xVelocity = RUNSPEED * (runningRight-runningLeft);
 			
 			if(!isCrouched){
 				if (keys["right"])
@@ -200,6 +204,16 @@ function Player(x, y){
 				currentBounds = crouchingBounds
 				xVelocity = 0
 				this.SetAnimation("crouch")
+			}else if (keys["up"] && (runningLeft || runningRight)){
+				console.log("jump")
+				//isRolling = true
+				//this.SetAnimation("roll")
+			}else if (keys["up"]){
+				/*isCrouched = true
+				currentBounds = crouchingBounds
+				xVelocity = 0
+				this.SetAnimation("crouch")*/
+				console.log("jumpup")
 			}else if (keys["right"] && (!keysLastFrame["right"] || wasRunningLeft || wasCrouched || !wasOnGround) && !runningLeft){
 				runningRight = true
 				this.SetAnimation("run")
@@ -280,6 +294,7 @@ function Player(x, y){
 	}
 	
 	this.SetAnimation = function(name){
+		//DebugLog("Animation Changed to " + name)
 		currentAnimation = animations[name];
 		currentAnimation.ChangeTo(flipped);
 	}
@@ -287,26 +302,35 @@ function Player(x, y){
 	this.KeyDown = function(keyCode) {
 		if(falling)
 			return;
-		else if (keyCode == keyCodes["right"] )
+		else if (keyCode == keyCodes["right"] ){
+			DebugLog("KeyDown Right")
 			keys["right"] = true;
-		else if (keyCode == keyCodes["left"] )
+		}else if (keyCode == keyCodes["left"] ){
+			DebugLog("KeyDown Left")
 			keys["left"] = true;
-		else if (keyCode == keyCodes["down"] )
+		}else if (keyCode == keyCodes["down"] ){
+			DebugLog("KeyDown Down")
 			keys["down"] = true;
-		else if (keyCode == keyCodes["up"] )
+		}else if (keyCode == keyCodes["up"] ){
+			DebugLog("KeyDown Up")
 			keys["up"] = true;
-		
+		}
 	}
 	
 	this.KeyUp = function(keyCode) {
-		if (keyCode == keyCodes["right"] )
+		if (keyCode == keyCodes["right"] ){
+			DebugLog("KeyUp Right")
 			keys["right"] = false;
-		else if (keyCode == keyCodes["left"] )
+		}else if (keyCode == keyCodes["left"] ){
+			DebugLog("KeyUp Left")
 			keys["left"] = false;
-		else if (keyCode == keyCodes["down"] )
+		}else if (keyCode == keyCodes["down"] ){
+			DebugLog("KeyUp Down")
 			keys["down"] = false;
-		else if (keyCode == keyCodes["up"] )
+		}else if (keyCode == keyCodes["up"] ){
+			DebugLog("KeyUp Up")
 			keys["up"] = false;
+		}
 		
 	}
 	
@@ -382,7 +406,7 @@ function Player(x, y){
 	
 	this.Land = function() {
 		falling = false;
-		this.SetAnimation("run");
+		this.SetAnimation("land");
 		xVelocity = 0;
 		currentBounds = standingBounds;
 	}

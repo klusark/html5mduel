@@ -1,4 +1,3 @@
-
 function Effect(x, y, type){
 	var img = new Image();
 	img.src = 'images/sprites.png';

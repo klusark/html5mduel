@@ -21,7 +21,7 @@ function Player(x, y){
 	var img = new Image();
 	img.src = 'images/player.png';
 	var frame = 0;
-	var lastUpdateTime = new Date().getTime();
+	var lastUpdateTime = GetTime()
 	var animations = new Array();
 	
 	animations["run"] = new Animation(img, 25, 0, 100, 4, 24, 24);
@@ -34,9 +34,11 @@ function Player(x, y){
 	animations["crouch"] = new Animation(img, 25, 125, 100, 2, 24, 24);
 	animations["crouch"].Repeat(false);
 	
-	animations["uncrouch"] = new Animation(img, 25, 125, 100, 2, 24, 24);
+	animations["uncrouch"] = new Animation(img, 25, 125, 100, 1, 24, 24);
 	animations["uncrouch"].Repeat(false);
-	animations["uncrouch"].Reverse(true);
+	
+	animations["roll"] = new Animation(img, 25, 175, 75, 5, 24, 24);
+	animations["roll"].Repeat(false);
 	
 	animations["climbup"] = new Animation(img, 25, 575, 150, 3, 24, 24);
 	animations["climbup"].Reverse(false);
@@ -53,6 +55,9 @@ function Player(x, y){
 	
 	animations["ropewin"] = new Animation(img, 25, 725, 100, 2, 24, 24);
 	animations["ropewin"].Repeat(false);
+	
+	animations["jumpup"] = new Animation(img, 25, 725, 100, 2, 24, 24);
+	animations["jumpup"].Repeat(false);
 	
 	var keyCodes = new Array();
 	keyCodes["right"] = 68;
@@ -109,12 +114,14 @@ function Player(x, y){
 	}
 	
 	this.Update = function(){
-		currentTime = new Date().getTime()
+		currentTime = GetTime()
 		var deltaT = (currentTime - lastUpdateTime)/1000
 		this.SimulateGravity(deltaT)
 		
-		if (y > 200)
+		if (y > 200-40 && !dead){
 			dead = true
+			CreateEffect("BigSplash", x, 200-40);
+		}
 		
 		if (isWinning){
 		
@@ -139,10 +146,10 @@ function Player(x, y){
 			
 		}else if (onGround){
 			xVelocity = RUNSPEED * (runningRight-runningLeft);
-			if (runningRight && !keys["right"])
+			if (runningRight && !keys["right"] && !isRolling)
 				runningRight = false
 				
-			if (runningLeft && !keys["left"])
+			if (runningLeft && !keys["left"] && !isRolling)
 				runningLeft = false
 			
 			if(!isCrouched){
@@ -163,18 +170,31 @@ function Player(x, y){
 			}else if (isCrouched){
 				if (isCrouchingUp){
 					if (currentAnimation.IsAnimationDone()){
-						this.SetAnimation("run")
+						//this.SetAnimation("run")
 						isCrouchingUp = false
 						isCrouched = false
 						justUncrouched = true
 						currentBounds = standingBounds
 					}
-				}else if (!keys["down"] && !isCrouchingUp){
+				}else if (!keys["down"] && !isCrouchingUp && currentAnimation.IsAnimationDone()){
 					isCrouchingUp = true
 					this.SetAnimation("uncrouch")
 				}
+			} else if (isRolling) {
+				if (currentAnimation.IsAnimationDone()){
+					runningRight = false
+					runningLeft = false
+					isRolling = false
+					xVelocity = 0
+					this.SetAnimation("crouch")
+					currentAnimation.SetFrame(1);
+					isCrouched = true
+					currentBounds = crouchingBounds
+				}
+			
 			}else if (keys["down"] && (runningLeft || runningRight)){
-				console.log("roll");
+				isRolling = true
+				this.SetAnimation("roll")
 			}else if (keys["down"]){
 				isCrouched = true
 				currentBounds = crouchingBounds

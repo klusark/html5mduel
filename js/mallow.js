@@ -15,14 +15,9 @@ function Mallow(x, y, frame){
 	}
 	
 	this.Update = function(){
-		//currentTime = new Date().getTime();
-		//var deltaT = currentTime - lastUpdateTime;
-
-
-
-		//lastUpdateTime = currentTime;
 		mallowTopAnimation.Update(x, y);
 	}
+	
 	this.GetY = function(){
 		return y;
 	}

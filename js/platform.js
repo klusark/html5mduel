@@ -1,7 +1,6 @@
 function Platform(x, y, numPlatforms){
 	var img = new Image();
 	img.src = 'images/sprites.png';
-	//var lastUpdateTime = new Date().getTime();
 
 	var x = x;
 	var y = y;
@@ -12,15 +11,6 @@ function Platform(x, y, numPlatforms){
 		for (var i = 0; i < numPlatforms; ++i)
 			window.ctx.drawImage(img, 143, 0, 14, 8, i*16 + x + 1, y, 14, 8);
 
-	}
-	
-	this.Update = function(){
-		//currentTime = new Date().getTime();
-		//var deltaT = currentTime - lastUpdateTime;
-
-
-
-		//lastUpdateTime = currentTime;
 	}
 	
 	this.GetNumPlatforms = function(){

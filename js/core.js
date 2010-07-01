@@ -1,5 +1,5 @@
 
-const FPS = 30;
+const FPS = 60;
 
 //var objects = new Array();
 var platforms = new Array();
@@ -8,6 +8,16 @@ var players = new Array();
 var mallows = new Array();
 var emitters = new Array();
 var effects = new Array();
+
+var timescale = 1
+
+function GetTime() {
+	return new Date().getTime() * timescale
+}
+
+function CreateEffect(name, x, y) {
+	effects.push(new Effect(x, y, name))
+}
 
 function Draw() {
 	ctx.fillStyle = "rgb(0,0,0)";
@@ -30,7 +40,13 @@ function ArrayDraw(array) {
 function Update() {
 	ArrayUpdate(players)
 	ArrayUpdate(mallows)
-	ArrayUpdate(effects)
+	for(var i = 0; i < effects.length; ++i){
+		effects[i].Update()
+		if (!effects[i].IsDraw())
+			effects.splice(i--, 1)
+		
+			
+	}
 	if (players[0].IsDead() || players[1].IsDead()){
 		if(players[0].IsDead() && players[1].IsDead()){
 			console.log("tie");

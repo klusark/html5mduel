@@ -3,7 +3,7 @@ function Animation(image, flippedYOffset, startX, frameTime, numFrames, w, h){
 
 	var frameTime = frameTime;
 	var numFrames = numFrames;
-	var NextFrameTime = new Date().getTime() + frameTime;
+	var NextFrameTime = GetTime() + frameTime;
 	var frame = 0;
 	var x = 0;
 	var y = 0;
@@ -20,7 +20,7 @@ function Animation(image, flippedYOffset, startX, frameTime, numFrames, w, h){
 	this.Update = function(nx ,ny){
 		x = nx;
 		y = ny;
-		var currentTime = new Date().getTime();
+		var currentTime = GetTime()
 		while (NextFrameTime < currentTime){
 			NextFrameTime += frameTime;
 			++frame;
@@ -41,7 +41,7 @@ function Animation(image, flippedYOffset, startX, frameTime, numFrames, w, h){
 	}
 	
 	this.ChangeTo = function(bflipped){
-		NextFrameTime = new Date().getTime() + frameTime;
+		NextFrameTime = GetTime() + frameTime;
 		/*if(flipped)
 			currentImage = imgflipped;
 		else

@@ -1,8 +1,6 @@
 function Rope(x, y, length){
 	var img = new Image();
 	img.src = 'images/sprites.png';
-	var lastUpdateTime = new Date().getTime();
-
 
 	var length = length-2;
 	var x = x;

@@ -1,5 +1,5 @@
 application: html5mduel
-version: 1
+version: 2
 runtime: python
 api_version: 1
 
@@ -12,19 +12,18 @@ handlers:
   static_files: manifest.cache
   upload: manifest.cache
 
-- url: /images/player.png
-  static_files: images/player.png
-  upload: images/player.png
 
-- url: /player.png
-  script: player.png
- 
-- url: /images/sprites.png
-  static_files: images/sprites.png
-  upload: images/sprites.png
+- url: /player
+  script: images/player.png
 
+- url: /playersample
+  script: images/playersample.png
+
+- url: /playersample
+  script: images/spites.png
+  
 - url: /js
   static_dir: js
   
-- url: /test
-  script: test.py
+- url: /generate
+  script: generate.py

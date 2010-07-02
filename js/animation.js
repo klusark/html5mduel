@@ -1,12 +1,9 @@
-function Animation(image, flippedYOffset, startX, frameTime, numFrames, w, h){
-	var image = image
+function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 
 	var frameTime = frameTime
 	var numFrames = numFrames
-	var NextFrameTime = GetTime() + frameTime
+	var NextFrameTime = core.GetTime() + frameTime
 	var frame = 0
-	var x = 0
-	var y = 0
 	var w = w
 	var h = h
 	var repeat = true
@@ -18,10 +15,8 @@ function Animation(image, flippedYOffset, startX, frameTime, numFrames, w, h){
 	//only usefull if repeat is off
 	var isAnimationDone = false;
 	
-	this.Update = function(nx ,ny){
-		x = nx;
-		y = ny;
-		var currentTime = GetTime()
+	this.Update = function(){
+		var currentTime = core.GetTime()
 		while (NextFrameTime < currentTime){
 			NextFrameTime += frameTime;
 			++frame;
@@ -43,11 +38,7 @@ function Animation(image, flippedYOffset, startX, frameTime, numFrames, w, h){
 	}
 	
 	this.ChangeTo = function(bflipped){
-		NextFrameTime = GetTime() + frameTime;
-		/*if(flipped)
-			currentImage = imgflipped;
-		else
-			currentImage = image;*/
+		NextFrameTime = core.GetTime() + frameTime;
 		flipped = bflipped
 		frame = 0;
 		isAnimationDone = false
@@ -77,12 +68,12 @@ function Animation(image, flippedYOffset, startX, frameTime, numFrames, w, h){
 		return numLoops
 	}
 	
-	this.Draw = function(){
+	this.Draw = function(image, x, y){
 		//rounding is to fix an inconsistancy in firefox vs chrome
 		var sx = frame*w + frame + startX;
 		if (reverse){
 			sx = startX + (numFrames-1)*w + numFrames - (frame*w + frame + 1)
 		}
-		window.ctx.drawImage(image,  sx, (flipped * flippedYOffset), w, h, Math.round(x), Math.round(y), w, h);
+		core.DrawImage(image,  sx, (flipped * flippedYOffset), w, h, Math.round(x), Math.round(y), w, h);
 	}
 }

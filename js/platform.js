@@ -1,6 +1,5 @@
 function Platform(x, y, numPlatforms){
-	var img = new Image();
-	img.src = 'images/sprites.png';
+	var img = core.GetSpritesImg()
 
 	var x = x;
 	var y = y;
@@ -9,7 +8,7 @@ function Platform(x, y, numPlatforms){
 	
 	this.Draw = function(){
 		for (var i = 0; i < numPlatforms; ++i)
-			window.ctx.drawImage(img, 143, 0, 14, 8, i*16 + x + 1, y, 14, 8);
+			core.DrawImage(img, 143, 0, 14, 8, i*16 + x + 1, y, 14, 8);
 
 	}
 	

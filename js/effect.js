@@ -1,12 +1,11 @@
 function Effect(x, y, type){
-	var img = new Image();
-	img.src = 'images/sprites.png';
+	var img = core.GetSpritesImg()
 	var animations = new Array();
 	
-	animations["GreenSmoke"] = new Animation(img, null, 0, 100, 3, 24, 24);
+	animations["GreenSmoke"] = new Animation(null, 0, 100, 3, 24, 24);
 	animations["GreenSmoke"].Repeat(false)
 	
-	animations["BigSplash"] = new Animation(img, null, 158, 100, 4, 24, 24);
+	animations["BigSplash"] = new Animation(null, 158, 100, 4, 24, 24);
 	animations["BigSplash"].Repeat(false)
 	
 	var currentAnimation = animations[type]
@@ -17,11 +16,11 @@ function Effect(x, y, type){
 	
 	this.Draw = function(){
 		if (draw)
-			currentAnimation.Draw();
+			currentAnimation.Draw(img, x, y);
 	}
 	
 	this.Update = function(){
-		currentAnimation.Update(x, y);
+		currentAnimation.Update();
 		if (currentAnimation.IsAnimationDone()){
 			//handle the animation finishing
 			draw = false

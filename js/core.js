@@ -20,7 +20,7 @@ function Core() {
 	var inSelectMode
 	
 	const timescale = 1
-	const scale = 2
+	const scale = 4
 	const FPS = 30;
 	
 	this.GetTime = function() {
@@ -65,8 +65,11 @@ function Core() {
 	}
 
 
-	this.DrawImage = function(image, sx, sy, sw, sh, dx, dy, dw, dh) {
-		window.ctx.drawImage(image, sx*scale, sy*scale, sw*scale, sh*scale, dx*scale, dy*scale, dw*scale, dh*scale)
+	this.DrawImage = function(image, sx, sy, sw, sh, dx, dy, dw, dh, iscale) {
+		iscale = iscale || scale
+		if (iscale == -1)
+			iscale = scale
+		window.ctx.drawImage(image, sx*iscale, sy*iscale, sw*iscale, sh*iscale, dx*iscale, dy*iscale, dw*iscale, dh*iscale)
 	}
 
 	this.FillRect = function(x, y, w, h) {
@@ -140,6 +143,8 @@ function Core() {
 
 	this.init = function() {
 		window.canvas = document.getElementById('canvas')
+		window.canvas.width = 320*scale
+		window.canvas.height = 200*scale
 		window.ctx = window.canvas.getContext('2d');
 		
 		//only works on firefox 3.6 and up

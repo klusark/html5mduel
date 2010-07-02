@@ -15,13 +15,14 @@ function Selector(x, y, scale){
 	
 	var x = x;
 	var y = y;
-	
+	var scale = scale*8
 	var colour = 0
 	var colours = 4
 	var url = "generate?sample&m="+scale+"&c="
 	img.src = url + colour
 	this.Draw = function(){
-		currentAnimation.Draw(img, x, y)
+		
+		currentAnimation.Draw(img, x, y, scale)
 
 	}
 	

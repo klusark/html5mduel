@@ -68,12 +68,13 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 		return numLoops
 	}
 	
-	this.Draw = function(image, x, y){
+	this.Draw = function(image, x, y, scale){
 		//rounding is to fix an inconsistancy in firefox vs chrome
 		var sx = frame*w + frame + startX;
 		if (reverse){
 			sx = startX + (numFrames-1)*w + numFrames - (frame*w + frame + 1)
 		}
-		core.DrawImage(image,  sx, (flipped * flippedYOffset), w, h, Math.round(x), Math.round(y), w, h);
+		scale = scale || -1
+		core.DrawImage(image,  sx, (flipped * flippedYOffset), w, h, Math.round(x), Math.round(y), w, h, scale);
 	}
 }

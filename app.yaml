@@ -12,6 +12,8 @@ handlers:
   static_files: manifest.cache
   upload: manifest.cache
 
+- url: /png
+  script: png.py
 
 - url: /player
   script: images/player.png

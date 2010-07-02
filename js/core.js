@@ -20,7 +20,7 @@ function Core() {
 	var inSelectMode
 	
 	const timescale = 1
-	const scale = 1
+	const scale = 2
 	const FPS = 30;
 	
 	this.GetTime = function() {
@@ -131,7 +131,7 @@ function Core() {
 	
 	this.ColourSelect = function() {
 		inSelectMode = true
-		selector = new Selector(0, 0)
+		selector = new Selector(0, 0, scale)
 	}
 	
 	this.GetSelector = function() {
@@ -150,12 +150,12 @@ function Core() {
 		player2Img = new Image()
 		spritesImg = new Image()
 		if (this.IsOnAppEngine()){
-			var base = "generate?c="
+			var base = "generate?m="+scale+"&c="
 			var colour0 = window.localStorage['colour0'] || 0
 			var colour1 = window.localStorage['colour1'] || 1
 			player1Img.src = base + colour0
 			player2Img.src = base + colour1
-			spritesImg.src = "generate?s"
+			spritesImg.src = "generate?s&m="+scale
 		}else{
 			player1Img.src = "/images/player.png"
 			player2Img.src = "/images/player.png"

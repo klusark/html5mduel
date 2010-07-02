@@ -23,10 +23,12 @@ class MainHandler(webapp.RequestHandler):
 		PLTE = '\x00\x00\x00\x18PLTE'
 		filename = 'player.png'
 		sprites = False
+		sample = False
 		colour = 0
 		scale = 1
 		if u'sample' in self.request.GET:
 			filename = 'playersample.png'
+			sample = True
 		if u's' in self.request.GET:
 			sprites = True
 			filename = 'sprites.png'
@@ -45,10 +47,16 @@ class MainHandler(webapp.RequestHandler):
 		if sprites:
 			w = 258
 			h = 25
+		elif sample:
+			w = 125
+			h = 24
 	
-		result = images.resize(self.passthrough(f), w*scale, h*scale)
+		self.response.out.write(images.resize(self.passthrough(f), w*scale, h*scale, images.PNG))
+		return
 		#result = self.passthrough(f)
 		PLTEpos = result.find('PLTE')
+		print struct.unpack('>L4s', result[PLTEpos-4:PLTEpos+4])
+		return 
 		length, chtype = struct.unpack('>L4s', result[PLTEpos-4:PLTEpos+4])
 		start = result[:PLTEpos-4]
 		if sprites:

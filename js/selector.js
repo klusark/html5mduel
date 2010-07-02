@@ -1,12 +1,12 @@
-function Selector(x, y){
+function Selector(x, y, scale){
 	img = new Image()
-	img.src = "generate?sample&c=0"
+	
 	var lastUpdateTime = core.GetTime()
 	var animations = new Array();
 	
 	animations["run"] = new Animation(0, 0, 100, 4, 24, 24);
 	
-	animations["idle"] = new Animation(0, 100, 100, 1, 24, 24);
+	animations["idle"] = new Animation(0, 100, 101, 1, 24, 24);
 
 	var currentAnimation = animations["idle"];
 
@@ -18,8 +18,8 @@ function Selector(x, y){
 	
 	var colour = 0
 	var colours = 4
-	var url = "generate?sample&c="
-
+	var url = "generate?sample&m="+scale+"&c="
+	img.src = url + colour
 	this.Draw = function(){
 		currentAnimation.Draw(img, x, y)
 

@@ -17,7 +17,7 @@ function Platform(x, y, numPlatforms){
 	}
 	
 	this.GetEnd = function(){
-		return this.GetNumPlatforms() * 16 + x - 3;
+		return 1000//this.GetNumPlatforms() * 16 + x - 3;
 	}
 	
 	this.GetY = function(){

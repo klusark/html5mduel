@@ -1,9 +1,3 @@
-
-
-
-//var objects = new Array();
-
-
 function Core() {
 	var platforms
 	var ropes
@@ -20,7 +14,7 @@ function Core() {
 	var inSelectMode
 	
 	const timescale = 1
-	const scale = 4
+	var scale = 2
 	const FPS = 30;
 	
 	this.GetTime = function() {
@@ -69,8 +63,10 @@ function Core() {
 		iscale = iscale || scale
 		if (iscale == -1)
 			iscale = scale
-		window.ctx.drawImage(image, sx*iscale, sy*iscale, sw*iscale, sh*iscale, dx*iscale, dy*iscale, dw*iscale, dh*iscale)
+		if (image.complete)
+			window.ctx.drawImage(image, sx*iscale, sy*iscale, sw*iscale, sh*iscale, dx*iscale, dy*iscale, dw*iscale, dh*iscale)
 	}
+
 
 	this.FillRect = function(x, y, w, h) {
 		window.ctx.fillRect(x*scale, y*scale, w*scale, h*scale)
@@ -108,6 +104,30 @@ function Core() {
 				}
 			}
 		}
+		this.GetCollitionsOf(players[0])
+	}
+	
+	this.GetCollitionsOf = function(entity) {
+		var other
+		if (entity == players[0])
+			other = players[1]
+		else if (entity == players[1])
+			other = players[0]
+		var entitybounds = entity.GetCurrentBounds()
+		var otherbounds  = other.GetCurrentBounds()
+		
+		if (entity.GetX()+entitybounds.GetX()+entitybounds.GetWidth() > other.GetX()+otherbounds.GetX() && 
+			entity.GetX()+entitybounds.GetX() < other.GetX()+otherbounds.GetX()+otherbounds.GetWidth() &&
+			entity.GetY()+entitybounds.GetY()+entitybounds.GetHeight() > other.GetY()+otherbounds.GetY() && 
+			entity.GetY()+entitybounds.GetY() < other.GetY()+otherbounds.GetY()+otherbounds.GetHeight()){
+			
+			entity.Collide(other)
+			other.Collide(entity)
+		} else {
+			entity.DoCollide()
+			other.DoCollide()
+		
+		}
 	}
 	
 	this.InSelectMode = function() {
@@ -143,8 +163,6 @@ function Core() {
 
 	this.init = function() {
 		window.canvas = document.getElementById('canvas')
-		window.canvas.width = 320*scale
-		window.canvas.height = 200*scale
 		window.ctx = window.canvas.getContext('2d');
 		
 		//only works on firefox 3.6 and up
@@ -155,12 +173,7 @@ function Core() {
 		player2Img = new Image()
 		spritesImg = new Image()
 		if (this.IsOnAppEngine()){
-			var base = "generate?m="+scale+"&c="
-			var colour0 = window.localStorage['colour0'] || 0
-			var colour1 = window.localStorage['colour1'] || 1
-			player1Img.src = base + colour0
-			player2Img.src = base + colour1
-			spritesImg.src = "generate?s&m="+scale
+			this.SetScale(scale)
 		}else{
 			player1Img.src = "/images/player.png"
 			player2Img.src = "/images/player.png"
@@ -188,7 +201,7 @@ function Core() {
 		
 		players[0] = new Player(28, 144, player1Img);
 		players[1] = new Player(268, 144, player2Img);
-		players[1].SetKeys(73, 75, 74, 76);
+		players[1].SetKeys(38, 40, 37, 39);
 		players[1].SetFlipped(true);
 		
 		
@@ -232,10 +245,26 @@ function Core() {
 	}
 
 	this.OnKeyUp = function(event) {
-		if (players.length == 2){
+		if (players){
 			players[0].KeyUp(event.keyCode);
 			players[1].KeyUp(event.keyCode);
 		}
+	}
+	
+	this.SetScale = function(newScale) {
+		scale = newScale
+		window.canvas.width = 320*scale
+		window.canvas.height = 200*scale
+		var base = "generate?m="+scale+"&c="
+		var colour0 = window.localStorage['colour0'] || 0
+		var colour1 = window.localStorage['colour1'] || 1
+		player1Img.src = base + colour0
+		player2Img.src = base + colour1
+		spritesImg.src = "generate?s&m="+scale
+	}
+	
+	this.GetScale = function() {
+		return scale
 	}
 	
 	//TODO: redo all of this code to make a more fair level generator

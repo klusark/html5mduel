@@ -12,6 +12,10 @@ handlers:
   static_files: manifest.cache
   upload: manifest.cache
 
+- url: /favicon.ico
+  static_files: favicon.ico
+  upload: favicon.ico
+
 - url: /png
   script: png.py
 

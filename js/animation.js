@@ -15,16 +15,16 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 	//only usefull if repeat is off
 	var isAnimationDone = false;
 	
-	this.Update = function(){
+	this.Update = function() {
 		var currentTime = core.GetTime()
-		while (NextFrameTime < currentTime){
+		while (NextFrameTime < currentTime) {
 			NextFrameTime += frameTime;
 			++frame;
-			if (frame == numFrames){
+			if (frame == numFrames) {
 				if (repeat){
 					frame = 0;
 					++numLoops;
-				}else{
+				} else {
 					frame = numFrames-1;
 					isAnimationDone = true;
 				}
@@ -37,7 +37,7 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 		return isAnimationDone
 	}
 	
-	this.ChangeTo = function(bflipped){
+	this.ChangeTo = function(bflipped) {
 		NextFrameTime = core.GetTime() + frameTime;
 		flipped = bflipped
 		frame = 0;
@@ -68,9 +68,9 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 		return numLoops
 	}
 	
-	this.Draw = function(image, x, y, scale){
+	this.Draw = function(image, x, y, scale) {
 		//rounding is to fix an inconsistancy in firefox vs chrome
-		var sx = frame*w + frame + startX;
+		var sx = frame*w + frame + startX
 		if (reverse){
 			sx = startX + (numFrames-1)*w + numFrames - (frame*w + frame + 1)
 		}

@@ -3,13 +3,12 @@ function Mallow(x, y, frame){
 	
 	var mallowTopAnimation = new Animation(null, 75, 1000, 4, 16, 8);
 	mallowTopAnimation.SetFrame(frame);
-
+	mallowBottom = new StaticImage(img, 75, 9, 16, 16)
 	var x = x;
 	var y = y;
 	
 	this.Draw = function(){
-		core.DrawImage(img, 75, 9, 16, 16, x, y+8, 16, 16);
-		//window.ctx.drawImage(mallowimg, x, y+8);
+		mallowBottom.Draw(x, y+8)
 		mallowTopAnimation.Draw(img, x, y);
 	}
 	

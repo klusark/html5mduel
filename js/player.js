@@ -1,7 +1,4 @@
 function Player(x, y, img){
-	//var img = core.GetPlayer1Img()
-
-	var frame = 0;
 	var lastUpdateTime = core.GetTime()
 	var animations = new Array();
 	
@@ -201,12 +198,12 @@ function Player(x, y, img){
 					this.SetAnimation("uncrouch")
 				}
 			} else if (isRolling) {
-				console.log("rolling")
+				//console.log("rolling")
 				//xVelocity = flipped ? -ROLLSPEED : ROLLSPEED
 				//if (reversedRoll)
 				//	xVelocity *= -1
 				if (currentAnimation.IsAnimationDone()){
-					console.log("rolling end")
+					//console.log("rolling end")
 					runningRight = false
 					runningLeft = false
 					isRolling = false
@@ -277,7 +274,7 @@ function Player(x, y, img){
 		if (pushed || dontCollide)
 			return
 		if ((other.IsRolling()) && wasOnGround && !isCrouched && !isRolling){
-			console.log("type 1")
+			//console.log("type 1")
 			var dontMove = xVelocity == 0 && other.IsRolling();
 			this.Bounce(true);
 			this.StartFall(false);
@@ -285,42 +282,42 @@ function Player(x, y, img){
 				xVelocity = 0;
 			yVelocity = JUMPYVELOCITY
 		} else if (xVelocity == 0 && other.GetXVelocity() == 0 && (yVelocity != 0 || other.GetYVelocity() != 0)) {
-			console.log("type 2")
+			//console.log("type 2")
 		} else if ((other.IsCrouched() && isRolling) || ((other.IsRolling() || other.WasRolling()) && isCrouched)) {
-			console.log("type 10")
+			//console.log("type 10")
 			x < other.GetX() ? this.Bounce(flipped) : this.Bounce(!flipped);
 			this.StartFall(false);
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else if (other.IsCrouched() ) {
-			console.log("type 8")
+			//console.log("type 8")
 			this.Bounce(true)
 			this.StartFall(false)
 			yVelocity = JUMPYVELOCITY*2/3
 		} else if (isCrouched && other.GetXVelocity != 0) {
-			console.log("type 9")
+			//console.log("type 9")
 
 		} else if (!isRolling && other.IsRolling()) {
-			console.log("type 3")
+			//console.log("type 3")
 			this.Bounce(true)
 			this.StartFall(false)
 			yVelocity = JUMPYVELOCITY*2/3
 		} else if (isRolling && !(other.IsRolling() || other.WasRolling())) {
-			console.log("type 4")
+			//console.log("type 4")
 		} else if (xVelocity != 0 && other.GetXVelocity() != 0) {
-			console.log("type 5")
+			//console.log("type 5")
 			isOnRope = false;
 
 			x < other.GetX() ? this.Bounce(flipped) : this.Bounce(!flipped);
 			this.StartFall(false);
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else if (xVelocity == 0 && other.GetXVelocity() != 0) {
-			console.log("type 6")
+			//console.log("type 6")
 			other.IsFlipped() ? this.Bounce(flipped) : this.Bounce(!flipped);
 			this.StartFall(false);
 			other.DontCollide()
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else {
-			console.log("type 7")
+			//console.log("type 7")
 		}
 	}
 	
@@ -334,6 +331,11 @@ function Player(x, y, img){
 			xVelocity = (flipped ? PUSHEDSPEED : -PUSHEDSPEED)
 			this.SetAnimation("pushedbackward")
 		}
+	}
+	
+	this.CollectPowerup = function(bubble) {
+		console.log(bubble.GetPowerupName())
+		bubble.SetDone(true)
 	}
 	
 	this.SetImage = function(image){
@@ -566,7 +568,7 @@ function Player(x, y, img){
 	}
 	
 	this.Land = function() {
-		console.log("land")
+		//console.log("land")
 		onGround = true
 		isJumping = false
 		if (pushed){

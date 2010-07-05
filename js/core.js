@@ -5,6 +5,8 @@ function Core() {
 	var mallows
 	var emitters
 	var effects
+	var bubbles
+	
 	var debug
 	var gameOver = false;
 	var player1Img 
@@ -13,9 +15,11 @@ function Core() {
 	var selector
 	var inSelectMode
 	
+	var nextBubbleTime
+	
 	const timescale = 1
-	var scale = 2
-	const FPS = 30;
+	var scale = 4
+	const FPS = 1200;
 	
 	this.GetTime = function() {
 		return new Date().getTime() * timescale 
@@ -24,6 +28,7 @@ function Core() {
 	this.CreateEffect = function(name, x, y) {
 		effects.push(new Effect(x, y, name))
 	}
+	
 	this.DebugLog = function(message) {
 		if (debug)
 			console.log(message)
@@ -40,7 +45,9 @@ function Core() {
 			this.ArrayDraw(players)
 			this.ArrayDraw(mallows)
 			this.ArrayDraw(emitters)
+			this.ArrayDraw(bubbles)
 			this.ArrayDraw(effects)
+			
 		}
 	}
 	
@@ -78,11 +85,14 @@ function Core() {
 		else{
 			this.ArrayUpdate(players)
 			this.ArrayUpdate(mallows)
+			this.UpdateBubbles()
+			
 			for(var i = 0; i < effects.length; ++i){
 				effects[i].Update()
 				if (!effects[i].IsDraw())
 					effects.splice(i--, 1)
 			}
+			
 			if ((players[0].IsDead() || players[1].IsDead()) && !gameOver){
 				players[0].SetInteruptInput(true)
 				players[1].SetInteruptInput(true)
@@ -107,19 +117,16 @@ function Core() {
 		this.GetCollitionsOf(players[0])
 	}
 	
+	//this collisions system kind of sucks... but it works for mduel
 	this.GetCollitionsOf = function(entity) {
 		var other
 		if (entity == players[0])
 			other = players[1]
 		else if (entity == players[1])
 			other = players[0]
-		var entitybounds = entity.GetCurrentBounds()
-		var otherbounds  = other.GetCurrentBounds()
+
 		
-		if (entity.GetX()+entitybounds.GetX()+entitybounds.GetWidth() > other.GetX()+otherbounds.GetX() && 
-			entity.GetX()+entitybounds.GetX() < other.GetX()+otherbounds.GetX()+otherbounds.GetWidth() &&
-			entity.GetY()+entitybounds.GetY()+entitybounds.GetHeight() > other.GetY()+otherbounds.GetY() && 
-			entity.GetY()+entitybounds.GetY() < other.GetY()+otherbounds.GetY()+otherbounds.GetHeight()){
+		if (this.DoesCollide(entity,other)){
 			
 			entity.Collide(other)
 			other.Collide(entity)
@@ -128,6 +135,61 @@ function Core() {
 			other.DoCollide()
 		
 		}
+	}
+	
+	this.DoesCollide = function(entity, other) {
+		var entitybounds = entity.GetCurrentBounds()
+		var otherbounds  = other.GetCurrentBounds()
+		return  entity.GetX()+entitybounds.GetX()+entitybounds.GetWidth() > other.GetX()+otherbounds.GetX() && 
+				entity.GetX()+entitybounds.GetX() < other.GetX()+otherbounds.GetX()+otherbounds.GetWidth() &&
+				entity.GetY()+entitybounds.GetY()+entitybounds.GetHeight() > other.GetY()+otherbounds.GetY() && 
+				entity.GetY()+entitybounds.GetY() < other.GetY()+otherbounds.GetY()+otherbounds.GetHeight()
+	}
+	
+	this.UpdateBubbles = function() {
+		for(var i = 0; i < bubbles.length; ++i){
+			bubbles[i].Update()
+			if(this.DoesCollide(bubbles[i], players[0]))
+				players[0].CollectPowerup(bubbles[i])
+			else if(this.DoesCollide(bubbles[i], players[1]))
+				players[1].CollectPowerup(bubbles[i])
+				
+			if (bubbles[i].IsDone()){
+				this.CreateEffect("BubbleDisolve", bubbles[i].GetX(), bubbles[i].GetY())
+				bubbles.splice(i--, 1)
+				if (bubbles.length < 3)
+					this.SetNextBubbleTime()
+			}
+		}
+		var numBubbles = bubbles.length
+		if (numBubbles < 3 && this.GetTime() > nextBubbleTime){
+			var emittor = Math.floor(Math.random()*3+1)
+			var x, y
+			if (emittor == 1) {
+				x = 13
+				y = 96
+			} else if (emittor == 2) {
+				x = 308
+				y = 95
+			} else if (emittor == 3) {
+				x = 156
+				y = 12
+			}
+			var xVelocity = Math.random()*60+30
+			if (Math.random()<0.5)
+				xVelocity *= -1
+			var yVelocity = Math.random()*60+30
+			if (Math.random()>0.5)
+				yVelocity *= -1
+			bubbles.push(new Bubble(x, y, xVelocity, yVelocity))
+			this.CreateEffect("PurpleSmoke", x, y)
+			this.SetNextBubbleTime()
+
+		}
+	}
+	
+	this.SetNextBubbleTime = function() {
+		nextBubbleTime = this.GetTime() + Math.random()*3000
 	}
 	
 	this.InSelectMode = function() {
@@ -163,7 +225,7 @@ function Core() {
 
 	this.init = function() {
 		window.canvas = document.getElementById('canvas')
-		window.ctx = window.canvas.getContext('2d');
+		window.ctx = window.canvas.getContext('2d')
 		
 		//only works on firefox 3.6 and up
 		//hopefuly chrome gets a similar setting soon
@@ -187,9 +249,12 @@ function Core() {
 		mallows = new Array()
 		emitters = new Array()
 		effects = new Array()
+		bubbles = new Array()
 		debug = false
 		gameOver = false
 		inSelectMode = false
+		
+		this.SetNextBubbleTime()
 		
 		var params = location.href.split("?")
 		if (params[1] == "debug")
@@ -199,31 +264,30 @@ function Core() {
 		this.SetupRopes()
 		
 		
-		players[0] = new Player(28, 144, player1Img);
-		players[1] = new Player(268, 144, player2Img);
-		players[1].SetKeys(38, 40, 37, 39);
-		players[1].SetFlipped(true);
+		players[0] = new Player(28, 144, player1Img)
+		players[1] = new Player(268, 144, player2Img)
+		players[1].SetKeys(38, 40, 37, 39)
+		players[1].SetFlipped(true)
 		
 		
-		
-		effects.push(new Effect(28, 144, "GreenSmoke"))
-		effects.push(new Effect(268, 144, "GreenSmoke"))
+		this.CreateEffect("GreenSmoke", 28, 144)
+		this.CreateEffect("GreenSmoke", 268, 144)
 
 		var frame = 0;
 		for (i = 0; i < 20; ++i){
-			mallows.push(new Mallow(i*16, 176, frame));
-			++frame;
+			mallows.push(new Mallow(i*16, 176, frame))
+			++frame
 			if (frame == 4)
 				frame = 0
 			
 		}
 		
-		emitters.push(new Emitter(0, 92, 0));
-		emitters.push(new Emitter(152, 0, 1));
-		emitters.push(new Emitter(320-16, 92, 2));
+		emitters.push(new Emitter(0, 92, 0))
+		emitters.push(new Emitter(152, 0, 1))
+		emitters.push(new Emitter(320-16, 92, 2))
 
 		this.Update();
-		setInterval(function(){core.Update()}, 1000 / FPS);
+		setInterval(function(){core.Update()}, 1000 / FPS)
 		setInterval(function(){core.Draw()}, 1000 / FPS);
 		
 
@@ -238,7 +302,7 @@ function Core() {
 	
 
 	this.OnKeyDown = function(event) {
-		if (players.length == 2){
+		if (players){
 			players[0].KeyDown(event.keyCode);
 			players[1].KeyDown(event.keyCode);
 		}

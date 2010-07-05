@@ -5,6 +5,12 @@ function Effect(x, y, type){
 	animations["GreenSmoke"] = new Animation(null, 0, 100, 3, 24, 24);
 	animations["GreenSmoke"].Repeat(false)
 	
+	animations["PurpleSmoke"] = new Animation(null, 437, 100, 3, 24, 24);
+	animations["PurpleSmoke"].Repeat(false)
+	
+	animations["BubbleDisolve"] = new Animation(null, 387, 100, 2, 24, 24);
+	animations["BubbleDisolve"].Repeat(false)
+	
 	animations["BigSplash"] = new Animation(null, 158, 100, 4, 24, 24);
 	animations["BigSplash"].Repeat(false)
 	

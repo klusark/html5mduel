@@ -5,8 +5,10 @@ function Rope(x, y, length){
 	var x = x;
 	var y = y-2;
 	
+	var ropeTop = new StaticImage(img, 143, 9, 5, 5)
+	
 	this.Draw = function(){
-		core.DrawImage(img, 143, 9, 5, 5, x, y, 5, 5);
+		ropeTop.Draw(x, y)
 		ctx.fillStyle = "rgb(146,97,0)";  
 		core.FillRect(x+2, y+5, 1, length);
 	}

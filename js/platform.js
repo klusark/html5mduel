@@ -6,10 +6,11 @@ function Platform(x, y, numPlatforms){
 	
 	var numPlatforms = numPlatforms;
 	
+	var platform = new StaticImage(img, 143, 0, 14, 8)
+	
 	this.Draw = function(){
 		for (var i = 0; i < numPlatforms; ++i)
-			core.DrawImage(img, 143, 0, 14, 8, i*16 + x + 1, y, 14, 8);
-
+			platform.Draw(i*16 + x + 1, y)
 	}
 	
 	this.GetNumPlatforms = function(){
@@ -17,7 +18,7 @@ function Platform(x, y, numPlatforms){
 	}
 	
 	this.GetEnd = function(){
-		return 1000//this.GetNumPlatforms() * 16 + x - 3;
+		return this.GetNumPlatforms() * 16 + x - 3;
 	}
 	
 	this.GetY = function(){

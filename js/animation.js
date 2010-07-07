@@ -7,10 +7,13 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 	var w = w
 	var h = h
 	var repeat = true
+	var startReverse = false
 	var reverse = false
 	var xOffset = 0
 	var flipped = false
 	var numLoops = 0
+	var reverseOnFinish = false
+	var reversed = false
 	
 	//only usefull if repeat is off
 	var isAnimationDone = false;
@@ -21,12 +24,18 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 			NextFrameTime += frameTime;
 			++frame;
 			if (frame == numFrames) {
-				if (repeat){
+				if (reverseOnFinish && !reversed) {
+					reverse = !reverse
+					reversed = true
+					frame = 0;
+				} else if (repeat){
 					frame = 0;
 					++numLoops;
+					reversed = false
 				} else {
 					frame = numFrames-1;
 					isAnimationDone = true;
+					reversed = false
 				}
 			}
 
@@ -42,14 +51,16 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 		flipped = bflipped
 		frame = 0;
 		isAnimationDone = false
+		reverse = startReverse
 	}
 	
 	this.Repeat = function(shouldRepeat) {
-		repeat = shouldRepeat;
+		repeat = shouldRepeat
 	}
 	
 	this.Reverse = function(shouldReverse) {
-		reverse = shouldReverse;
+		reverse = shouldReverse
+		startReverse = shouldReverse
 	}
 	
 	this.SetXOffset = function(offset) {
@@ -66,6 +77,10 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 	
 	this.GetNumLoops = function() {
 		return numLoops
+	}
+	
+	this.ReverseOnFinish = function(rof) {
+		reverseOnFinish = rof
 	}
 	
 	this.Draw = function(image, x, y, scale) {

@@ -6,9 +6,10 @@ function Core() {
 	var emitters
 	var effects
 	var bubbles
+	var entities
 	
 	var debug
-	var gameOver = false;
+	var gameOver = false
 	var player1Img 
 	var player2Img 
 	var spritesImg
@@ -18,8 +19,10 @@ function Core() {
 	var nextBubbleTime
 	
 	const timescale = 1
-	var scale = 4
-	const FPS = 1200;
+	var scale = 2
+	const FPS = 30
+	var maxBubbles = 3
+	const maxTimeBetweenBubbles = 3000
 	
 	this.GetTime = function() {
 		return new Date().getTime() * timescale 
@@ -36,17 +39,21 @@ function Core() {
 	
 	this.Draw = function() {
 		ctx.fillStyle = "rgb(0,0,0)";
-		window.ctx.fillRect(0, 0, window.canvas.width, window.canvas.height);
+		window.ctx.fillRect(0, 0, window.canvas.width, window.canvas.height)
 		if (this.InSelectMode())
 			selector.Draw()
 		else{
 			this.ArrayDraw(platforms)
 			this.ArrayDraw(ropes)
+			this.ArrayDraw(emitters)
 			this.ArrayDraw(players)
 			this.ArrayDraw(mallows)
-			this.ArrayDraw(emitters)
 			this.ArrayDraw(bubbles)
 			this.ArrayDraw(effects)
+			
+			//might need to place this somewhere else
+			this.ArrayDraw(entities)
+			
 			
 		}
 	}
@@ -85,6 +92,7 @@ function Core() {
 		else{
 			this.ArrayUpdate(players)
 			this.ArrayUpdate(mallows)
+			this.ArrayUpdate(entities)
 			this.UpdateBubbles()
 			
 			for(var i = 0; i < effects.length; ++i){
@@ -119,12 +127,7 @@ function Core() {
 	
 	//this collisions system kind of sucks... but it works for mduel
 	this.GetCollitionsOf = function(entity) {
-		var other
-		if (entity == players[0])
-			other = players[1]
-		else if (entity == players[1])
-			other = players[0]
-
+		var other = this.GetOponentOf(entity)
 		
 		if (this.DoesCollide(entity,other)){
 			
@@ -140,40 +143,47 @@ function Core() {
 	this.DoesCollide = function(entity, other) {
 		var entitybounds = entity.GetCurrentBounds()
 		var otherbounds  = other.GetCurrentBounds()
-		return  entity.GetX()+entitybounds.GetX()+entitybounds.GetWidth() > other.GetX()+otherbounds.GetX() && 
+		return  entity.GetX()+entitybounds.GetX() + entitybounds.GetWidth() > other.GetX()+otherbounds.GetX() && 
 				entity.GetX()+entitybounds.GetX() < other.GetX()+otherbounds.GetX()+otherbounds.GetWidth() &&
-				entity.GetY()+entitybounds.GetY()+entitybounds.GetHeight() > other.GetY()+otherbounds.GetY() && 
+				entity.GetY()+entitybounds.GetY() + entitybounds.GetHeight() > other.GetY()+otherbounds.GetY() && 
 				entity.GetY()+entitybounds.GetY() < other.GetY()+otherbounds.GetY()+otherbounds.GetHeight()
 	}
 	
 	this.UpdateBubbles = function() {
 		for(var i = 0; i < bubbles.length; ++i){
 			bubbles[i].Update()
+			
 			if(this.DoesCollide(bubbles[i], players[0]))
 				players[0].CollectPowerup(bubbles[i])
 			else if(this.DoesCollide(bubbles[i], players[1]))
 				players[1].CollectPowerup(bubbles[i])
-				
+			
 			if (bubbles[i].IsDone()){
 				this.CreateEffect("BubbleDisolve", bubbles[i].GetX(), bubbles[i].GetY())
 				bubbles.splice(i--, 1)
-				if (bubbles.length < 3)
+				if (bubbles.length < maxBubbles)
 					this.SetNextBubbleTime()
 			}
 		}
-		var numBubbles = bubbles.length
-		if (numBubbles < 3 && this.GetTime() > nextBubbleTime){
+
+		if (bubbles.length < maxBubbles && this.GetTime() > nextBubbleTime) {
 			var emittor = Math.floor(Math.random()*3+1)
-			var x, y
+			var x, y, ey, ex
 			if (emittor == 1) {
-				x = 13
-				y = 96
+				x = 14
+				y = 92
+				ex = 8
+				ey = 88
 			} else if (emittor == 2) {
-				x = 308
+				x = 295
 				y = 95
+				ex = 290
+				ey = 91
 			} else if (emittor == 3) {
 				x = 156
 				y = 12
+				ex = 150
+				ey = 7
 			}
 			var xVelocity = Math.random()*60+30
 			if (Math.random()<0.5)
@@ -182,14 +192,14 @@ function Core() {
 			if (Math.random()>0.5)
 				yVelocity *= -1
 			bubbles.push(new Bubble(x, y, xVelocity, yVelocity))
-			this.CreateEffect("PurpleSmoke", x, y)
+			this.CreateEffect("PurpleSmoke", ex, ey)
 			this.SetNextBubbleTime()
 
 		}
 	}
 	
 	this.SetNextBubbleTime = function() {
-		nextBubbleTime = this.GetTime() + Math.random()*3000
+		nextBubbleTime = this.GetTime() + Math.random()*maxTimeBetweenBubbles
 	}
 	
 	this.InSelectMode = function() {
@@ -229,6 +239,7 @@ function Core() {
 		
 		//only works on firefox 3.6 and up
 		//hopefuly chrome gets a similar setting soon
+		//this really has no use because of my appengine scaling
 		window.ctx.mozImageSmoothingEnabled = false
 		
 		player1Img = new Image()
@@ -250,6 +261,7 @@ function Core() {
 		emitters = new Array()
 		effects = new Array()
 		bubbles = new Array()
+		entities = new Array()
 		debug = false
 		gameOver = false
 		inSelectMode = false
@@ -266,7 +278,7 @@ function Core() {
 		
 		players[0] = new Player(28, 144, player1Img)
 		players[1] = new Player(268, 144, player2Img)
-		players[1].SetKeys(38, 40, 37, 39)
+		players[1].SetKeys(38, 40, 37, 39, 13)
 		players[1].SetFlipped(true)
 		
 		
@@ -286,16 +298,56 @@ function Core() {
 		emitters.push(new Emitter(152, 0, 1))
 		emitters.push(new Emitter(320-16, 92, 2))
 
-		this.Update();
-		setInterval(function(){core.Update()}, 1000 / FPS)
-		setInterval(function(){core.Draw()}, 1000 / FPS);
+		setInterval(function(){core.Update();core.Draw()}, 1000 / FPS)
+		//setInterval(function(){core.Draw()}, 1000 / FPS);
 		
 
 	}
 	
+	this.IsOnGround = function(yb, ya, entity) {
+		var entityBounds = entity.GetCurrentBounds()
+		var platformsPassedThrough = new Array()
+		for (var i = 0; i < platforms.length; ++i){
+			var other = platforms[i];
+			if (((yb+entityBounds.GetY()+entityBounds.GetHeight() == other.GetY()) || (yb < other.GetY()-(entityBounds.GetY()+entityBounds.GetHeight()) && ya > other.GetY()-(entityBounds.GetY()+entityBounds.GetHeight()))) && 
+				(entity.GetX() + entityBounds.GetX() < other.GetEnd() 
+				&& entity.GetX() + entityBounds.GetX() + entityBounds.GetWidth() > other.GetX())){
+				platformsPassedThrough.push(other)
+				//break;
+			}
+		}
+		
+		//may need to make this check for multiple platforms
+		if (platformsPassedThrough.length == 1)
+			return platformsPassedThrough[0]
+		else if (platformsPassedThrough.length != 0)
+			console.log(platformsPassedThrough)
+	}
+	
+	this.AddEntity = function(entity) {
+		entities.push(entity)
+	}
+	
+	this.RemoveEntity = function(entity) {
+		for (var i = 0; i < entities.length; ++i){
+			if (entities[i] == entity){
+				entities.splice(i, 1)
+				return
+			}
+		}
+	}
+	
+	this.GetOponentOf = function(entity) {
+		if (entity == players[0])
+			return players[1]
+		else if (entity == players[1])
+			return players[0]
+		//javascript will return undefined here
+	}
+	
 	this.IsOnAppEngine = function() {
 		var loc = document.location.href
-		if (loc.search("appspot.com")==-1 || loc.search("127.0.0.1:8080") == -1)
+		if (loc.search("appspot.com") == -1 || loc.search("127.0.0.1:8080") == -1)
 			return true
 		return false
 	}

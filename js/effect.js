@@ -13,6 +13,12 @@ function Effect(x, y, type){
 	
 	animations["BigSplash"] = new Animation(null, 158, 100, 4, 24, 24);
 	animations["BigSplash"].Repeat(false)
+
+	animations["SmallSplash"] = new Animation(null, 687, 100, 3, 24, 24);
+	animations["SmallSplash"].Repeat(false)
+
+	animations["explode"] = new Animation(null, 612, 100, 3, 24, 24);
+	animations["explode"].Repeat(false)
 	
 	var currentAnimation = animations[type]
 

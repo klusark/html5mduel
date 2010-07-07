@@ -7,39 +7,42 @@ function Bubble(x, y, xVelocity, yVelocity){
 	
 	var powerups = new Array()
 	powerups[0] = new StaticImage(img, 284, 0, 12, 12)
-	powerups[0].name = "gun"
+	powerups[0].name = "Gun"
 	
 	powerups[1] = new StaticImage(img, 258, 0, 12, 12)
-	powerups[1].name = "skull"
+	powerups[1].name = "Skull"
 	
 	powerups[2] = new StaticImage(img, 258, 13, 12, 12)
 	powerups[2].name = "10000v"
 	
 	powerups[3] = new StaticImage(img, 271, 0, 12, 12)
-	powerups[3].name = "invis"
+	powerups[3].name = "Invis"
 	
 	powerups[4] = new StaticImage(img, 271, 13, 12, 12)
-	powerups[4].name = "mine"
+	powerups[4].name = "Mine"
 	
 	powerups[5] = new StaticImage(img, 284, 13, 12, 12)
-	powerups[5].name = "destroy"
+	powerups[5].name = "Destroy"
 	
 	powerups[6] = new StaticImage(img, 297, 0, 12, 12)
-	powerups[6].name = "boots"
+	powerups[6].name = "Boots"
 	
 	powerups[7] = new StaticImage(img, 297, 13, 12, 12)
-	powerups[7].name = "nade"
+	powerups[7].name = "Nade"
 
 	powerups[8] = new StaticImage(img, 310, 0, 12, 12)
-	powerups[8].name = "nukepuck"
+	powerups[8].name = "Nukepuck"
 	
 	powerups[9] = new StaticImage(img, 310, 13, 12, 12)
-	powerups[9].name = "chut"
+	powerups[9].name = "Chut"
 	
 	powerups[10] = new StaticImage(img, 323, 0, 12, 12)
-	powerups[10].name = "hook"
+	powerups[10].name = "Hook"
 	
-
+	//dont you love javascript?
+	powerups[11] = new function(){this.Draw=function(dx, dy){}}
+	powerups[11].name = "Teleport"
+	
 	var currentPowerup = powerups[Math.floor(Math.random()*powerups.length)]
 	
 	var x = x
@@ -50,15 +53,13 @@ function Bubble(x, y, xVelocity, yVelocity){
 	var done = false
 
 	var currentBounds = new Bounds(0, 0, 16, 16)
-	
 
-
-	this.Draw = function(){
+	this.Draw = function() {
 		animation.Draw(img, x, y)
 		currentPowerup.Draw(x+2, y+2)
 	}
 	
-	this.Update = function(){
+	this.Update = function() {
 		currentTime = core.GetTime()
 		var deltaT = (currentTime - lastUpdateTime)/1000
 		
@@ -66,18 +67,18 @@ function Bubble(x, y, xVelocity, yVelocity){
 		x += deltaT*xVelocity
 		y += deltaT*yVelocity	
 		
-		if (y > 160){
-			y = 160
+		if (y > 163){
+			y = 163
 			yVelocity *= -1
-		} else if (y < 0) {
-			y = 0
+		} else if (y < -2) {
+			y = -2
 			yVelocity *= -1
 		}
-		if (x > 300) {
-			x = 300
+		if (x > 309) {
+			x = 309
 			xVelocity *= -1
-		} else if (x < 0) {
-			x = 0
+		} else if (x < -2) {
+			x = -2
 			xVelocity *= -1
 		}
 		

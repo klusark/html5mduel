@@ -15,8 +15,9 @@
 <script type="text/javascript" src="js/staticimage.js"></script>
 <script type="text/javascript" src="js/powerup.js"></script>
 </head>
-<body>
-<canvas id="canvas" width="320" height="200">
+<body style="background-color: #000;overflow: hidden">
+<div style="width: 320;height: 200;margin: auto;position:relative;" id="container">
+<canvas id="canvas" width="320" height="200" >
 This text is displayed if your browser does not support HTML5 Canvas.
 </canvas>
 <div id="1"><input type=button OnClick="core.init()" value="Restart"><input type=button OnClick="core.ColourSelect()" value="Colour Select"></div>
@@ -27,5 +28,6 @@ This text is displayed if your browser does not support HTML5 Canvas.
 <footer>
 <a href="http://code.google.com/p/html5mduel/issues">Report Bugs</a><br/>
 </footer>
+</div>
 </body>
 </html>

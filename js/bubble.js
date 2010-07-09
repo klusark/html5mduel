@@ -1,12 +1,13 @@
-function Bubble(x, y, xVelocity, yVelocity){
+
+function Bubble(x, y, xVelocity, yVelocity) {
 	var img = core.GetSpritesImg()
 	var lastUpdateTime = core.GetTime()
 	
 	var animation = new Animation(25, 336, 200, 3, 16, 16);
 
 	
-	var powerups = new Array()
-	powerups[0] = new StaticImage(img, 284, 0, 12, 12)
+	/*var powerups = new Array()
+	powerups[0] = new StaticImage(core.GetSpritesImg(), 284, 0, 12, 12)
 	powerups[0].name = "Gun"
 	
 	powerups[1] = new StaticImage(img, 258, 0, 12, 12)
@@ -36,7 +37,7 @@ function Bubble(x, y, xVelocity, yVelocity){
 	powerups[9] = new StaticImage(img, 310, 13, 12, 12)
 	powerups[9].name = "Chute"
 	
-	powerups[10] = new StaticImage(img, 323, 0, 12, 12)
+	powerups[10] = new StaticImage(img, 323, 13, 12, 12)
 	powerups[10].name = "Hook"
 	
 	//dont you love javascript?
@@ -47,10 +48,11 @@ function Bubble(x, y, xVelocity, yVelocity){
 		var currentPowerup = powerups[Math.floor(Math.random()*powerups.length)]
 		var powerup
 		if (window["Powerup"+currentPowerup.name])
-			powerup = new window["Powerup"+currentPowerup.name](this)
+			powerup = new window["Powerup"+powerups[Math.floor(Math.random()*powerups.length)]](this)
 		else
 			console.log("implement Powerup" + currentPowerup.name)
-	} while(!window["Powerup"+currentPowerup.name])
+	} while(!window["Powerup"+currentPowerup.name])*/
+	var powerup
 	var x = x
 	var y = y
 	var yVelocity = yVelocity
@@ -59,10 +61,14 @@ function Bubble(x, y, xVelocity, yVelocity){
 	var done = false
 
 	var currentBounds = new Bounds(0, 0, 16, 16)
+	
+	this.SetCurrentPowerup = function(npowerup) {
+		powerup = npowerup
+	}
 
 	this.Draw = function() {
 		animation.Draw(img, x, y)
-		currentPowerup.Draw(x+2, y+2)
+		powerup.image.Draw(x+2, y+2)
 	}
 	
 	this.Update = function() {
@@ -89,8 +95,8 @@ function Bubble(x, y, xVelocity, yVelocity){
 			y = -2
 			yVelocity *= -1
 		}
-		if (x > 309) {
-			x = 309
+		if (x > 306) {
+			x = 306
 			xVelocity *= -1
 		} else if (x < -2) {
 			x = -2

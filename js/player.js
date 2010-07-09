@@ -98,6 +98,7 @@ function Player(x, y, img){
 	var isJumping = false
 	var interuptInput = false
 	var wasRolling = false
+	var wasOnRope = false
 	var dontCollide = false
 	var interruptAnimationInput = false
 	var interruptAnimation = false
@@ -196,6 +197,7 @@ function Player(x, y, img){
 		} else if (isJumpingUp) {
 			if (currentAnimation.IsAnimationDone()){
 				isJumpingUp = false
+				this.StartFall(true)
 			}
 			
 		} else if (isJumping) {
@@ -264,28 +266,19 @@ function Player(x, y, img){
 				currentBounds = crouchingBounds
 				xVelocity = 0
 				this.SetAnimation("crouch")
-			}else if (keys["up"] && (keys["right"] || keys["left"])){
-				core.DebugLog("jump")
-				yVelocity = JUMPYVELOCITY
-				isJumping = true
-				xVelocity = flipped ? -JUMPXVELOCITY : JUMPXVELOCITY
-				this.SetAnimation("jump")
-				onGround = false
-			}else if (keys["up"]){
-				yVelocity = JUMPYVELOCITY
-				onGround = false
-				isJumpingUp = true
-				this.SetAnimation("jumpup")
-				core.DebugLog("jumpup")
-			}else if (keys["right"] && (!keysLastFrame["right"] || wasRunningLeft || wasCrouched || !wasOnGround) && !runningLeft){
+			} else if (keys["up"] && (keys["right"] || keys["left"])) {
+				this.StartJump()
+			} else if (keys["up"]) {
+				this.StartJumpUp()
+			} else if (keys["right"] && (!keysLastFrame["right"] || wasRunningLeft || wasCrouched || !wasOnGround) && !runningLeft) {
 				runningRight = true
 				flipped = false
 				this.SetAnimation("run")
-			}else if (keys["left"] && (!keysLastFrame["left"] || wasRunningRight || wasCrouched || !wasOnGround) && !runningRight){
+			} else if (keys["left"] && (!keysLastFrame["left"] || wasRunningRight || wasCrouched || !wasOnGround) && !runningRight) {
 				runningLeft = true
 				flipped = true
 				this.SetAnimation("run")
-			}else if (!keys["left"] && !keys["right"]){
+			} else if (!keys["left"] && !keys["right"]) {
 				this.SetAnimation("idle")
 				isIdle = true
 			}
@@ -309,6 +302,7 @@ function Player(x, y, img){
 		wasRunningLeft = runningLeft
 		wasRunningRight = runningRight
 		wasRolling = isRolling
+		wasOnRope = isOnRope
 		lastUpdateTime = currentTime
 		
 	}
@@ -325,54 +319,90 @@ function Player(x, y, img){
 		if (thiscollide || othercollide)
 			return
 		
-		if ((other.IsRolling()) && wasOnGround && !isCrouched && !isRolling){
-			//console.log("type 1")
+		if (isOnRope || wasOnRope || other.IsOnRope() || other.WasOnRope()) {
+			if ((isOnRope || wasOnRope) && (other.IsOnRope() || other.WasOnRope())) {
+				console.log("type 11")
+				isOnRope = false;
+				if (y < other.GetY()) {
+					flipped = false
+					this.Bounce(true)
+				} else {
+					flipped = true
+					this.Bounce(true)
+				}
+				this.StartFall(false);
+				this.DontCollide()
+			} else if (isOnRope || wasOnRope) {
+				console.log("type 12")
+				flipped = !other.IsFlipped()
+				isOnRope = false;
+				this.Bounce(false);
+				this.StartFall(false);
+			}
+		} else if ((other.IsRolling()) && wasOnGround && !isCrouched && !isRolling) {
+			console.log("type 1")
 			var dontMove = xVelocity == 0 && other.IsRolling();
 			this.Bounce(true);
 			this.StartFall(false);
 			if (dontMove)
 				xVelocity = 0;
 			yVelocity = JUMPYVELOCITY
+		} else if (xVelocity == 0 && other.GetXVelocity() == 0 && (y > other.GetY())) {
+			console.log("type 13")
 		} else if (xVelocity == 0 && other.GetXVelocity() == 0 && (yVelocity != 0 || other.GetYVelocity() != 0)) {
-			//console.log("type 2")
+			console.log("type 2")
 		} else if ((other.IsCrouched() && isRolling) || ((other.IsRolling() || other.WasRolling()) && isCrouched)) {
-			//console.log("type 10")
+			console.log("type 10")
 			x < other.GetX() ? this.Bounce(flipped) : this.Bounce(!flipped);
 			this.StartFall(false);
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else if (other.IsCrouched() ) {
-			//console.log("type 8")
+			console.log("type 8")
 			this.Bounce(true)
 			this.StartFall(false)
 			yVelocity = JUMPYVELOCITY*2/3
 		} else if (isCrouched && other.GetXVelocity != 0) {
-			//console.log("type 9")
+			console.log("type 9")
 
 		} else if (!isRolling && other.IsRolling()) {
-			//console.log("type 3")
+			console.log("type 3")
 			this.Bounce(true)
 			this.StartFall(false)
 			yVelocity = JUMPYVELOCITY*2/3
 		} else if (isRolling && !(other.IsRolling() || other.WasRolling())) {
-			//console.log("type 4")
+			console.log("type 4")
 		} else if (xVelocity != 0 && other.GetXVelocity() != 0) {
-			//console.log("type 5")
+			console.log("type 5")
 			isOnRope = false;
 
 			x < other.GetX() ? this.Bounce(flipped) : this.Bounce(!flipped);
 			this.StartFall(false);
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else if (xVelocity == 0 && other.GetXVelocity() != 0) {
-			//console.log("type 6")
+			console.log("type 6")
 			other.IsFlipped() ? this.Bounce(flipped) : this.Bounce(!flipped);
 			this.StartFall(false);
 			other.DontCollide()
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else {
-			//console.log("type 7")
+			console.log("type 7")
 		}
 	}
 	
+	this.StartJumpUp = function() {
+		yVelocity = JUMPYVELOCITY
+		onGround = false
+		isJumpingUp = true
+		this.SetAnimation("jumpup")
+	}
+	
+	this.StartJump = function() {
+		onGround = false
+		yVelocity = JUMPYVELOCITY
+		isJumping = true
+		xVelocity = flipped ? -JUMPXVELOCITY : JUMPXVELOCITY
+		this.SetAnimation("jump")
+	}
 	
 	this.Bounce = function(forward) {
 		pushed = true
@@ -493,6 +523,15 @@ function Player(x, y, img){
 		return isOnRope
 	}
 	
+	
+	this.WasOnRope = function() {
+		return wasOnRope
+	}
+	
+	this.IsRunning = function() {
+		return (runningLeft || runningRight) && (!isRolling)
+	}
+	
 	this.IsRolling = function() {
 		return isRolling
 	}
@@ -564,6 +603,14 @@ function Player(x, y, img){
 	
 	this.IsCrouched = function() {
 		return isCrouched
+	}
+	
+	this.IsJumpingUp = function() {
+		return isJumpingUp
+	}
+	
+	this.IsJumping = function() {
+		return isJumping
 	}
 	
 	this.SetInteruptInput = function(interupt){

@@ -13,6 +13,9 @@ function Core() {
 	var bubbles
 	var entities
 	
+	var registerdPowerups = new Array()
+	var selectedPowerups = new Array()
+	
 	var debug
 	var gameOver = false
 	var player1Img 
@@ -126,8 +129,7 @@ function Core() {
 					players[0].Win()
 					gameOver = true
 				}
-				if (gameOver)
-					core.StopTime()
+
 			}
 			
 		}
@@ -200,7 +202,9 @@ function Core() {
 			var yVelocity = Math.random()*20+20
 			if (Math.random()>0.5)
 				yVelocity *= -1
-			bubbles.push(new Bubble(x, y, xVelocity, yVelocity))
+			var newBubble = new Bubble(x, y, xVelocity, yVelocity)
+			newBubble.SetCurrentPowerup(new window["Powerup"+selectedPowerups[Math.floor(Math.random()*selectedPowerups.length)]](newBubble))//new PowerupGun(newBubble))
+			bubbles.push(newBubble)
 			this.CreateEffect("PurpleSmoke", ex, ey)
 			this.SetNextBubbleTime()
 
@@ -384,6 +388,17 @@ function Core() {
 		}
 	}
 	
+	this.RegisterPowerupType = function(name) {
+		if (window["Powerup" + name]){
+			var test = new window["Powerup" + name]()
+			if (test.image)
+				registerdPowerups.push(name)
+				if (window.localStorage["Powerup" + name] != "disabled") {
+					selectedPowerups.push(name)
+				}
+		}
+	}
+	
 	this.AddEntity = function(entity) {
 		entities.push(entity)
 	}
@@ -396,6 +411,17 @@ function Core() {
 			}
 		}
 	}
+	
+	this.GetEntityCollisionsOf = function(entity) {
+		var collisions = new Array()
+		for (var i = 0; i < entities.length; ++i){
+			if (this.DoesCollide(entities[i], entity)){
+				collisions.push(entities[i])
+			}
+		}
+		return collisions
+	}
+	
 	this.RemovePlatform = function(entity) {
 		for (var i = 0; i < platforms.length; ++i){
 			if (platforms[i] == entity){
@@ -440,6 +466,10 @@ function Core() {
 		scale = newScale
 		window.canvas.width = 320*scale
 		window.canvas.height = 200*scale
+		var container = document.getElementById("container").style
+		container.width = 320*scale
+		container.height = 200*scale
+		//container.line-height = 200*scale
 		var base = "generate?m="+scale+"&c="
 		var colour0 = window.localStorage['colour0'] || 0
 		var colour1 = window.localStorage['colour1'] || 1

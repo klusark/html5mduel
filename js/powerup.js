@@ -1,4 +1,6 @@
 function PowerupGun(owner){
+	this.image = new StaticImage(core.GetSpritesImg(), 284, 0, 12, 12)
+	
 	var ammo = 5
 	var firing = false
 	var inPlayer = false
@@ -53,7 +55,10 @@ function PowerupGun(owner){
 
 }
 
+core.RegisterPowerupType("Gun")
+
 function PowerupSkull(owner){
+	this.image = new StaticImage(core.GetSpritesImg(), 258, 0, 12, 12)
 	this.CollidePlayer = function(player) {
 		player.CollectPowerup(false)
 		player.Disolve2()
@@ -63,7 +68,10 @@ function PowerupSkull(owner){
 	
 }
 
+core.RegisterPowerupType("Skull")
+
 function PowerupInvis(owner){
+	this.image = new StaticImage(core.GetSpritesImg(), 271, 0, 12, 12)
 	var invis = false
 	var disabled = false
 	var nextAllowedTime = 0
@@ -99,6 +107,8 @@ function PowerupInvis(owner){
 	}
 }
 
+core.RegisterPowerupType("Invis")
+
 function Mine(x, y, owner) {
 	var other = core.GetOponentOf(owner)
 	var bounds = new Bounds(0, 0, 1, 1)
@@ -110,10 +120,14 @@ function Mine(x, y, owner) {
 		var collision = core.DoesCollide(this, owner) ? owner : core.DoesCollide(this, other) ? other : undefined
 		if (collision && collision.IsOnGround()){
 			collision.Explode()
-			core.CreateEffect("explode", x-11, y-20)
-			core.RemoveEntity(this)
+			this.Explode()
 		}
 
+	}
+	
+	this.Explode = function() {
+		core.CreateEffect("explode", x-11, y-20)
+		core.RemoveEntity(this)
 	}
 	
 	
@@ -131,6 +145,7 @@ function Mine(x, y, owner) {
 }
 
 function PowerupMine(owner) {
+	this.image = new StaticImage(core.GetSpritesImg(), 271, 13, 12, 12)
 	var used = false
 	//HACK!!! fixes "The 'this' problem"
 	var self = this
@@ -152,10 +167,13 @@ function PowerupMine(owner) {
 	}
 	
 	this.LayMine = function() {
+		core.PlaySound("beep1")
 		var xoff = owner.IsFlipped() ? 4 : 20
 		core.AddEntity(new Mine(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+23), owner))
 	}
 }
+
+core.RegisterPowerupType("Mine")
 
 function Puck(x, y, owner, direction) {
 	var img = core.GetSpritesImg()
@@ -177,8 +195,10 @@ function Puck(x, y, owner, direction) {
 		x += xVelocity * deltaT
 		var ya = y + yVelocity * deltaT
 		var platform = core.IsOnGround(y, ya, this)
-		if (!platform){
+		if (!platform) {
 			y = ya
+		} else {
+			y = platform.GetY()-2
 		}
 		var collision = core.DoesCollide(this, owner) ? owner : core.DoesCollide(this, other) ? other : undefined
 		if (collision){
@@ -187,10 +207,17 @@ function Puck(x, y, owner, direction) {
 			core.RemoveEntity(this)
 			return
 		}
+		
+		var entities = core.GetEntityCollisionsOf(this)
+		
+		for (var i = 0; i < entities.length; ++i) {
+			if (entities[i].__proto__.constructor.name == "Mine")
+				entities[i].Explode()
+		}
+		
 		//make sure it is fully off the screen before it is removed
 		if (x < -5 || x > 320){
 			core.RemoveEntity(this)
-			console.log("removed")
 			return
 		}
 		if (y > 180){
@@ -215,6 +242,7 @@ function Puck(x, y, owner, direction) {
 }
 
 function PowerupNukepuck(owner) {
+	this.image = new StaticImage(core.GetSpritesImg(), 310, 0, 12, 12)
 	var used = false
 	var inPlayer = false
 	//HACK!!! fixes "The 'this' problem"
@@ -246,8 +274,10 @@ function PowerupNukepuck(owner) {
 	}
 }
 
+core.RegisterPowerupType("Nukepuck")
 
 function PowerupDestroy(owner) {
+	this.image = new StaticImage(core.GetSpritesImg(), 284, 13, 12, 12)
 	this.Update = function() {
 		var platforms = core.GetPlatforms()
 		for (var i = 0; i < platforms.length; ++i){
@@ -260,14 +290,15 @@ function PowerupDestroy(owner) {
 	}
 }
 
+core.RegisterPowerupType("Destroy")
 
 function Nade(x, y, owner, direction) {
 	var img = core.GetSpritesImg()
 	var bounds = new Bounds(0, 0, 5, 4)
-	var animation = new StaticImage(img, 300, 18, 5, 4);
-	var xVelocity = direction ? -90 : 90
-	var yVelocity = -70
-	var yAcceleration = 150
+	var animation = new StaticImage(core.GetSpritesImg(), 300, 18, 5, 4);
+	var xVelocity = direction ? -70 : 70
+	var yVelocity = -150
+	var yAcceleration = 350
 	var lastUpdateTime = core.GetTime()
 	
 	this.Draw = function() {
@@ -291,7 +322,6 @@ function Nade(x, y, owner, direction) {
 		//make sure it is fully off the screen before it is removed
 		if (x < -5 || x > 320){
 			core.RemoveEntity(this)
-			console.log("removed")
 			return
 		}
 		if (y > 180){
@@ -316,6 +346,7 @@ function Nade(x, y, owner, direction) {
 }
 
 function PowerupNade(owner) {
+	this.image = new StaticImage(core.GetSpritesImg(), 297, 13, 12, 12)
 	var used = false
 	var inPlayer = false
 
@@ -349,7 +380,10 @@ function PowerupNade(owner) {
 	}
 }
 
+core.RegisterPowerupType("Nade")
+
 function PowerupTeleport(owner) {
+	this.image = new function(){this.Draw=function(dx, dy){}}
 	//this probably needs some work
 
 	this.CollidePlayer = function(player) {
@@ -364,7 +398,10 @@ function PowerupTeleport(owner) {
 	}
 }
 
+core.RegisterPowerupType("Teleport")
+
 function PowerupChute(owner) {
+	this.image = new StaticImage(core.GetSpritesImg(), 310, 13, 12, 12)
 	var inPlayer = false
 	var self = this
 	var active = false
@@ -429,11 +466,14 @@ function PowerupChute(owner) {
 	}
 	
 	this.Animate = function() {
-		owner.InterruptAnimation("chute", true, function(){})//if(!owner.IsOnGround())self.Animate()})
+		owner.InterruptAnimation("chute", true)
 	}
 }
 
+core.RegisterPowerupType("Chute")
+
 function Powerup1000v(owner) {
+	this.image = new StaticImage(core.GetSpritesImg(), 258, 13, 12, 12)
 	var inPlayer = false
 	var img = new Image()
 	img.src = "generate?c=4&m=" + core.GetScale()
@@ -455,7 +495,8 @@ function Powerup1000v(owner) {
 			}
 			player.SetYVelocity(-1000)
 			player.SetXVelocity(100)
-			player.InterruptAnimation("explode", true, function(){})
+			player.InterruptAnimation("explode", true)
+			player.StartFall(true)
 			owner.DontCollide()
 			core.CreateEffect("Lightning", player.GetX(), player.GetY())
 			return true
@@ -475,3 +516,105 @@ function Powerup1000v(owner) {
 		owner.SetImage(orrigImg)
 	}
 }
+
+core.RegisterPowerupType("1000v")
+
+function PowerupBoots(owner) {
+	this.image = new StaticImage(core.GetSpritesImg(), 297, 0, 12, 12)
+	var inPlayer = false
+	var inAir = false
+	var wasInAir = false
+	this.CollidePlayer = function(player) {
+		if (!inPlayer) {
+			owner.SetDone(true)
+			owner = player
+			player.CollectPowerup(this)
+			orrigImg = owner.GetImage()
+			inPlayer = true
+			
+		} 
+	}
+	
+	this.Use = function() {
+		if (!inPlayer || !owner.IsOnGround())
+			return
+		if (owner.IsRunning() || owner.IsIdle()){
+			var keys = owner.GetKeys()
+			if (keys["right"] || keys["left"]) {
+				owner.StartJump()
+			} else  {
+				owner.StartJumpUp()
+			}
+			owner.SetYVelocity(-230)
+		}
+	}
+	
+}
+
+core.RegisterPowerupType("Boots")
+
+function PowerupHook(owner) {
+	this.image = new StaticImage(core.GetSpritesImg(), 323, 13, 12, 12)
+	var inPlayer = false
+	var active = false
+	this.CollidePlayer = function(player) {
+		if (!inPlayer) {
+			owner.SetDone(true)
+			owner = player
+			player.CollectPowerup(this)
+			orrigImg = owner.GetImage()
+			var ownerAnimations = owner.GetAnimations()
+			if (!ownerAnimations["hook"]){
+				ownerAnimations["hook"] = new Animation(25, 1200, 100, 2, 24, 24);
+				//ownerAnimations["hook"].Repeat(false);
+			}
+			inPlayer = true
+			
+		} 
+	}
+	this.Use = function() {
+		if (!inPlayer || owner.IsOnGround() || owner.IsOnRope())
+			return
+		if (!active) {
+			active = true
+			owner.InterruptAnimation("hook", true)
+		}
+		var platforms = core.GetPlatforms()
+		for (var i = 0; i < platforms.length; ++i){
+			var other = platforms[i]
+			var test = core.DoesCollide(new function(){
+					this.GetX = function() {
+						return owner.IsFlipped() ? owner.GetX()+5 : owner.GetX()+19
+					}
+					this.GetY = function() {
+						return owner.GetY()+8
+					}
+					this.GetCurrentBounds = function() {
+						return new Bounds(0,0,1,1)
+					}
+				}, other)
+			if (test){
+				owner.SetYVelocity(-150)
+				if (owner.IsJumping())
+					owner.Bounce(true)
+				return
+			}	
+		}
+		
+	}
+	this.CollidePlatform = function(platform) {
+		if (!inPlayer || !active)
+			return
+		
+		this.Disable()
+	}
+	this.Disable = function() {
+		active = false
+		owner.DisableAnimationInterrupt()
+	}
+	this.ChangeFrom = function() {
+		this.Disable()
+	}
+}
+
+core.RegisterPowerupType("Hook")

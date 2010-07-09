@@ -13,7 +13,7 @@ function Bubble(x, y, xVelocity, yVelocity){
 	powerups[1].name = "Skull"
 	
 	powerups[2] = new StaticImage(img, 258, 13, 12, 12)
-	powerups[2].name = "10000v"
+	powerups[2].name = "1000v"
 	
 	powerups[3] = new StaticImage(img, 271, 0, 12, 12)
 	powerups[3].name = "Invis"
@@ -34,7 +34,7 @@ function Bubble(x, y, xVelocity, yVelocity){
 	powerups[8].name = "Nukepuck"
 	
 	powerups[9] = new StaticImage(img, 310, 13, 12, 12)
-	powerups[9].name = "Chut"
+	powerups[9].name = "Chute"
 	
 	powerups[10] = new StaticImage(img, 323, 0, 12, 12)
 	powerups[10].name = "Hook"
@@ -43,8 +43,14 @@ function Bubble(x, y, xVelocity, yVelocity){
 	powerups[11] = new function(){this.Draw=function(dx, dy){}}
 	powerups[11].name = "Teleport"
 	
-	var currentPowerup = powerups[Math.floor(Math.random()*powerups.length)]
-	
+	do {
+		var currentPowerup = powerups[Math.floor(Math.random()*powerups.length)]
+		var powerup
+		if (window["Powerup"+currentPowerup.name])
+			powerup = new window["Powerup"+currentPowerup.name](this)
+		else
+			console.log("implement Powerup" + currentPowerup.name)
+	} while(!window["Powerup"+currentPowerup.name])
 	var x = x
 	var y = y
 	var yVelocity = yVelocity
@@ -65,7 +71,16 @@ function Bubble(x, y, xVelocity, yVelocity){
 		
 		
 		x += deltaT*xVelocity
-		y += deltaT*yVelocity	
+		var ya = y+ deltaT*yVelocity
+		if (powerup && powerup.CollidePlatform){
+			var platform = core.IsOnGround(y, ya, this)
+			if (platform)
+				powerup.CollidePlatform(platform)
+		}
+		y = ya
+		if (powerup && powerup.Update){
+			powerup.Update()
+		}
 		
 		if (y > 163){
 			y = 163
@@ -86,6 +101,11 @@ function Bubble(x, y, xVelocity, yVelocity){
 
 		lastUpdateTime = currentTime
 		
+	}
+	
+	this.CollidePlayer = function(player) {
+		if (powerup && powerup.CollidePlayer)
+			powerup.CollidePlayer(player)
 	}
 	
 	this.GetPowerupName = function() {

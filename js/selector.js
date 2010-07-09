@@ -17,7 +17,7 @@ function Selector(x, y, scale){
 	var y = y;
 	var scale = scale*8
 	var colour = 0
-	var colours = 4
+	var colours = 5
 	var url = "generate?sample&m="+scale+"&c="
 	img.src = url + colour
 	this.Draw = function(){

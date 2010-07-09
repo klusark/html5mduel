@@ -49,6 +49,9 @@ function Player(x, y, img){
 	animations["disolve"] = new Animation(25, 525, 100, 3, 24, 24);
 	animations["disolve"].Repeat(false);
 	
+	animations["disolve2"] = new Animation(25, 1125, 100, 3, 24, 24);
+	animations["disolve2"].Repeat(false);
+	
 	animations["explode"] = new Animation(25, 500, 100, 2, 24, 24);
 	
 	var keyCodes = new Array();
@@ -103,6 +106,7 @@ function Player(x, y, img){
 	var isDisolving = false
 	var draw = true
 	var isExploding = false
+	var gravityEnabled = true
 	
 	var standingBounds = new Bounds(6, 1, 10, 23)
 	var crouchingBounds = new Bounds(6, 10, 10, 14)
@@ -114,7 +118,7 @@ function Player(x, y, img){
 	var currentPowerup
 	
 	const RUNSPEED = 60
-	const PUSHEDSPEED = 80
+	const PUSHEDSPEED = 60
 	const ROLLSPEED = 60
 	const CLIMBSPEED = 60
 	const JUMPYVELOCITY = -170
@@ -131,12 +135,16 @@ function Player(x, y, img){
 	}
 	
 	this.Update = function(){
-		currentTime = core.GetTime()
+		var currentTime = core.GetTime()
 		var deltaT = (currentTime - lastUpdateTime)/1000
+		
+		if (currentPowerup && currentPowerup.Update)
+			currentPowerup.Update()
+		
 		if (!isDisolving)
 			this.SimulateGravity(deltaT)
 		
-		if (y > 200-40 && !dead){
+		if (y > 160 && !dead){
 			dead = true
 			core.CreateEffect("BigSplash", x, 200-40)
 		}
@@ -144,7 +152,10 @@ function Player(x, y, img){
 			x = x < 0-currentBounds.GetX() ? 0 : 300
 			this.Bounce(false)
 		}
-			
+		if (y < -50 && !dead){
+			dead = true
+			draw = false
+		}
 
 		isIdle = false
 		if (interruptAnimation) {
@@ -281,7 +292,7 @@ function Player(x, y, img){
 			
 		}
 		
-		if (keys["use"] && currentPowerup)
+		if (keys["use"] && currentPowerup && currentPowerup.Use)
 			currentPowerup.Use()
 		
 		x += deltaT*xVelocity
@@ -305,6 +316,15 @@ function Player(x, y, img){
 	this.Collide = function(other, ignore) {
 		if (pushed || dontCollide)
 			return
+		var thiscollide = false
+		var othercollide = false
+		if (currentPowerup && currentPowerup.CollidePlayer)
+			thiscollide = currentPowerup.CollidePlayer(other)
+		if (other.GetCurrentPowerup() && other.GetCurrentPowerup().CollidePlayer)
+			othercollide = other.GetCurrentPowerup().CollidePlayer(this)
+		if (thiscollide || othercollide)
+			return
+		
 		if ((other.IsRolling()) && wasOnGround && !isCrouched && !isRolling){
 			//console.log("type 1")
 			var dontMove = xVelocity == 0 && other.IsRolling();
@@ -365,13 +385,15 @@ function Player(x, y, img){
 		}
 	}
 	
-	this.CollectPowerup = function(bubble) {
+	this.CollectPowerup = function(powerup) {
+		if (isWinning || dead)
+			return
+		if (currentPowerup && currentPowerup.ChangeFrom)
+			currentPowerup.ChangeFrom()
+		
+		currentPowerup = powerup
 
-		if (window["Powerup"+bubble.GetPowerupName()])
-			currentPowerup = new window["Powerup"+bubble.GetPowerupName()](this)
-		else
-			console.log("implement Powerup" + bubble.GetPowerupName())
-		bubble.SetDone(true)
+		
 	}
 	
 	this.Disolve = function() {
@@ -381,12 +403,19 @@ function Player(x, y, img){
 		this.SetAnimation("disolve")
 	}
 	
+	this.Disolve2 = function() {
+		isDisolving = true
+		xVelocity = 0
+		yVelocity = 0
+		this.SetAnimation("disolve2")
+	}
+	
 	this.Explode = function() {
 		isExploding = true
 		xVelocity = 0
 		yVelocity = EXPLODEVELOCITY
 		this.SetAnimation("explode")
-		
+		core.PlaySound("buzz")
 	}
 	
 	this.InterruptAnimation = function(name, controls, callback) {
@@ -397,8 +426,19 @@ function Player(x, y, img){
 		interruptAnimationCallback = callback
 	}
 	
+	this.DisableAnimationInterrupt = function() {
+		interruptAnimationInput = false
+		interuptInput = false
+		interruptAnimation = false
+		interruptAnimationCallback = false
+	}
+		
 	this.SetImage = function(image) {
 		img = image
+	}
+	
+	this.GetImage = function() {
+		return img
 	}
 	
 	this.IsInPositionToWin = function() {
@@ -465,6 +505,9 @@ function Player(x, y, img){
 		return wasRolling
 	}
 	
+	this.GetCurrentPowerup = function() {
+		return currentPowerup
+	}
 	
 	this.GetY = function(){
 		return y
@@ -482,6 +525,14 @@ function Player(x, y, img){
 		return yVelocity
 	}
 	
+	this.SetXVelocity = function(v) {
+		xVelocity = v
+	}
+	
+	this.SetYVelocity = function(v) {
+		yVelocity = v
+	}
+	
 	this.SetY = function(ny) {
 		y = ny
 	}
@@ -490,8 +541,17 @@ function Player(x, y, img){
 		x = nx
 	}
 	
+	this.DisableGravity = function() {
+		gravityEnabled = false
+	}
+	
+	this.EnableGravity = function() {
+		gravityEnabled = true
+	}
+	
 	this.SetFlipped = function(nf) {
 		flipped = nf
+		currentAnimation.SetFlipped(flipped)
 	}
 	
 	this.IsFlipped = function() {
@@ -521,6 +581,10 @@ function Player(x, y, img){
 		}
 		currentAnimation = animations[name];
 		currentAnimation.ChangeTo(flipped);
+	}
+	
+	this.GetKeys = function() {
+		return keys
 	}
 	
 	this.KeyDown = function(keyCode) {
@@ -592,7 +656,7 @@ function Player(x, y, img){
 	this.SimulateGravity = function(deltaT) {
 		var yb = y
 
-		if (!isOnRope)
+		if (!isOnRope && gravityEnabled)
 			yVelocity += yAcceleration * deltaT
 		if (yMaxVelocity < yVelocity)
 			yVelocity = yMaxVelocity
@@ -600,9 +664,10 @@ function Player(x, y, img){
 		var ny = y + deltaT * yVelocity
 		if (!isOnRope && yVelocity > 0){
 			onGround = false;
-			var platforms = core.GetPlatforms()
 			var platform = core.IsOnGround(yb, ny, this)
 			if (platform){
+				if (currentPowerup && currentPowerup.CollidePlatform)
+					currentPowerup.CollidePlatform(platform)
 				ny = platform.GetY()-24;
 				yVelocity = 0;
 				
@@ -638,6 +703,7 @@ function Player(x, y, img){
 	}
 	
 	this.StartFall = function(animate) {
+		isOnRope = false
 		falling = true;
 		onGround = false;
 		isRolling = false
@@ -651,6 +717,7 @@ function Player(x, y, img){
 	this.Land = function() {
 		onGround = true
 		isJumping = false
+		isJumpingUp = false
 		if (pushed){
 			this.SetAnimation("roll2");
 			isRolling = true

@@ -83,6 +83,10 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 		reverseOnFinish = rof
 	}
 	
+	this.SetFlipped = function(f) {
+		flipped = f
+	}
+	
 	this.Draw = function(image, x, y, scale) {
 		//rounding is to fix an inconsistancy in firefox vs chrome
 		var sx = frame*w + frame + startX

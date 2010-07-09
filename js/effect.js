@@ -8,6 +8,9 @@ function Effect(x, y, type){
 	animations["PurpleSmoke"] = new Animation(null, 437, 100, 3, 24, 24);
 	animations["PurpleSmoke"].Repeat(false)
 	
+	animations["BlackSmoke"] = new Animation(null, 512, 100, 4, 24, 24);
+	animations["BlackSmoke"].Repeat(false)
+	
 	animations["BubbleDisolve"] = new Animation(null, 387, 100, 2, 24, 24);
 	animations["BubbleDisolve"].Repeat(false)
 	
@@ -19,6 +22,9 @@ function Effect(x, y, type){
 
 	animations["explode"] = new Animation(null, 612, 100, 3, 24, 24);
 	animations["explode"].Repeat(false)
+	
+	animations["Lightning"] = new Animation(null, 762, 100, 2, 24, 24);
+	animations["Lightning"].Repeat(false)
 	
 	var currentAnimation = animations[type]
 

@@ -1,32 +1,55 @@
-function Platform(x, y, numPlatforms){
+function Platform(x, y, numPlatforms) {
 	var img = core.GetSpritesImg()
 
-	var x = x;
-	var y = y;
-	
-	var numPlatforms = numPlatforms;
+	var x = x
+	var y = y
+	var numPlatforms = numPlatforms
 	
 	var platform = new StaticImage(img, 143, 0, 14, 8)
 	
-	this.Draw = function(){
+	var bounds = new Bounds(0, 0, numPlatforms * 16, 8)
+	
+	this.Draw = function() {
 		for (var i = 0; i < numPlatforms; ++i)
 			platform.Draw(i*16 + x + 1, y)
 	}
 	
-	this.GetNumPlatforms = function(){
+	this.GetNumPlatforms = function() {
 		return numPlatforms
 	}
 	
-	this.GetEnd = function(){
-		return this.GetNumPlatforms() * 16 + x - 3;
+	this.GetEnd = function() {
+		return numPlatforms * 16 + x - 3
 	}
 	
-	this.GetY = function(){
-		return y;
+	this.GetY = function() {
+		return y
 	}
-	this.GetX = function(){
-		return x;
+	
+	this.GetX = function() {
+		return x
+	}
+	
+	this.GetCurrentBounds = function() {
+		return bounds
 	}
 
+	this.Destroy = function(xpos) {
+		xpos = Math.floor(xpos)
+		var dist = xpos - x
+		var x1 = (dist - dist%16)+x+32
+		var x2 = this.GetNumPlatforms() * 16 + x
+		if (x1!=x2)
+			core.MakeFloor((dist - dist%16)+x+32, this.GetNumPlatforms() * 16 + x, y)
+		//make this have an effect for each platform that is destroyed
+		core.CreateEffect("BlackSmoke", xpos, y-10)
+		
+		numPlatforms = (dist - dist%16)/16
+		bounds = new Bounds(0, 0, numPlatforms * 16, 8)
+		if (numPlatforms == 0)
+			core.RemovePlatform(this)
+		core.PlaySound("buzz")
+		
+	}
 	
 }

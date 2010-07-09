@@ -1,3 +1,8 @@
+//make it so that browsers that do not have console are still supported
+if (!window.console) {
+	window.console = new Object()
+	window.console.log = function(){}
+}
 function Core() {
 	var platforms
 	var ropes
@@ -17,15 +22,17 @@ function Core() {
 	var inSelectMode
 	
 	var nextBubbleTime
-	
+	var startTime
+	var timeStarted
+	var stoppedTime
 	const timescale = 1
-	var scale = 2
+	var scale = 1
 	const FPS = 30
 	var maxBubbles = 3
 	const maxTimeBetweenBubbles = 3000
 	
 	this.GetTime = function() {
-		return new Date().getTime() * timescale 
+		return timeStarted ? new Date().getTime() * timescale - startTime : stoppedTime
 	}
 	
 	this.CreateEffect = function(name, x, y) {
@@ -38,8 +45,7 @@ function Core() {
 	}
 	
 	this.Draw = function() {
-		ctx.fillStyle = "rgb(0,0,0)";
-		window.ctx.fillRect(0, 0, window.canvas.width, window.canvas.height)
+		this.ClearScreen()
 		if (this.InSelectMode())
 			selector.Draw()
 		else{
@@ -59,9 +65,9 @@ function Core() {
 	}
 	
 	this.ArrayDraw = function(array) {
-		for(var i = 0; i < array.length; ++i){
-			array[i].Draw()
-		}
+		for(var i = 0; i < array.length; ++i)
+			if (array[i].Draw)
+				array[i].Draw()
 	}
 	
 	this.GetRopes = function() {
@@ -120,7 +126,10 @@ function Core() {
 					players[0].Win()
 					gameOver = true
 				}
+				if (gameOver)
+					core.StopTime()
 			}
+			
 		}
 		this.GetCollitionsOf(players[0])
 	}
@@ -154,9 +163,9 @@ function Core() {
 			bubbles[i].Update()
 			
 			if(this.DoesCollide(bubbles[i], players[0]))
-				players[0].CollectPowerup(bubbles[i])
+				bubbles[i].CollidePlayer(players[0])
 			else if(this.DoesCollide(bubbles[i], players[1]))
-				players[1].CollectPowerup(bubbles[i])
+				bubbles[i].CollidePlayer(players[1])
 			
 			if (bubbles[i].IsDone()){
 				this.CreateEffect("BubbleDisolve", bubbles[i].GetX(), bubbles[i].GetY())
@@ -185,10 +194,10 @@ function Core() {
 				ex = 150
 				ey = 7
 			}
-			var xVelocity = Math.random()*60+30
+			var xVelocity = Math.random()*20+20
 			if (Math.random()<0.5)
 				xVelocity *= -1
-			var yVelocity = Math.random()*60+30
+			var yVelocity = Math.random()*20+20
 			if (Math.random()>0.5)
 				yVelocity *= -1
 			bubbles.push(new Bubble(x, y, xVelocity, yVelocity))
@@ -232,15 +241,33 @@ function Core() {
 	this.GetSelector = function() {
 		return selector
 	}
+	
+	this.PlaySound = function(name) {
+		var sound = new Audio()
+		sound.src = "sound/" + name + ".ogg"
+		sound.play()
+	}
+	
+	this.ClearScreen = function() {
+		ctx.fillStyle = "rgb(0,0,0)";
+		window.ctx.fillRect(0, 0, window.canvas.width, window.canvas.height)
+	}
 
 	this.init = function() {
 		window.canvas = document.getElementById('canvas')
 		window.ctx = window.canvas.getContext('2d')
-		
+		this.ClearScreen()
 		//only works on firefox 3.6 and up
 		//hopefuly chrome gets a similar setting soon
 		//this really has no use because of my appengine scaling
 		window.ctx.mozImageSmoothingEnabled = false
+		
+		
+		var windowwidth = window.innerWidth
+		var windowheight = window.innerHeight
+		scale = 1
+		while (320*(scale+1) < windowwidth && 200*(scale+1) < windowheight)
+			++scale
 		
 		player1Img = new Image()
 		player2Img = new Image()
@@ -253,7 +280,8 @@ function Core() {
 			spritesImg.src = "/images/sprites.png"
 		}
 		
-		
+
+		stoppedTime = 0
 		platforms = new Array()
 		ropes = new Array()
 		players = new Array()
@@ -265,6 +293,7 @@ function Core() {
 		debug = false
 		gameOver = false
 		inSelectMode = false
+		timeStarted = false
 		
 		this.SetNextBubbleTime()
 		
@@ -297,14 +326,39 @@ function Core() {
 		emitters.push(new Emitter(0, 92, 0))
 		emitters.push(new Emitter(152, 0, 1))
 		emitters.push(new Emitter(320-16, 92, 2))
-
-		setInterval(function(){core.Update();core.Draw()}, 1000 / FPS)
-		//setInterval(function(){core.Draw()}, 1000 / FPS);
+		
+		var loadingInterval = setInterval(function(){
+			if (core.IsLoaded()){
+				window.clearInterval(loadingInterval)
+				core.FinishLoading()
+			}
+		}, 25)
 		
 
 	}
+	this.StartTime = function() {
+		startTime = new Date().getTime() * timescale
+		timeStarted = true
+	}
+	
+	this.StopTime = function() {
+		stoppedTime = new Date().getTime() * timescale
+		timeStarted = false
+	}
+	
+	this.FinishLoading = function() {
+		core.PlaySound("buzz")
+		core.StartTime()
+		setInterval(function(){core.Update();core.Draw()}, 1000 / FPS)
+	}
+	
+	this.IsLoaded = function() {
+		return (player1Img.complete && player2Img.complete && spritesImg.complete)
+	}
 	
 	this.IsOnGround = function(yb, ya, entity) {
+		if (ya < yb)
+			return
 		var entityBounds = entity.GetCurrentBounds()
 		var platformsPassedThrough = new Array()
 		for (var i = 0; i < platforms.length; ++i){
@@ -316,12 +370,18 @@ function Core() {
 				//break;
 			}
 		}
-		
-		//may need to make this check for multiple platforms
-		if (platformsPassedThrough.length == 1)
-			return platformsPassedThrough[0]
-		else if (platformsPassedThrough.length != 0)
-			console.log(platformsPassedThrough)
+		if (platformsPassedThrough.length){
+			var platform
+			var min = 240
+			for (var i = 0; i < platformsPassedThrough.length; ++i){
+				var other = platformsPassedThrough[i]
+				if (other.GetY() <= min){
+					min = other.GetY()
+					platform = other
+				}
+			}
+			return platform
+		}
 	}
 	
 	this.AddEntity = function(entity) {
@@ -336,6 +396,15 @@ function Core() {
 			}
 		}
 	}
+	this.RemovePlatform = function(entity) {
+		for (var i = 0; i < platforms.length; ++i){
+			if (platforms[i] == entity){
+				platforms.splice(i, 1)
+				return
+			}
+		}
+	}
+	
 	
 	this.GetOponentOf = function(entity) {
 		if (entity == players[0])
@@ -399,12 +468,11 @@ function Core() {
 	const MIN_DIST_FROM_EDGE = 7;
 	const ROPE_X_INT = 32
 
-	this.Make_Floor = function(x1,x2,y)
-	{
+	this.MakeFloor = function(x1,x2,y) {
 		platforms.push(new Platform(x1,y, (x2-x1)/BLOCK_SIZE));
 	}
 
-	this.Make_Rope = function(x, y1, y2){
+	this.Make_Rope = function(x, y1, y2) {
 		ropes.push(new Rope(x, y1, y2-y1))
 	}
 
@@ -421,10 +489,10 @@ function Core() {
 		var	length;
 		var done = false;
 
-		this.Make_Floor(LOW_FLOOR_X, LOW_FLOOR_X+(LOW_FLOOR_LENGTH*BLOCK_SIZE), LOW_FLOOR_Y);
-		this.Make_Floor(SCREEN_WIDTH - LOW_FLOOR_X - (LOW_FLOOR_LENGTH*BLOCK_SIZE), SCREEN_WIDTH - LOW_FLOOR_X, LOW_FLOOR_Y);
-		this.Make_Floor(HIGH_FLOOR_X, HIGH_FLOOR_X + (HIGH_FLOOR_LENGTH*BLOCK_SIZE), HIGH_FLOOR_Y);
-		this.Make_Floor(SCREEN_WIDTH - HIGH_FLOOR_X - (HIGH_FLOOR_LENGTH*BLOCK_SIZE), SCREEN_WIDTH - HIGH_FLOOR_X, HIGH_FLOOR_Y);
+		this.MakeFloor(LOW_FLOOR_X, LOW_FLOOR_X+(LOW_FLOOR_LENGTH*BLOCK_SIZE), LOW_FLOOR_Y);
+		this.MakeFloor(SCREEN_WIDTH - LOW_FLOOR_X - (LOW_FLOOR_LENGTH*BLOCK_SIZE), SCREEN_WIDTH - LOW_FLOOR_X, LOW_FLOOR_Y);
+		this.MakeFloor(HIGH_FLOOR_X, HIGH_FLOOR_X + (HIGH_FLOOR_LENGTH*BLOCK_SIZE), HIGH_FLOOR_Y);
+		this.MakeFloor(SCREEN_WIDTH - HIGH_FLOOR_X - (HIGH_FLOOR_LENGTH*BLOCK_SIZE), SCREEN_WIDTH - HIGH_FLOOR_X, HIGH_FLOOR_Y);
 
 		cur_y = HIGH_FLOOR_Y + FLOOR_Y_INT;
 		cur_x2 = 0;
@@ -441,7 +509,7 @@ function Core() {
 				cur_x2 = cur_x1 + ((Math.floor(rand() % (MAX_FLOOR_LENGTH - MIN_FLOOR_LENGTH + 1)) + MIN_FLOOR_LENGTH) * BLOCK_SIZE);
 				if (cur_x2 > SCREEN_WIDTH - (2 * BLOCK_SIZE))
 					cur_x2 = SCREEN_WIDTH - (2 * BLOCK_SIZE);
-				this.Make_Floor(Math.floor(cur_x1), Math.floor(cur_x2), Math.floor(cur_y));
+				this.MakeFloor(Math.floor(cur_x1), Math.floor(cur_x2), Math.floor(cur_y));
 			}
 		}
 	}

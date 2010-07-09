@@ -1,5 +1,5 @@
 application: html5mduel
-version: 3
+version: 5
 runtime: python
 api_version: 1
 
@@ -30,6 +30,12 @@ handlers:
   
 - url: /js
   static_dir: js
-  
+
+- url: /sound
+  static_dir: sound
+
 - url: /generate
   script: generate.py
+
+- url: /stats.*
+  script: $PYTHON_LIB/google/appengine/ext/appstats/ui.py

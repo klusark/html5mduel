@@ -24,6 +24,8 @@ function Core() {
 	var selector
 	var inSelectMode
 	
+	var gameInterval
+	
 	var nextBubbleTime
 	var startTime
 	var timeStarted
@@ -62,8 +64,6 @@ function Core() {
 			
 			//might need to place this somewhere else
 			this.ArrayDraw(entities)
-			
-			
 		}
 	}
 	
@@ -80,7 +80,6 @@ function Core() {
 	this.GetPlatforms = function() {
 		return platforms
 	}
-
 
 	this.DrawImage = function(image, sx, sy, sw, sh, dx, dy, dw, dh, iscale) {
 		iscale = iscale || scale
@@ -256,6 +255,12 @@ function Core() {
 		ctx.fillStyle = "rgb(0,0,0)";
 		window.ctx.fillRect(0, 0, window.canvas.width, window.canvas.height)
 	}
+	
+	this.Restart = function() {
+		window.clearInterval(gameInterval)
+		
+		this.init()
+	}
 
 	this.init = function() {
 		window.canvas = document.getElementById('canvas')
@@ -265,14 +270,9 @@ function Core() {
 		//hopefuly chrome gets a similar setting soon
 		//this really has no use because of my appengine scaling
 		window.ctx.mozImageSmoothingEnabled = false
-		
-		
-		var windowwidth = window.innerWidth
-		var windowheight = window.innerHeight
-		scale = 1
-		while (320*(scale+1) < windowwidth && 200*(scale+1) < windowheight)
-			++scale
-		
+		scale = menu.GetScale()
+
+				
 		player1Img = new Image()
 		player2Img = new Image()
 		spritesImg = new Image()
@@ -353,7 +353,7 @@ function Core() {
 	this.FinishLoading = function() {
 		core.PlaySound("buzz")
 		core.StartTime()
-		setInterval(function(){core.Update();core.Draw()}, 1000 / FPS)
+		gameInterval = setInterval(function(){core.Update();core.Draw()}, 1000 / FPS)
 	}
 	
 	this.IsLoaded = function() {
@@ -464,11 +464,7 @@ function Core() {
 	
 	this.SetScale = function(newScale) {
 		scale = newScale
-		window.canvas.width = 320*scale
-		window.canvas.height = 200*scale
-		var container = document.getElementById("container").style
-		container.width = 320*scale
-		container.height = 200*scale
+
 		//container.line-height = 200*scale
 		var base = "generate?m="+scale+"&c="
 		var colour0 = window.localStorage['colour0'] || 0
@@ -589,6 +585,6 @@ var core = new Core()
 
 document.onkeyup = function(e){core.OnKeyUp(e)}
 document.onkeydown = function(e){core.OnKeyDown(e)}
-window.onload = function(){core.init()}
+//window.onload = function(){core.init()}
 
 

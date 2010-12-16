@@ -106,6 +106,12 @@ function Game() {
 					players[0].Win()
 					gameOver = true
 				}
+				if (gameOver){
+					this.SetNextBubbleTime()
+					for(var i = 0; i < bubbles.length; ++i){
+						bubbles[i].SetDone(true)
+					}
+				}
 
 			}
 			
@@ -154,7 +160,7 @@ function Game() {
 			}
 		}
 
-		if (bubbles.length < maxBubbles && this.GetTime() > nextBubbleTime) {
+		if (!gameOver && bubbles.length < maxBubbles && this.GetTime() > nextBubbleTime) {
 			var emittor = Math.floor(Math.random()*3+1)
 			var x, y, ey, ex
 			if (emittor == 1) {

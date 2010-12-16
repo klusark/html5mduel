@@ -1,7 +1,7 @@
 function PowerupManager(){
 	var registerdPowerups = new Array()
 	var selectedPowerups = new Array()
-		
+
 	this.RegisterPowerupType = function(name) {
 		if (window["Powerup" + name]){
 			var test = new window["Powerup" + name]()

@@ -1,4 +1,3 @@
-
 function Game() {
 	var platforms
 	var ropes
@@ -8,15 +7,15 @@ function Game() {
 	var effects
 	var bubbles
 	var entities
-	
-	
+
+
 	var debug
 	var gameOver = false
 	var selector
 	var inSelectMode
-	
+
 	var gameInterval
-	
+
 	var nextBubbleTime
 	var startTime
 	var timeStarted
@@ -26,19 +25,19 @@ function Game() {
 	const FPS = 30
 	var maxBubbles = 3
 	const maxTimeBetweenBubbles = 3000
-	
+
 	sound.Preload("buzz")
-	
+
 	this.GetTime = function() {
 		return timeStarted ? new Date().getTime() * timescale - startTime : stoppedTime
 	}
-	
+
 	this.CreateEffect = function(name, x, y) {
 		effects.push(new Effect(x, y, name))
 	}
-	
 
-	
+
+
 	this.Draw = function() {
 		canvas.Clear()
 		if (this.InSelectMode())
@@ -51,22 +50,22 @@ function Game() {
 			this.ArrayDraw(mallows)
 			this.ArrayDraw(bubbles)
 			this.ArrayDraw(effects)
-			
+
 			//might need to place this somewhere else
 			this.ArrayDraw(entities)
 		}
 	}
-	
+
 	this.ArrayDraw = function(array) {
 		for(var i = 0; i < array.length; ++i)
 			if (array[i].Draw)
 				array[i].Draw()
 	}
-	
+
 	this.GetRopes = function() {
 		return ropes
 	}
-	
+
 	this.GetPlatforms = function() {
 		return platforms
 	}
@@ -80,13 +79,13 @@ function Game() {
 			this.ArrayUpdate(mallows)
 			this.ArrayUpdate(entities)
 			this.UpdateBubbles()
-			
+
 			for(var i = 0; i < effects.length; ++i){
 				effects[i].Update()
 				if (!effects[i].IsDraw())
 					effects.splice(i--, 1)
 			}
-			
+
 			if ((players[0].IsDead() || players[1].IsDead()) && !gameOver){
 				players[0].SetInteruptInput(true)
 				players[1].SetInteruptInput(true)
@@ -114,44 +113,44 @@ function Game() {
 				}
 
 			}
-			
+
 		}
 		this.GetCollitionsOf(players[0])
 	}
-	
+
 	//this collisions system kind of sucks... but it works for mduel
 	this.GetCollitionsOf = function(entity) {
 		var other = this.GetOponentOf(entity)
-		
+
 		if (this.DoesCollide(entity,other)){
-			
+
 			entity.Collide(other)
 			other.Collide(entity)
 		} else {
 			entity.DoCollide()
 			other.DoCollide()
-		
+
 		}
 	}
-	
+
 	this.DoesCollide = function(entity, other) {
 		var entitybounds = entity.GetCurrentBounds()
 		var otherbounds  = other.GetCurrentBounds()
-		return  entity.GetX()+entitybounds.GetX() + entitybounds.GetWidth() > other.GetX()+otherbounds.GetX() && 
+		return  entity.GetX()+entitybounds.GetX() + entitybounds.GetWidth() > other.GetX()+otherbounds.GetX() &&
 				entity.GetX()+entitybounds.GetX() < other.GetX()+otherbounds.GetX()+otherbounds.GetWidth() &&
-				entity.GetY()+entitybounds.GetY() + entitybounds.GetHeight() > other.GetY()+otherbounds.GetY() && 
+				entity.GetY()+entitybounds.GetY() + entitybounds.GetHeight() > other.GetY()+otherbounds.GetY() &&
 				entity.GetY()+entitybounds.GetY() < other.GetY()+otherbounds.GetY()+otherbounds.GetHeight()
 	}
-	
+
 	this.UpdateBubbles = function() {
 		for(var i = 0; i < bubbles.length; ++i){
 			bubbles[i].Update()
-			
+
 			if(this.DoesCollide(bubbles[i], players[0]))
 				bubbles[i].CollidePlayer(players[0])
 			else if(this.DoesCollide(bubbles[i], players[1]))
 				bubbles[i].CollidePlayer(players[1])
-			
+
 			if (bubbles[i].IsDone()){
 				this.CreateEffect("BubbleDisolve", bubbles[i].GetX(), bubbles[i].GetY())
 				bubbles.splice(i--, 1)
@@ -193,11 +192,11 @@ function Game() {
 
 		}
 	}
-	
+
 	this.SetNextBubbleTime = function() {
 		nextBubbleTime = this.GetTime() + Math.random()*maxTimeBetweenBubbles
 	}
-	
+
 	this.InSelectMode = function() {
 		return inSelectMode
 	}
@@ -207,27 +206,27 @@ function Game() {
 			array[i].Update()
 		}
 	}
-		
+
 	this.ColourSelect = function() {
 		inSelectMode = true
 		selector = new Selector(0, 0, scale)
 	}
-	
+
 	this.GetSelector = function() {
 		return selector
 	}
 
-	
+
 	this.Restart = function() {
 		window.clearInterval(gameInterval)
-		
+
 		this.init()
 	}
 
 	this.init = function() {
 		canvas.Clear()
 
-				
+
 
 
 		stoppedTime = 0
@@ -243,23 +242,23 @@ function Game() {
 		gameOver = false
 		inSelectMode = false
 		timeStarted = false
-		
+
 		this.SetNextBubbleTime()
-		
+
 		var params = location.href.split("?")
 		if (params[1] == "debug")
 			debug = true
-		
+
 		this.SetupPlatforms()
 		this.SetupRopes()
-		
-		
+
+
 		players[0] = new Player(28, 144, image.GetPlayer1Img())
 		players[1] = new Player(268, 144, image.GetPlayer2Img())
 		players[1].SetKeys(38, 40, 37, 39, 13)
 		players[1].SetFlipped(true)
-		
-		
+
+
 		this.CreateEffect("GreenSmoke", 28, 144)
 		this.CreateEffect("GreenSmoke", 268, 144)
 
@@ -269,42 +268,42 @@ function Game() {
 			++frame
 			if (frame == 4)
 				frame = 0
-			
+
 		}
-		
+
 		emitters.push(new Emitter(0, 92, 0))
 		emitters.push(new Emitter(152, 0, 1))
 		emitters.push(new Emitter(320-16, 92, 2))
-		
+
 		var loadingInterval = setInterval(function(){
 			if (game.IsLoaded()){
 				window.clearInterval(loadingInterval)
 				game.FinishLoading()
 			}
 		}, 25)
-		
+
 
 	}
 	this.StartTime = function() {
 		startTime = new Date().getTime() * timescale
 		timeStarted = true
 	}
-	
+
 	this.StopTime = function() {
 		stoppedTime = new Date().getTime() * timescale
 		timeStarted = false
 	}
-	
+
 	this.FinishLoading = function() {
 		sound.Play("buzz")
 		this.StartTime()
 		gameInterval = setInterval(function(){game.Update();game.Draw()}, 1000 / FPS)
 	}
-	
+
 	this.IsLoaded = function() {
 		return image.IsLoaded()
 	}
-	
+
 	this.IsOnGround = function(yb, ya, entity) {
 		if (ya < yb)
 			return
@@ -312,8 +311,8 @@ function Game() {
 		var platformsPassedThrough = new Array()
 		for (var i = 0; i < platforms.length; ++i){
 			var other = platforms[i];
-			if (((yb+entityBounds.GetY()+entityBounds.GetHeight() == other.GetY()) || (yb < other.GetY()-(entityBounds.GetY()+entityBounds.GetHeight()) && ya > other.GetY()-(entityBounds.GetY()+entityBounds.GetHeight()))) && 
-				(entity.GetX() + entityBounds.GetX() < other.GetEnd() 
+			if (((yb+entityBounds.GetY()+entityBounds.GetHeight() == other.GetY()) || (yb < other.GetY()-(entityBounds.GetY()+entityBounds.GetHeight()) && ya > other.GetY()-(entityBounds.GetY()+entityBounds.GetHeight()))) &&
+				(entity.GetX() + entityBounds.GetX() < other.GetEnd()
 				&& entity.GetX() + entityBounds.GetX() + entityBounds.GetWidth() > other.GetX())){
 				platformsPassedThrough.push(other)
 				//break;
@@ -332,13 +331,13 @@ function Game() {
 			return platform
 		}
 	}
-	
 
-	
+
+
 	this.AddEntity = function(entity) {
 		entities.push(entity)
 	}
-	
+
 	this.RemoveEntity = function(entity) {
 		for (var i = 0; i < entities.length; ++i){
 			if (entities[i] == entity){
@@ -347,7 +346,7 @@ function Game() {
 			}
 		}
 	}
-	
+
 	this.GetEntityCollisionsOf = function(entity) {
 		var collisions = new Array()
 		for (var i = 0; i < entities.length; ++i){
@@ -357,7 +356,7 @@ function Game() {
 		}
 		return collisions
 	}
-	
+
 	this.RemovePlatform = function(entity) {
 		for (var i = 0; i < platforms.length; ++i){
 			if (platforms[i] == entity){
@@ -366,8 +365,8 @@ function Game() {
 			}
 		}
 	}
-	
-	
+
+
 	this.GetOponentOf = function(entity) {
 		if (entity == players[0])
 			return players[1]
@@ -375,14 +374,14 @@ function Game() {
 			return players[0]
 		//javascript will return undefined here
 	}
-	
+
 	this.IsOnAppEngine = function() {
 		var loc = document.location.href
 		if (loc.search("appspot.com") == -1 || loc.search("127.0.0.1:8080") == -1)
 			return true
 		return false
 	}
-	
+
 
 	this.OnKeyDown = function(event) {
 		if (players){
@@ -397,18 +396,18 @@ function Game() {
 			players[1].KeyUp(event.keyCode);
 		}
 	}
-	
+
 	this.SetScale = function(newScale) {
 		scale = newScale
 
 		//container.line-height = 200*scale
 
 	}
-	
+
 	this.GetScale = function() {
 		return scale
 	}
-	
+
 	//TODO: redo all of this code to make a more fair level generator
 	const HIGH_FLOOR_Y = 40
 	const HIGH_FLOOR_X = 48
@@ -516,7 +515,7 @@ window.onload = function()
 	game = new Game()
 	document.onkeyup = function(e){game.OnKeyUp(e)}
 	document.onkeydown = function(e){game.OnKeyDown(e)}
-	
-	
+
+
 	game.init()
 }

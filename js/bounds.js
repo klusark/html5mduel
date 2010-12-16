@@ -15,5 +15,5 @@ function Bounds(x, y, w, h){
 	this.GetHeight = function() {
 		return h;
 	}
-	
+
 }

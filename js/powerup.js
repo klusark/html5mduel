@@ -1,14 +1,14 @@
 function PowerupGun(owner){
 	this.image = new StaticImage(image.GetSpritesImg(), 284, 0, 12, 12)
-	
+
 	var ammo = 5
 	var firing = false
 	var inPlayer = false
 
 	//HACK!!! fixes "The 'this' problem"
 	var self = this
-	var other 
-	
+	var other
+
 	this.Use = function() {
 		if (inPlayer && ammo && !firing && owner.IsIdle()){
 			owner.InterruptAnimation("gundown", true, function(){self.CheckForKill();owner.InterruptAnimation("gunup", true, function(){firing=false})})
@@ -16,7 +16,7 @@ function PowerupGun(owner){
 			firing = true
 		}
 	}
-	
+
 	this.CollidePlayer = function(player) {
 		if (!inPlayer) {
 			owner.SetDone(true)
@@ -27,7 +27,7 @@ function PowerupGun(owner){
 			if (!ownerAnimations["gundown"]){
 				ownerAnimations["gundown"] = new Animation(25, 450, 100, 2, 24, 24);
 				ownerAnimations["gundown"].Repeat(false);
-				
+
 				ownerAnimations["gunup"] = new Animation(25, 450, 100, 2, 24, 24);
 				ownerAnimations["gunup"].Repeat(false);
 				ownerAnimations["gunup"].Reverse(true);
@@ -35,7 +35,7 @@ function PowerupGun(owner){
 			inPlayer = true
 		}
 	}
-	
+
 	this.CheckForKill = function() {
 		sound.Play("shot")
 		//need to make this work with turning
@@ -65,7 +65,7 @@ function PowerupSkull(owner){
 		owner.SetDone(true)
 		sound.Play("buzz2")
 	}
-	
+
 }
 
 powerups.RegisterPowerupType("Skull")
@@ -76,7 +76,7 @@ function PowerupInvis(owner){
 	var disabled = false
 	var nextAllowedTime = 0
 	var inPlayer = false
-	
+
 	this.CollidePlayer = function(player) {
 		if (!inPlayer) {
 			owner.SetDone(true)
@@ -85,11 +85,11 @@ function PowerupInvis(owner){
 			inPlayer = true
 		}
 	}
-	
+
 	this.ChangeFrom = function() {
 		owner.SetDraw(true)
 	}
-	
+
 	this.Use = function() {
 		if (game.GetTime() < nextAllowedTime || !owner.IsIdle())
 			return
@@ -112,9 +112,9 @@ powerups.RegisterPowerupType("Invis")
 function Mine(x, y, owner) {
 	var other = game.GetOponentOf(owner)
 	var bounds = new Bounds(0, 0, 1, 1)
-	
+
 	sound.Play("beep")
-	
+
 	this.Update = function() {
 
 		var collision = game.DoesCollide(this, owner) ? owner : game.DoesCollide(this, other) ? other : undefined
@@ -124,21 +124,21 @@ function Mine(x, y, owner) {
 		}
 
 	}
-	
+
 	this.Explode = function() {
 		game.CreateEffect("explode", x-11, y-20)
 		game.RemoveEntity(this)
 	}
-	
-	
+
+
 	this.GetX = function() {
 		return x
 	}
-	
+
 	this.GetY = function() {
 		return y
 	}
-	
+
 	this.GetCurrentBounds = function() {
 		return bounds
 	}
@@ -156,7 +156,7 @@ function PowerupMine(owner) {
 		used = true
 		owner.InterruptAnimation("crouch", true, function(){self.LayMine();owner.InterruptAnimation("uncrouch", true)})
 	}
-	
+
 	this.CollidePlayer = function(player) {
 		if (!inPlayer) {
 			owner.SetDone(true)
@@ -165,7 +165,7 @@ function PowerupMine(owner) {
 			inPlayer = true
 		}
 	}
-	
+
 	this.LayMine = function() {
 		sound.Play("beep1")
 		var xoff = owner.IsFlipped() ? 4 : 20
@@ -183,11 +183,11 @@ function Puck(x, y, owner, direction) {
 	var xVelocity = direction ? -90 : 90
 	var yVelocity = 70
 	var lastUpdateTime = game.GetTime()
-	
+
 	this.Draw = function() {
 		animation.Draw(img, x-4, y-6)
 	}
-	
+
 	this.Update = function() {
 		var currentTime = game.GetTime()
 		var deltaT = (currentTime - lastUpdateTime)/1000
@@ -207,14 +207,14 @@ function Puck(x, y, owner, direction) {
 			game.RemoveEntity(this)
 			return
 		}
-		
+
 		var entities = game.GetEntityCollisionsOf(this)
-		
+
 		for (var i = 0; i < entities.length; ++i) {
 			if (entities[i].__proto__.constructor.name == "Mine")
 				entities[i].Explode()
 		}
-		
+
 		//make sure it is fully off the screen before it is removed
 		if (x < -5 || x > 320){
 			game.RemoveEntity(this)
@@ -227,15 +227,15 @@ function Puck(x, y, owner, direction) {
 		}
 		lastUpdateTime = currentTime
 	}
-	
+
 	this.GetX = function() {
 		return x
 	}
-	
+
 	this.GetY = function() {
 		return y
 	}
-	
+
 	this.GetCurrentBounds = function() {
 		return bounds
 	}
@@ -267,7 +267,7 @@ function PowerupNukepuck(owner) {
 			inPlayer = true
 		}
 	}
-	
+
 	this.ThrowPuck = function() {
 		var xoff = owner.IsFlipped() ? 0 : 20
 		game.AddEntity(new Puck(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+22), owner, owner.IsFlipped()))
@@ -300,11 +300,11 @@ function Nade(x, y, owner, direction) {
 	var yVelocity = -150
 	var yAcceleration = 350
 	var lastUpdateTime = game.GetTime()
-	
+
 	this.Draw = function() {
 		animation.Draw(x, y)
 	}
-	
+
 	this.Update = function() {
 		var currentTime = game.GetTime()
 		var deltaT = (currentTime - lastUpdateTime)/1000
@@ -313,7 +313,7 @@ function Nade(x, y, owner, direction) {
 		yVelocity += yAcceleration * deltaT
 		var ya = y + yVelocity * deltaT
 		var platform = game.IsOnGround(y, ya, this)
-		
+
 		if (platform){
 			platform.Destroy(x)
 			game.RemoveEntity(this)
@@ -331,15 +331,15 @@ function Nade(x, y, owner, direction) {
 		}
 		lastUpdateTime = currentTime
 	}
-	
+
 	this.GetX = function() {
 		return x
 	}
-	
+
 	this.GetY = function() {
 		return y
 	}
-	
+
 	this.GetCurrentBounds = function() {
 		return bounds
 	}
@@ -358,7 +358,7 @@ function PowerupNade(owner) {
 		used = true
 		owner.InterruptAnimation("thrownade", true, function(){self.ThrowNade()})
 	}
-	
+
 	this.CollidePlayer = function(player) {
 		if (!inPlayer) {
 			owner.SetDone(true)
@@ -372,8 +372,8 @@ function PowerupNade(owner) {
 			inPlayer = true
 		}
 	}
-	
-	
+
+
 	this.ThrowNade = function() {
 		var xoff = owner.IsFlipped() ? 0 : 20
 		game.AddEntity(new Nade(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()), owner, owner.IsFlipped()))
@@ -394,7 +394,7 @@ function PowerupTeleport(owner) {
 		owner.SetDone(true)
 		player.CollectPowerup(false)
 		sound.Play("buzz")
-		
+
 	}
 }
 
@@ -417,24 +417,24 @@ function PowerupChute(owner) {
 			v = 0
 		log.Log("animate")
 	}
-	
+
 	this.Update = function() {
 		if (active) {
 			var keys = owner.GetKeys()
 			owner.SetYVelocity(40)
 			owner.SetXVelocity(v)
-			
+
 			v = keys["right"] ? 40 : keys["left"] ? -40 : v
 			log.Log(v)
 			owner.SetFlipped(v < 0)
 		}
 	}
-	
+
 	this.ChangeFrom = function() {
 		this.Disable()
 		owner = false
 	}
-	
+
 	this.CollidePlayer = function(player) {
 		if (!inPlayer) {
 			owner.SetDone(true)
@@ -448,23 +448,23 @@ function PowerupChute(owner) {
 			inPlayer = true
 		}
 	}
-	
+
 	this.Disable = function() {
 		owner.DisableAnimationInterrupt()
 		owner.EnableGravity()
 		if (active)
 			owner.StartFall(true)
 		active = false
-		
+
 	}
-	
+
 	this.CollidePlatform = function(platform) {
 		if (!inPlayer || !active)
 			return
-		
+
 		this.Disable()
 	}
-	
+
 	this.Animate = function() {
 		owner.InterruptAnimation("chute", true)
 	}
@@ -476,7 +476,7 @@ function Powerup1000v(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 258, 13, 12, 12)
 	var inPlayer = false
 	var img = image.Get1000vImg()
-	
+
 	var orrigImg
 	this.Is1000V = true
 	this.CollidePlayer = function(player) {
@@ -502,7 +502,7 @@ function Powerup1000v(owner) {
 			return true
 		}
 	}
-	
+
 	this.Update = function() {
 		if (!inPlayer)
 			return
@@ -511,7 +511,7 @@ function Powerup1000v(owner) {
 		else
 			owner.SetImage(orrigImg)
 	}
-	
+
 	this.ChangeFrom = function() {
 		owner.SetImage(orrigImg)
 	}
@@ -531,10 +531,10 @@ function PowerupBoots(owner) {
 			player.CollectPowerup(this)
 			orrigImg = owner.GetImage()
 			inPlayer = true
-			
-		} 
+
+		}
 	}
-	
+
 	this.Use = function() {
 		if (!inPlayer || !owner.IsOnGround())
 			return
@@ -548,7 +548,7 @@ function PowerupBoots(owner) {
 			owner.SetYVelocity(-230)
 		}
 	}
-	
+
 }
 
 powerups.RegisterPowerupType("Boots")
@@ -569,8 +569,8 @@ function PowerupHook(owner) {
 				//ownerAnimations["hook"].Repeat(false);
 			}
 			inPlayer = true
-			
-		} 
+
+		}
 	}
 	this.Use = function() {
 		if (!inPlayer || owner.IsOnGround() || owner.IsOnRope())
@@ -598,14 +598,14 @@ function PowerupHook(owner) {
 				if (owner.IsJumping())
 					owner.Bounce(true)
 				return
-			}	
+			}
 		}
-		
+
 	}
 	this.CollidePlatform = function(platform) {
 		if (!inPlayer || !active)
 			return
-		
+
 		this.Disable()
 	}
 	this.Disable = function() {

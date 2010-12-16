@@ -14,10 +14,10 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 	var numLoops = 0
 	var reverseOnFinish = false
 	var reversed = false
-	
+
 	//only usefull if repeat is off
 	var isAnimationDone = false;
-	
+
 	this.Update = function() {
 		var currentTime = game.GetTime()
 		while (NextFrameTime < currentTime) {
@@ -41,11 +41,11 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 
 		}
 	}
-	
+
 	this.IsAnimationDone = function() {
 		return isAnimationDone
 	}
-	
+
 	this.ChangeTo = function(bflipped) {
 		NextFrameTime = game.GetTime() + frameTime;
 		flipped = bflipped
@@ -53,40 +53,40 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 		isAnimationDone = false
 		reverse = startReverse
 	}
-	
+
 	this.Repeat = function(shouldRepeat) {
 		repeat = shouldRepeat
 	}
-	
+
 	this.Reverse = function(shouldReverse) {
 		reverse = shouldReverse
 		startReverse = shouldReverse
 	}
-	
+
 	this.SetXOffset = function(offset) {
 		xOffset = offset;
 	}
-	
+
 	this.SetFrame = function(framenum) {
 		frame = framenum;
 	}
-	
+
 	this.SetNextFrameTime = function(time) {
 		NextFrameTime = time;
 	}
-	
+
 	this.GetNumLoops = function() {
 		return numLoops
 	}
-	
+
 	this.ReverseOnFinish = function(rof) {
 		reverseOnFinish = rof
 	}
-	
+
 	this.SetFlipped = function(f) {
 		flipped = f
 	}
-	
+
 	this.Draw = function(image, x, y, scale) {
 		//rounding is to fix an inconsistancy in firefox vs chrome
 		var sx = frame*w + frame + startX

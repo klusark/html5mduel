@@ -1,5 +1,5 @@
 function Platform(x, y, numPlatforms) {
-	var img = core.GetSpritesImg()
+	var img = image.GetSpritesImg()
 
 	var x = x
 	var y = y
@@ -40,15 +40,15 @@ function Platform(x, y, numPlatforms) {
 		var x1 = (dist - dist%16)+x+32
 		var x2 = this.GetNumPlatforms() * 16 + x
 		if (x1!=x2)
-			core.MakeFloor((dist - dist%16)+x+32, this.GetNumPlatforms() * 16 + x, y)
-		//make this have an effect for each platform that is destroyed
-		core.CreateEffect("BlackSmoke", xpos, y-10)
+			game.MakeFloor((dist - dist%16)+x+32, this.GetNumPlatforms() * 16 + x, y)
+		//TODO: make this have an effect for each platform that is destroyed
+		game.CreateEffect("BlackSmoke", xpos, y-10)
 		
 		numPlatforms = (dist - dist%16)/16
 		bounds = new Bounds(0, 0, numPlatforms * 16, 8)
 		if (numPlatforms == 0)
-			core.RemovePlatform(this)
-		core.PlaySound("buzz")
+			game.RemovePlatform(this)
+		sound.Play("buzz")
 		
 	}
 	

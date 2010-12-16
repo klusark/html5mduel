@@ -1,5 +1,5 @@
 function Mallow(x, y, frame){
-	var img = core.GetSpritesImg()
+	var img = image.GetSpritesImg()
 	
 	var mallowTopAnimation = new Animation(null, 75, 1000, 4, 16, 8);
 	mallowTopAnimation.SetFrame(frame);

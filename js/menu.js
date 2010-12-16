@@ -3,6 +3,7 @@ function Menu() {
 	var avail
 	var inGame
 	var buttonDir = false
+	var gamesPerSeries
 	this.Setup = function() {
 		var windowwidth = window.innerWidth
 		var windowheight = window.innerHeight
@@ -22,9 +23,17 @@ function Menu() {
 	}
 	
 	this.StartGame = function() {
+		if (inGame.length < 2)
+			return
+		gamesPerSeries = document.getElementById("numgames").value
 		document.getElementById("menu").style.display = "none"
 		document.getElementById("canvas").style.display = "block"
-		core.init()
+		var players = this.GetPlayersNextRound()
+		core.StartGame(players[0], players[1], function(){menu.GameOver()})
+	}
+	
+	this.GetPlayersNextRound = function() {
+		
 	}
 	
 	this.StartGameMenu = function() {

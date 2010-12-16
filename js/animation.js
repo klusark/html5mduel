@@ -2,7 +2,7 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 
 	var frameTime = frameTime
 	var numFrames = numFrames
-	var NextFrameTime = core.GetTime() + frameTime
+	var NextFrameTime = game.GetTime() + frameTime
 	var frame = 0
 	var w = w
 	var h = h
@@ -19,7 +19,7 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 	var isAnimationDone = false;
 	
 	this.Update = function() {
-		var currentTime = core.GetTime()
+		var currentTime = game.GetTime()
 		while (NextFrameTime < currentTime) {
 			NextFrameTime += frameTime;
 			++frame;
@@ -47,7 +47,7 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 	}
 	
 	this.ChangeTo = function(bflipped) {
-		NextFrameTime = core.GetTime() + frameTime;
+		NextFrameTime = game.GetTime() + frameTime;
 		flipped = bflipped
 		frame = 0;
 		isAnimationDone = false
@@ -94,6 +94,6 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 			sx = startX + (numFrames-1)*w + numFrames - (frame*w + frame + 1)
 		}
 		scale = scale || -1
-		core.DrawImage(image,  sx, (flipped * flippedYOffset), w, h, Math.round(x), Math.round(y), w, h, scale);
+		canvas.DrawImage(image,  sx, (flipped * flippedYOffset), w, h, x, y, w, h, scale);
 	}
 }

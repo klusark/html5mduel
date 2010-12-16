@@ -1,5 +1,5 @@
 function Effect(x, y, type){
-	var img = core.GetSpritesImg()
+	var img = image.GetSpritesImg()
 	var animations = new Array();
 	
 	animations["GreenSmoke"] = new Animation(null, 0, 100, 3, 24, 24);

@@ -1,7 +1,7 @@
 
 function Bubble(x, y, xVelocity, yVelocity) {
-	var img = core.GetSpritesImg()
-	var lastUpdateTime = core.GetTime()
+	var img = image.GetSpritesImg()
+	var lastUpdateTime = game.GetTime()
 	
 	var animation = new Animation(25, 336, 200, 3, 16, 16);
 
@@ -26,14 +26,14 @@ function Bubble(x, y, xVelocity, yVelocity) {
 	}
 	
 	this.Update = function() {
-		currentTime = core.GetTime()
+		currentTime = game.GetTime()
 		var deltaT = (currentTime - lastUpdateTime)/1000
 		
 		
 		x += deltaT*xVelocity
 		var ya = y+ deltaT*yVelocity
 		if (powerup && powerup.CollidePlatform){
-			var platform = core.IsOnGround(y, ya, this)
+			var platform = game.IsOnGround(y, ya, this)
 			if (platform)
 				powerup.CollidePlatform(platform)
 		}

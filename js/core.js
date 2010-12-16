@@ -1,9 +1,5 @@
-//make it so that browsers that do not have console are still supported
-if (!window.console) {
-	window.console = new Object()
-	window.console.log = function(){}
-}
-function Core() {
+
+function Game() {
 	var platforms
 	var ropes
 	var players
@@ -13,14 +9,9 @@ function Core() {
 	var bubbles
 	var entities
 	
-	var registerdPowerups = new Array()
-	var selectedPowerups = new Array()
 	
 	var debug
 	var gameOver = false
-	var player1Img 
-	var player2Img 
-	var spritesImg
 	var selector
 	var inSelectMode
 	
@@ -36,6 +27,8 @@ function Core() {
 	var maxBubbles = 3
 	const maxTimeBetweenBubbles = 3000
 	
+	sound.Preload("buzz")
+	
 	this.GetTime = function() {
 		return timeStarted ? new Date().getTime() * timescale - startTime : stoppedTime
 	}
@@ -44,13 +37,10 @@ function Core() {
 		effects.push(new Effect(x, y, name))
 	}
 	
-	this.DebugLog = function(message) {
-		if (debug)
-			console.log(message)
-	}
+
 	
 	this.Draw = function() {
-		this.ClearScreen()
+		canvas.Clear()
 		if (this.InSelectMode())
 			selector.Draw()
 		else{
@@ -81,18 +71,6 @@ function Core() {
 		return platforms
 	}
 
-	this.DrawImage = function(image, sx, sy, sw, sh, dx, dy, dw, dh, iscale) {
-		iscale = iscale || scale
-		if (iscale == -1)
-			iscale = scale
-		if (image.complete)
-			window.ctx.drawImage(image, sx*iscale, sy*iscale, sw*iscale, sh*iscale, dx*iscale, dy*iscale, dw*iscale, dh*iscale)
-	}
-
-
-	this.FillRect = function(x, y, w, h) {
-		window.ctx.fillRect(x*scale, y*scale, w*scale, h*scale)
-	}
 
 	this.Update = function() {
 		if (this.InSelectMode())
@@ -119,12 +97,12 @@ function Core() {
 					gameOver = true
 				}
 				else if (players[0].IsDead() && players[1].IsInPositionToWin()){
-					this.DebugLog("Player 2 wins");
+					log.DebugLog("Player 2 wins");
 					players[1].Win()
 					gameOver = true
 				}
 				else if (players[1].IsDead() && players[0].IsInPositionToWin()){
-					this.DebugLog("Player 1 wins");
+					log.DebugLog("Player 1 wins");
 					players[0].Win()
 					gameOver = true
 				}
@@ -202,7 +180,7 @@ function Core() {
 			if (Math.random()>0.5)
 				yVelocity *= -1
 			var newBubble = new Bubble(x, y, xVelocity, yVelocity)
-			newBubble.SetCurrentPowerup(new window["Powerup"+selectedPowerups[Math.floor(Math.random()*selectedPowerups.length)]](newBubble))//new PowerupGun(newBubble))
+			newBubble.SetCurrentPowerup(powerups.GetRandomPowerup(newBubble))
 			bubbles.push(newBubble)
 			this.CreateEffect("PurpleSmoke", ex, ey)
 			this.SetNextBubbleTime()
@@ -223,19 +201,7 @@ function Core() {
 			array[i].Update()
 		}
 	}
-	
-	this.GetPlayer1Img = function() {
-		return player1Img
-	}
-	
-	this.GetPlayer2Img = function() {
-		return player2Img
-	}
-	
-	this.GetSpritesImg = function() {
-		return spritesImg
-	}
-	
+		
 	this.ColourSelect = function() {
 		inSelectMode = true
 		selector = new Selector(0, 0, scale)
@@ -244,17 +210,7 @@ function Core() {
 	this.GetSelector = function() {
 		return selector
 	}
-	
-	this.PlaySound = function(name) {
-		var sound = new Audio()
-		sound.src = "sound/" + name + ".ogg"
-		sound.play()
-	}
-	
-	this.ClearScreen = function() {
-		ctx.fillStyle = "rgb(0,0,0)";
-		window.ctx.fillRect(0, 0, window.canvas.width, window.canvas.height)
-	}
+
 	
 	this.Restart = function() {
 		window.clearInterval(gameInterval)
@@ -263,27 +219,10 @@ function Core() {
 	}
 
 	this.init = function() {
-		window.canvas = document.getElementById('canvas')
-		window.ctx = window.canvas.getContext('2d')
-		this.ClearScreen()
-		//only works on firefox 3.6 and up
-		//hopefuly chrome gets a similar setting soon
-		//this really has no use because of my appengine scaling
-		window.ctx.mozImageSmoothingEnabled = false
-		scale = menu.GetScale()
+		canvas.Clear()
 
 				
-		player1Img = new Image()
-		player2Img = new Image()
-		spritesImg = new Image()
-		if (this.IsOnAppEngine()){
-			this.SetScale(scale)
-		}else{
-			player1Img.src = "/images/player.png"
-			player2Img.src = "/images/player.png"
-			spritesImg.src = "/images/sprites.png"
-		}
-		
+
 
 		stoppedTime = 0
 		platforms = new Array()
@@ -309,8 +248,8 @@ function Core() {
 		this.SetupRopes()
 		
 		
-		players[0] = new Player(28, 144, player1Img)
-		players[1] = new Player(268, 144, player2Img)
+		players[0] = new Player(28, 144, image.GetPlayer1Img())
+		players[1] = new Player(268, 144, image.GetPlayer2Img())
 		players[1].SetKeys(38, 40, 37, 39, 13)
 		players[1].SetFlipped(true)
 		
@@ -319,7 +258,7 @@ function Core() {
 		this.CreateEffect("GreenSmoke", 268, 144)
 
 		var frame = 0;
-		for (i = 0; i < 20; ++i){
+		for (var i = 0; i < 20; ++i){
 			mallows.push(new Mallow(i*16, 176, frame))
 			++frame
 			if (frame == 4)
@@ -332,9 +271,9 @@ function Core() {
 		emitters.push(new Emitter(320-16, 92, 2))
 		
 		var loadingInterval = setInterval(function(){
-			if (core.IsLoaded()){
+			if (game.IsLoaded()){
 				window.clearInterval(loadingInterval)
-				core.FinishLoading()
+				game.FinishLoading()
 			}
 		}, 25)
 		
@@ -351,13 +290,13 @@ function Core() {
 	}
 	
 	this.FinishLoading = function() {
-		core.PlaySound("buzz")
-		core.StartTime()
-		gameInterval = setInterval(function(){core.Update();core.Draw()}, 1000 / FPS)
+		sound.Play("buzz")
+		this.StartTime()
+		gameInterval = setInterval(function(){game.Update();game.Draw()}, 1000 / FPS)
 	}
 	
 	this.IsLoaded = function() {
-		return (player1Img.complete && player2Img.complete && spritesImg.complete)
+		return image.IsLoaded()
 	}
 	
 	this.IsOnGround = function(yb, ya, entity) {
@@ -388,16 +327,7 @@ function Core() {
 		}
 	}
 	
-	this.RegisterPowerupType = function(name) {
-		if (window["Powerup" + name]){
-			var test = new window["Powerup" + name]()
-			if (test.image)
-				registerdPowerups.push(name)
-				if (window.localStorage["Powerup" + name] != "disabled") {
-					selectedPowerups.push(name)
-				}
-		}
-	}
+
 	
 	this.AddEntity = function(entity) {
 		entities.push(entity)
@@ -466,12 +396,7 @@ function Core() {
 		scale = newScale
 
 		//container.line-height = 200*scale
-		var base = "generate?m="+scale+"&c="
-		var colour0 = window.localStorage['colour0'] || 0
-		var colour1 = window.localStorage['colour1'] || 1
-		player1Img.src = base + colour0
-		player2Img.src = base + colour1
-		spritesImg.src = "generate?s&m="+scale
+
 	}
 	
 	this.GetScale = function() {
@@ -578,13 +503,14 @@ function Core() {
 	}
 }
 
-var core = new Core()
-
-
-
-
-document.onkeyup = function(e){core.OnKeyUp(e)}
-document.onkeydown = function(e){core.OnKeyDown(e)}
-//window.onload = function(){core.init()}
-
-
+window.onload = function()
+{
+	canvas.DocumentLoaded()
+	Scale.SetScale(3)
+	game = new Game()
+	document.onkeyup = function(e){game.OnKeyUp(e)}
+	document.onkeydown = function(e){game.OnKeyDown(e)}
+	
+	
+	game.init()
+}

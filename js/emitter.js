@@ -1,5 +1,5 @@
 function Emitter(x, y, type) {
-	var img = core.GetSpritesImg()
+	var img = image.GetSpritesImg()
 
 	var emitter = new StaticImage(img, type*16+type+92, 9, 16, 16)
 	

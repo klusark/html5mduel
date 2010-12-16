@@ -1,5 +1,5 @@
 function Rope(x, y, length){
-	var img = core.GetSpritesImg()
+	var img = image.GetSpritesImg()
 
 	var length = length-2;
 	var x = x;
@@ -9,22 +9,23 @@ function Rope(x, y, length){
 	
 	this.Draw = function(){
 		ropeTop.Draw(x, y)
-		ctx.fillStyle = "rgb(146,97,0)";  
-		core.FillRect(x+2, y+5, 1, length);
+
+		canvas.FillStyle("rgb(146,97,0)")
+		canvas.FillRect(x+2, y+5, 1, length)
 	}
 	
 	this.Update = function(){
 	}
 	
 	this.GetLength = function(){
-		return length;
+		return length
 	}
 	
 	this.GetY = function(){
-		return y+5;
+		return y+5
 	}
 	this.GetX = function(){
-		return x+2;
+		return x+2
 	}
 
 	

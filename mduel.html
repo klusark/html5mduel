@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html manifest="manifest.cache">
+<html>
 <head>
 <title>HTML5 Marshmallow Duel</title>
+<script type="text/javascript" src="js/scale.js"></script>
 <script type="text/javascript" src="js/core.js"></script>
+<script type="text/javascript" src="js/imagemanager.js"></script>
 <script type="text/javascript" src="js/player.js"></script>
 <script type="text/javascript" src="js/animation.js"></script>
 <script type="text/javascript" src="js/platform.js"></script>
@@ -14,58 +16,26 @@
 <script type="text/javascript" src="js/bounds.js"></script>
 <script type="text/javascript" src="js/bubble.js"></script>
 <script type="text/javascript" src="js/staticimage.js"></script>
+<script type="text/javascript" src="js/powerupmanager.js"></script>
 <script type="text/javascript" src="js/powerup.js"></script>
-<script type="text/javascript" src="js/menu.js"></script>
 <script type="text/javascript" src="js/storedplayer.js"></script>
-<style type="text/css">
-#playerstable
-{
-text-align:center;
-color:red;
-}
-#pth
-{
-color:white;
-}
-</style>
+<script type="text/javascript" src="js/sound.js"></script>
+<script type="text/javascript" src="js/log.js"></script>
+<script type="text/javascript" src="js/canvas.js"></script>
 </head>
 <body style="background-color: #000;overflow: hidden">
-<div style="width: 320;height: 200" align="center" id="container">
-<canvas id="canvas" width="320" height="200" style='display:none'>
+<div style="width: 320;height: 200;margin: auto;position:relative;" id="container">
+<canvas id="canvas" width="320" height="200" >
 This text is displayed if your browser does not support HTML5 Canvas.
 </canvas>
-<div id="menu" align="center" style="width: 320;height: 200;display:block">
-<div id="main">
-<button OnClick="menu.StartGameMenu()">Start Game</button><br/>
-<button>Change Controls</button><br/>
-<button OnClick="menu.Players()">Players</button>
-</div>
-<div id="players" style="display:none">
-<button OnClick="menu.CreatePlayer()">Create Player</button>
-<table id="playerstable" align="center" >
-</table>
-</div>
-<div id="createPlayer" style="display:none">
-<div style="color:white;display:inline">Name: </div><input id="playername" type="text"/><br/>
-<button OnClick="menu.CreateNewPlayer()">Create Player</button><button OnClick="menu.CancelCreateNewPlayer()">Cancel</button>
-</div>
-<div id="gamesettings" style="display:none">
-<select id="playersavail" size=6 style="width:120px" onchange="menu.ClickPlayersAvail()">
-</select>
-<button id="playersbutton" style="width:30px" OnClick="menu.MoveSelectedPlayer()">--</button>
-<select id="playersgame" size=6 style="width:120px" onchange="menu.ClickPlayersGame()">
-</select><br/>
-<button disabled="yes" id="gamesettingstartgame" onclick="asfg">Start Game</button>
-</div>
-</div>
-<div id="1" style='display:none'><input type=button OnClick="core.Restart()" value="Restart"><input type=button OnClick="core.ColourSelect()" value="Colour Select"></div>
+<div id="1"><input type=button OnClick="core.init()" value="Restart"><input type=button OnClick="core.ColourSelect()" value="Colour Select"></div>
 <div id="2" style='display:none'><input type=button OnClick="core.GetSelector().Previous()" value="Previous Colour"><input type=button OnClick="core.GetSelector().Next()" value="Next Colour"><br/>
 <input type=button OnClick="core.GetSelector().StartRun()" value="Start Run"><input type=button OnClick="core.GetSelector().StartIdle()" value="Start Idle"><br/>
 <input type=button OnClick="core.GetSelector().Save(0)" value="Save as Player 1"><input type=button OnClick="core.GetSelector().Save(1)" value="Save as Player 2"><br/>
 <input type=button OnClick="core.GetSelector().End();core.init()" value="Back to game"></div>
-</div>
 <footer>
 <a href="http://code.google.com/p/html5mduel/issues">Report Bugs</a><br/>
 </footer>
+</div>
 </body>
 </html>

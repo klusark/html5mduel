@@ -1,16 +1,20 @@
 //make it so that browsers that do not have console are still supported
-if (!window.console) {
-	window.console = new Object()
-	window.console.log = function(){}
+/*global console*/
+if (!console) {
+	console = {};
+	console.log = function(){};
 }
 function Log() {
-	var debug = false
+	var debug = false;
+
 	this.DebugLog = function(message) {
-		if (debug)
-			console.log(message)
-	}
+		if (debug) {
+			console.log(message);
+		}
+	};
+
 	this.Log = function(message) {
-		console.log(message)
-	}
+		console.log(message);
+	};
 }
-log = new Log()
+var log = new Log();

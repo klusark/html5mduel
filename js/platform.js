@@ -1,55 +1,60 @@
-function Platform(x, y, numPlatforms) {
-	var img = image.GetSpritesImg()
+/*global image, Bounds, StaticImage, game, sound*/
+function Platform(xI, yI, numPlatformsI) {
+	var img = image.GetSpritesImg(),
 
-	var x = x
-	var y = y
-	var numPlatforms = numPlatforms
+	x = xI,
+	y = yI,
+	numPlatforms = numPlatformsI,
 
-	var platform = new StaticImage(img, 143, 0, 14, 8)
+	platform = new StaticImage(img, 143, 0, 14, 8),
 
-	var bounds = new Bounds(0, 0, numPlatforms * 16, 8)
+	bounds = new Bounds(0, 0, numPlatforms * 16, 8);
 
 	this.Draw = function() {
-		for (var i = 0; i < numPlatforms; ++i)
-			platform.Draw(i*16 + x + 1, y)
-	}
+		var i;
+		for (i = 0; i < numPlatforms; i += 1){
+			platform.Draw(i*16 + x + 1, y);
+		}
+	};
 
 	this.GetNumPlatforms = function() {
-		return numPlatforms
-	}
+		return numPlatforms;
+	};
 
 	this.GetEnd = function() {
-		return numPlatforms * 16 + x - 3
-	}
+		return numPlatforms * 16 + x - 3;
+	};
 
 	this.GetY = function() {
-		return y
-	}
+		return y;
+	};
 
 	this.GetX = function() {
-		return x
-	}
+		return x;
+	};
 
 	this.GetCurrentBounds = function() {
-		return bounds
-	}
+		return bounds;
+	};
 
 	this.Destroy = function(xpos) {
-		xpos = Math.floor(xpos)
-		var dist = xpos - x
-		var x1 = (dist - dist%16)+x+32
-		var x2 = this.GetNumPlatforms() * 16 + x
-		if (x1!=x2)
-			game.MakeFloor((dist - dist%16)+x+32, this.GetNumPlatforms() * 16 + x, y)
+		xpos = Math.floor(xpos);
+		var dist = xpos - x,
+		x1 = (dist - dist%16)+x+32,
+		x2 = this.GetNumPlatforms() * 16 + x;
+		if (x1!==x2){
+			game.MakeFloor((dist - dist%16)+x+32, this.GetNumPlatforms() * 16 + x, y);
+		}
 		//TODO: make this have an effect for each platform that is destroyed
-		game.CreateEffect("BlackSmoke", xpos, y-10)
+		game.CreateEffect("BlackSmoke", xpos, y-10);
 
-		numPlatforms = (dist - dist%16)/16
-		bounds = new Bounds(0, 0, numPlatforms * 16, 8)
-		if (numPlatforms == 0)
-			game.RemovePlatform(this)
-		sound.Play("buzz")
+		numPlatforms = (dist - dist%16)/16;
+		bounds = new Bounds(0, 0, numPlatforms * 16, 8);
+		if (numPlatforms === 0){
+			game.RemovePlatform(this);
+		}
+		sound.Play("buzz");
 
-	}
+	};
 
 }

@@ -1,115 +1,116 @@
-function Bubble(x, y, xVelocity, yVelocity) {
-	var img = image.GetSpritesImg()
-	var lastUpdateTime = game.GetTime()
+/*global game, image, Animation, Bounds*/
+function Bubble(xI, yI, xVelocityI, yVelocityI) {
+	var img = image.GetSpritesImg(),
+	lastUpdateTime = game.GetTime(),
 
-	var animation = new Animation(25, 336, 200, 3, 16, 16);
+	animation = new Animation(25, 336, 200, 3, 16, 16),
 
 
-	var powerup
-	var x = x
-	var y = y
-	var yVelocity = yVelocity
-	var xVelocity = xVelocity
+	powerup,
+	x = xI,
+	y = yI,
+	yVelocity = yVelocityI,
+	xVelocity = xVelocityI,
 
-	var done = false
+	done = false,
 
-	var currentBounds = new Bounds(0, 0, 16, 16)
+	currentBounds = new Bounds(0, 0, 16, 16);
 
 	this.SetCurrentPowerup = function(npowerup) {
-		powerup = npowerup
-	}
+		powerup = npowerup;
+	};
 
 	this.Draw = function() {
-		animation.Draw(img, x, y)
-		powerup.image.Draw(x+2, y+2)
-	}
+		animation.Draw(img, x, y);
+		powerup.image.Draw(x+2, y+2);
+	};
 
 	this.Update = function() {
-		currentTime = game.GetTime()
-		var deltaT = (currentTime - lastUpdateTime)/1000
+		var currentTime = game.GetTime(),
+		deltaT = (currentTime - lastUpdateTime)/1000,
+
+		ya = y+ deltaT*yVelocity,
+		platform;
 
 
-		x += deltaT*xVelocity
-		var ya = y+ deltaT*yVelocity
+		x += deltaT*xVelocity;
 		if (powerup && powerup.CollidePlatform){
-			var platform = game.IsOnGround(y, ya, this)
-			if (platform)
-				powerup.CollidePlatform(platform)
+			platform = game.IsOnGround(y, ya, this);
+			if (platform){
+				powerup.CollidePlatform(platform);
+			}
 		}
-		y = ya
+		y = ya;
 		if (powerup && powerup.Update){
-			powerup.Update()
+			powerup.Update();
 		}
 
 		if (y > 163){
-			y = 163
-			yVelocity *= -1
+			y = 163;
+			yVelocity *= -1;
 		} else if (y < -2) {
-			y = -2
-			yVelocity *= -1
+			y = -2;
+			yVelocity *= -1;
 		}
 		if (x > 306) {
-			x = 306
-			xVelocity *= -1
+			x = 306;
+			xVelocity *= -1;
 		} else if (x < -2) {
-			x = -2
-			xVelocity *= -1
+			x = -2;
+			xVelocity *= -1;
 		}
 
-		animation.Update()
+		animation.Update();
 
-		lastUpdateTime = currentTime
+		lastUpdateTime = currentTime;
 
-	}
+	};
 
 	this.CollidePlayer = function(player) {
-		if (powerup && powerup.CollidePlayer)
-			powerup.CollidePlayer(player)
-	}
-
-	this.GetPowerupName = function() {
-		return currentPowerup.name
-	}
+		if (powerup && powerup.CollidePlayer){
+			powerup.CollidePlayer(player);
+		}
+	};
 
 	this.SetImage = function(image){
-		img = image
-	}
+		img = image;
+	};
 
 	this.GetY = function(){
-		return y
-	}
+		return y;
+	};
 
 	this.GetX = function(){
-		return x
-	}
+		return x;
+	};
 
 	this.GetXVelocity = function() {
-		return xVelocity
-	}
+		return xVelocity;
+	};
 
 	this.GetYVelocity = function() {
-		return yVelocity
-	}
+		return yVelocity;
+	};
 
 	this.SetY = function(ny) {
-		y = ny
-	}
+		y = ny;
+	};
 
 	this.SetX = function(nx) {
-		x = nx
-	}
+		x = nx;
+	};
 
 	this.IsDone = function() {
-		return done
-	}
+		return done;
+	};
 
 	this.SetDone = function(nDone) {
-		done = nDone
-	}
+		done = nDone;
+	};
 
 
 	this.GetCurrentBounds = function() {
-		return currentBounds
-	}
+		return currentBounds;
+	};
 
 }

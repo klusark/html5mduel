@@ -1,4 +1,7 @@
 /*global image, Bounds, StaticImage, game, sound*/
+/**
+ * @constructor
+ */
 function Platform(xI, yI, numPlatformsI) {
 	var img = image.GetSpritesImg(),
 
@@ -46,7 +49,7 @@ function Platform(xI, yI, numPlatformsI) {
 			game.MakeFloor((dist - dist%16)+x+32, this.GetNumPlatforms() * 16 + x, y);
 		}
 		//TODO: make this have an effect for each platform that is destroyed
-		game.CreateEffect("BlackSmoke", xpos, y-10);
+		game.CreateEffect(BlackSmoke, xpos, y-10);
 
 		numPlatforms = (dist - dist%16)/16;
 		bounds = new Bounds(0, 0, numPlatforms * 16, 8);

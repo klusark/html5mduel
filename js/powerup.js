@@ -1,18 +1,24 @@
 /*global StaticImage, image, game, Animation, sound, Bounds, powerups*/
+/**
+ * @constructor
+ */
 function PowerupGun(owner){
 	this.image = new StaticImage(image.GetSpritesImg(), 284, 0, 12, 12);
 
 	var ammo = 5,
 	firing = false,
 	inPlayer = false,
-
+	gundown = new Animation(25, 450, 100, 2, 24, 24),
+	gunup = new Animation(25, 450, 100, 2, 24, 24),
 	//HACK!!! fixes "The 'this' problem"
 	self = this,
 	other;
-
+	gundown.Repeat(false);
+	gunup.Repeat(false);
+	gunup.Reverse(true);
 	this.Use = function() {
 		if (inPlayer && ammo && !firing && owner.IsIdle()){
-			owner.InterruptAnimation("gundown", true, function(){self.CheckForKill();owner.InterruptAnimation("gunup", true, function(){firing=false;});});
+			owner.InterruptAnimation(gundown, true, function(){self.CheckForKill();owner.InterruptAnimation(gunup, true, function(){firing=false;});});
 			ammo -= 1;
 			firing = true;
 		}
@@ -24,20 +30,13 @@ function PowerupGun(owner){
 			owner = player;
 			player.CollectPowerup(this);
 			other = game.GetOponentOf(owner);
-			var ownerAnimations = owner.GetAnimations();
-			if (!ownerAnimations.gundown){
-				ownerAnimations.gundown = new Animation(25, 450, 100, 2, 24, 24);
-				ownerAnimations.gundown.Repeat(false);
-
-				ownerAnimations.gunup = new Animation(25, 450, 100, 2, 24, 24);
-				ownerAnimations.gunup.Repeat(false);
-				ownerAnimations.gunup.Reverse(true);
-			}
 			inPlayer = true;
 		}
 	};
 
-
+	/**
+	 * @constructor
+	 */
 	function GunCollisionCheck(){
 		this.GetX = function() {
 			return owner.IsFlipped() ? owner.GetX()+23 - 320 : owner.GetX()+23;
@@ -60,8 +59,9 @@ function PowerupGun(owner){
 
 }
 
-powerups.RegisterPowerupType("Gun");
-
+/**
+ * @constructor
+ */
 function PowerupSkull(owner){
 	this.image = new StaticImage(image.GetSpritesImg(), 258, 0, 12, 12);
 	this.CollidePlayer = function(player) {
@@ -73,8 +73,9 @@ function PowerupSkull(owner){
 
 }
 
-powerups.RegisterPowerupType("Skull");
-
+/**
+ * @constructor
+ */
 function PowerupInvis(owner){
 	this.image = new StaticImage(image.GetSpritesImg(), 271, 0, 12, 12);
 	var invis = false,
@@ -113,8 +114,9 @@ function PowerupInvis(owner){
 	};
 }
 
-powerups.RegisterPowerupType("Invis");
-
+/**
+ * @constructor
+ */
 function Mine(x, y, owner) {
 	var other = game.GetOponentOf(owner),
 	bounds = new Bounds(0, 0, 1, 1);
@@ -133,7 +135,7 @@ function Mine(x, y, owner) {
 	};
 
 	this.Explode = function() {
-		game.CreateEffect("explode", x - 11, y - 20);
+		game.CreateEffect(Explode, x - 11, y - 20);
 		game.RemoveEntity(this);
 	};
 
@@ -151,6 +153,9 @@ function Mine(x, y, owner) {
 	};
 }
 
+/**
+ * @constructor
+ */
 function PowerupMine(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 271, 13, 12, 12);
 	var used = false,
@@ -162,7 +167,7 @@ function PowerupMine(owner) {
 			return;
 		}
 		used = true;
-		owner.InterruptAnimation("crouch", true, function(){self.LayMine();owner.InterruptAnimation("uncrouch", true);});
+		owner.InterruptAnimation(owner.GetAnimations().crouch, true, function(){self.LayMine();owner.InterruptAnimation(owner.GetAnimations().uncrouch, true);});
 	};
 
 	this.CollidePlayer = function(player) {
@@ -181,8 +186,9 @@ function PowerupMine(owner) {
 	};
 }
 
-powerups.RegisterPowerupType("Mine");
-
+/**
+ * @constructor
+ */
 function Puck(x, y, owner, direction) {
 	var img = image.GetSpritesImg(),
 	other = game.GetOponentOf(owner),
@@ -212,7 +218,7 @@ function Puck(x, y, owner, direction) {
 		collision = game.DoesCollide(this, owner) ? owner : game.DoesCollide(this, other) ? other : undefined;
 		if (collision){
 			collision.Explode();
-			game.CreateEffect("explode", x-11, y-20);
+			game.CreateEffect(Explode, x-11, y-20);
 			game.RemoveEntity(this);
 			return;
 		}
@@ -232,7 +238,7 @@ function Puck(x, y, owner, direction) {
 		}
 		if (y > 180){
 			game.RemoveEntity(this);
-			game.CreateEffect("SmallSplash", x-11, y-20);
+			game.CreateEffect(SmallSplash, x-11, y-20);
 			return;
 		}
 		lastUpdateTime = currentTime;
@@ -251,6 +257,9 @@ function Puck(x, y, owner, direction) {
 	};
 }
 
+/**
+ * @constructor
+ */
 function PowerupNukepuck(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 310, 0, 12, 12);
 	var used = false,
@@ -285,8 +294,9 @@ function PowerupNukepuck(owner) {
 	};
 }
 
-powerups.RegisterPowerupType("Nukepuck");
-
+/**
+ * @constructor
+ */
 function PowerupDestroy(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 284, 13, 12, 12);
 
@@ -302,8 +312,9 @@ function PowerupDestroy(owner) {
 	};
 }
 
-powerups.RegisterPowerupType("Destroy");
-
+/**
+ * @constructor
+ */
 function Nade(x, y, owner, direction) {
 	var img = image.GetSpritesImg(),
 	bounds = new Bounds(0, 0, 5, 4),
@@ -339,7 +350,7 @@ function Nade(x, y, owner, direction) {
 		}
 		if (y > 180){
 			game.RemoveEntity(this);
-			game.CreateEffect("SmallSplash", x - 11, y - 20);
+			game.CreateEffect(SmallSplash, x - 11, y - 20);
 			return;
 		}
 		lastUpdateTime = currentTime;
@@ -358,6 +369,9 @@ function Nade(x, y, owner, direction) {
 	};
 }
 
+/**
+ * @constructor
+ */
 function PowerupNade(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 297, 13, 12, 12);
 	var used = false,
@@ -394,9 +408,13 @@ function PowerupNade(owner) {
 	};
 }
 
-powerups.RegisterPowerupType("Nade");
-
+/**
+ * @constructor
+ */
 function PowerupTeleport(owner) {
+	/**
+	 * @constructor
+	 */
 	function EmptyImage(){
 		this.Draw=function(dx, dy){
 		};
@@ -405,7 +423,7 @@ function PowerupTeleport(owner) {
 	//this probably needs some work
 
 	this.CollidePlayer = function(player) {
-		game.CreateEffect("GreenSmoke", player.GetX(), player.GetY());
+		game.CreateEffect(GreenSmoke, player.GetX(), player.GetY());
 		player.SetX(Math.floor(Math.random()*320));
 		player.SetY(Math.floor(Math.random()*150));
 		player.StartFall(true);
@@ -416,8 +434,9 @@ function PowerupTeleport(owner) {
 	};
 }
 
-powerups.RegisterPowerupType("Teleport");
-
+/**
+ * @constructor
+ */
 function PowerupChute(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 310, 13, 12, 12);
 	var inPlayer = false,
@@ -490,8 +509,9 @@ function PowerupChute(owner) {
 	};
 }
 
-powerups.RegisterPowerupType("Chute");
-
+/**
+ * @constructor
+ */
 function Powerup1000v(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 258, 13, 12, 12);
 	var inPlayer = false,
@@ -519,7 +539,7 @@ function Powerup1000v(owner) {
 			player.InterruptAnimation("explode", true);
 			player.StartFall(true);
 			owner.DontCollide();
-			game.CreateEffect("Lightning", player.GetX(), player.GetY());
+			game.CreateEffect(Lightning, player.GetX(), player.GetY());
 			return true;
 		}
 	};
@@ -540,8 +560,9 @@ function Powerup1000v(owner) {
 	};
 }
 
-powerups.RegisterPowerupType("1000v");
-
+/**
+ * @constructor
+ */
 function PowerupBoots(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 297, 0, 12, 12);
 	var inPlayer = false,
@@ -576,8 +597,9 @@ function PowerupBoots(owner) {
 
 }
 
-powerups.RegisterPowerupType("Boots");
-
+/**
+ * @constructor
+ */
 function PowerupHook(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 323, 13, 12, 12);
 	var inPlayer = false,
@@ -598,6 +620,9 @@ function PowerupHook(owner) {
 		}
 	};
 
+	/**
+	 * @constructor
+	 */
 	function HookColide() {
 		this.GetX = function() {
 			return owner.IsFlipped() ? owner.GetX()+5 : owner.GetX()+19;
@@ -651,5 +676,3 @@ function PowerupHook(owner) {
 		this.Disable();
 	};
 }
-
-powerups.RegisterPowerupType("Hook");

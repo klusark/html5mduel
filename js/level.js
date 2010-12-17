@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 function Level() {
 	//TODO: redo all of this code to make a more fair level generator
 	var HIGH_FLOOR_Y = 40,

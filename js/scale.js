@@ -1,22 +1,26 @@
-function Scale(){
+/**
+ * @constructor
+ */
+function ScaleT(){
 
-	var scale = 1
-	var callbacks = new Array()
+	var scale = 1,
+	callbacks = [];
 
 	this.ScaleCallback = function(callback) {
 		//if (window[callback])
-		callbacks.push(callback)
-	}
+		callbacks.push(callback);
+	};
 
 	this.SetScale = function(scale) {
-		for (var i = 0; i < callbacks.length; ++i){
-			callbacks[i](scale)
+		var i;
+		for (i = 0; i < callbacks.length; i += 1){
+			callbacks[i](scale);
 		}
-	}
+	};
 
 	this.GetScale = function() {
-		return scale
-	}
+		return scale;
+	};
 }
 
-var Scale = new Scale()
+var Scale = new ScaleT();

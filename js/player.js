@@ -1,4 +1,7 @@
 /*global game, Bounds, Animation, log, sound */
+/**
+ * @constructor
+ */
 function Player(xI, yI, imgI){
 	var lastUpdateTime = game.GetTime(),
 	animations = [],
@@ -151,7 +154,7 @@ function Player(xI, yI, imgI){
 
 		if (y > 160 && !dead){
 			dead = true;
-			game.CreateEffect("BigSplash", x, 200-40);
+			game.CreateEffect(BigSplash, x, 200-40);
 		}
 		if (x < 0-currentBounds.GetX() || x > 300){
 			x = x < 0-currentBounds.GetX() ? 0 : 300;
@@ -187,11 +190,11 @@ function Player(xI, yI, imgI){
 
 				yVelocity = (keys.down - keys.up) * CLIMBSPEED;
 				if (keys.up && !keysLastFrame.up){
-					this.SetAnimation("climbup");
+					this.SetAnimation(animations.climbup);
 				}else if (keys.down && !keysLastFrame.down){
-					this.SetAnimation("climbdown");
+					this.SetAnimation(animations.climbdown);
 				}else if (!keys.down && !keys.up){
-					this.SetAnimation("climbidle");
+					this.SetAnimation(animations.climbidle);
 				}
 			} else if (!(keys.up || keys.down)) {
 				isOnRope = false;
@@ -239,14 +242,14 @@ function Player(xI, yI, imgI){
 				wasOnGround = false;
 				x = currentRope.GetX()-11;
 				if (keys.down){
-					this.SetAnimation("climbdown");
+					this.SetAnimation(animations.climbdown);
 				}else if (keys.up){
-					this.SetAnimation("climbup");
+					this.SetAnimation(animations.climbup);
 				}
 			}else if (isCrouched){
 				if (isCrouchingUp){
 					if (currentAnimation.IsAnimationDone()){
-						//this.SetAnimation("run")
+						//this.SetAnimation(animations.run")
 						isCrouchingUp = false;
 						isCrouched = false;
 						justUncrouched = true;
@@ -254,7 +257,7 @@ function Player(xI, yI, imgI){
 					}
 				}else if (!keys.down && !isCrouchingUp && currentAnimation.IsAnimationDone()){
 					isCrouchingUp = true;
-					this.SetAnimation("uncrouch");
+					this.SetAnimation(animations.uncrouch);
 				}
 			} else if (isRolling) {
 				if (currentAnimation.IsAnimationDone()){
@@ -262,19 +265,19 @@ function Player(xI, yI, imgI){
 					runningLeft = false;
 					isRolling = false;
 					xVelocity = 0;
-					this.SetAnimation("crouch");
+					this.SetAnimation(animations.crouch);
 					currentAnimation.SetFrame(1);
 					isCrouched = true;
 					currentBounds = crouchingBounds;
 				}
 			} else if (keys.down && (runningLeft || runningRight)){
 				isRolling = true;
-				this.SetAnimation("roll");
+				this.SetAnimation(animations.roll);
 			}else if (keys.down){
 				isCrouched = true;
 				currentBounds = crouchingBounds;
 				xVelocity = 0;
-				this.SetAnimation("crouch");
+				this.SetAnimation(animations.crouch);
 			} else if (keys.up && (keys.right || keys.left)) {
 				this.StartJump();
 			} else if (keys.up) {
@@ -282,13 +285,13 @@ function Player(xI, yI, imgI){
 			} else if (keys.right && (!keysLastFrame.right || wasRunningLeft || wasCrouched || !wasOnGround) && !runningLeft) {
 				runningRight = true;
 				flipped = false;
-				this.SetAnimation("run");
+				this.SetAnimation(animations.run);
 			} else if (keys.left && (!keysLastFrame.left || wasRunningRight || wasCrouched || !wasOnGround) && !runningRight) {
 				runningLeft = true;
 				flipped = true;
-				this.SetAnimation("run");
+				this.SetAnimation(animations.run);
 			} else if (!keys.left && !keys.right) {
-				this.SetAnimation("idle");
+				this.SetAnimation(animations.idle);
 				isIdle = true;
 			}
 
@@ -410,7 +413,7 @@ function Player(xI, yI, imgI){
 		yVelocity = JUMPYVELOCITY;
 		onGround = false;
 		isJumpingUp = true;
-		this.SetAnimation("jumpup");
+		this.SetAnimation(animations.jumpup);
 	};
 
 	this.StartJump = function() {
@@ -418,17 +421,17 @@ function Player(xI, yI, imgI){
 		yVelocity = JUMPYVELOCITY;
 		isJumping = true;
 		xVelocity = flipped ? -JUMPXVELOCITY : JUMPXVELOCITY;
-		this.SetAnimation("jump");
+		this.SetAnimation(animations.jump);
 	};
 
 	this.Bounce = function(forward) {
 		pushed = true;
 		if (forward) {
 			xVelocity = (flipped ? -PUSHEDSPEED : PUSHEDSPEED);
-			this.SetAnimation("pushedforward");
+			this.SetAnimation(animations.pushedforward);
 		} else {
 			xVelocity = (flipped ? PUSHEDSPEED : -PUSHEDSPEED);
-			this.SetAnimation("pushedbackward");
+			this.SetAnimation(animations.pushedbackward);
 		}
 	};
 
@@ -449,21 +452,21 @@ function Player(xI, yI, imgI){
 		isDisolving = true;
 		xVelocity = 0;
 		yVelocity = 0;
-		this.SetAnimation("disolve");
+		this.SetAnimation(animations.disolve);
 	};
 
 	this.Disolve2 = function() {
 		isDisolving = true;
 		xVelocity = 0;
 		yVelocity = 0;
-		this.SetAnimation("disolve2");
+		this.SetAnimation(animations.disolve2);
 	};
 
 	this.Explode = function() {
 		isExploding = true;
 		xVelocity = 0;
 		yVelocity = EXPLODEVELOCITY;
-		this.SetAnimation("explode");
+		this.SetAnimation(animations.explode);
 		sound.Play("buzz");
 	};
 
@@ -497,9 +500,9 @@ function Player(xI, yI, imgI){
 	this.Win = function() {
 
 		if (isOnRope){
-			this.SetAnimation("ropewin");
+			this.SetAnimation(animations.ropewin);
 		}else{
-			this.SetAnimation("standingwin");
+			this.SetAnimation(animations.standingwin);
 		}
 		isWinning = true;
 		xVelocity = 0;
@@ -638,17 +641,17 @@ function Player(xI, yI, imgI){
 	};
 
 	this.SetAnimation = function(name){
-		if(isWinning){
+		if(isWinning || !name){
 			return;
 		}
-		if (name !== 'idle'){
+		/*if (name !== 'idle'){
 			log.DebugLog("Animation Changed to " + name);
 		}
 		if (!animations[name]){
 			log.Log("Could not find animation " + name);
 			return;
-		}
-		currentAnimation = animations[name];
+		}*/
+		currentAnimation = name;
 		currentAnimation.ChangeTo(flipped);
 	};
 
@@ -785,7 +788,7 @@ function Player(xI, yI, imgI){
 		isRolling = false;
 		flipped = (keys.right - keys.left === 0 ? flipped : keys.right - keys.left < 0);
 		if (animate){
-			this.SetAnimation("fall");
+			this.SetAnimation(animations.fall);
 		}
 		currentBounds = fallingBounds;
 
@@ -796,11 +799,11 @@ function Player(xI, yI, imgI){
 		isJumping = false;
 		isJumpingUp = false;
 		if (pushed){
-			this.SetAnimation("roll2");
+			this.SetAnimation(animations.roll2);
 			isRolling = true;
 			pushed = false;
 		}else{
-			this.SetAnimation("land");
+			this.SetAnimation(animations.land);
 			xVelocity = 0;
 			currentBounds = standingBounds;
 		}
@@ -814,5 +817,5 @@ function Player(xI, yI, imgI){
 	};
 
 
-	this.SetAnimation("idle");
+	this.SetAnimation(animations.idle);
 }

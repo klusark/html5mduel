@@ -1,5 +1,8 @@
 /*global Scale, log*/
 var canvas;
+/**
+ * @constructor
+ */
 function Canvas() {
 	var ctx,
 	_canvas,

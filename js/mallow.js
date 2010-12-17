@@ -1,4 +1,7 @@
 /*global image, Animation, StaticImage*/
+/**
+ * @constructor
+ */
 function Mallow(xI, yI, frame){
 	var img = image.GetSpritesImg(),
 	x = xI,

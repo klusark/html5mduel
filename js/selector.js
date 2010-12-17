@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 function Selector(x, y, scale){
 	img = new Image()
 
@@ -13,13 +16,12 @@ function Selector(x, y, scale){
 	document.getElementById("1").style.display = "none"
 	document.getElementById("2").style.display = "block"
 
-	var x = x;
-	var y = y;
 	var scale = scale*8
 	var colour = 0
 	var colours = 5
 	var url = "generate?sample&m="+scale+"&c="
 	img.src = url + colour
+
 	this.Draw = function(){
 
 		currentAnimation.Draw(img, x, y, scale)

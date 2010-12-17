@@ -1,5 +1,8 @@
 /*global Scale, window*/
 var image;
+/**
+ * @constructor
+ */
 function ImageManager()
 {
 	var player1Img = new Image(),

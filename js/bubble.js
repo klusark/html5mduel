@@ -1,4 +1,7 @@
 /*global game, image, Animation, Bounds*/
+/**
+ * @constructor
+ */
 function Bubble(xI, yI, xVelocityI, yVelocityI) {
 	var img = image.GetSpritesImg(),
 	lastUpdateTime = game.GetTime(),

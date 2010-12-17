@@ -1,5 +1,9 @@
 /*global Scale, canvas, sound, Effect, log, powerups, Bubble, Selector, Level, window, Player, image, Mallow, Emitter*/
 var game;
+
+/**
+ * @constructor
+ */
 function Game() {
 	var platforms, ropes, players, mallows,
 	emitters, effects, bubbles, entities,
@@ -18,7 +22,8 @@ function Game() {
 	scale = 1,
 	FPS = 30,
 	maxBubbles = 3,
-	maxTimeBetweenBubbles = 3000;
+	maxTimeBetweenBubbles = 3000,
+	powerups;
 
 	sound.Preload("buzz");
 
@@ -27,7 +32,7 @@ function Game() {
 	};
 
 	this.CreateEffect = function(name, x, y) {
-		effects.push(new Effect(x, y, name));
+		effects.push(new name(x, y));
 	};
 
 	this.Draw = function() {
@@ -149,7 +154,7 @@ function Game() {
 				bubbles[i].CollidePlayer(players[1]);
 			}
 			if (bubbles[i].IsDone()){
-				this.CreateEffect("BubbleDisolve", bubbles[i].GetX(), bubbles[i].GetY());
+				this.CreateEffect(BubbleDisolve, bubbles[i].GetX(), bubbles[i].GetY());
 				bubbles.splice(i, 1);
 				i -= 1;
 				if (bubbles.length < maxBubbles){
@@ -187,7 +192,7 @@ function Game() {
 			newBubble = new Bubble(x, y, xVelocity, yVelocity);
 			newBubble.SetCurrentPowerup(powerups.GetRandomPowerup(newBubble));
 			bubbles.push(newBubble);
-			this.CreateEffect("PurpleSmoke", ex, ey);
+			this.CreateEffect(PurpleSmoke, ex, ey);
 			this.SetNextBubbleTime();
 
 		}
@@ -244,6 +249,9 @@ function Game() {
 		inSelectMode = false;
 		timeStarted = false;
 
+		powerups = new PowerupManager();
+		powerups.ReigisterPowerups();
+
 		this.SetNextBubbleTime();
 
 		params = location.href.split("?");
@@ -262,8 +270,8 @@ function Game() {
 		players[1].SetFlipped(true);
 
 
-		this.CreateEffect("GreenSmoke", 28, 144);
-		this.CreateEffect("GreenSmoke", 268, 144);
+		this.CreateEffect(GreenSmoke, 28, 144);
+		this.CreateEffect(GreenSmoke, 268, 144);
 
 		frame = 0;
 		for (i = 0; i < 20; i += 1){

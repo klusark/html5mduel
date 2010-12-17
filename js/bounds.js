@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 function Bounds(xI, yI, wI, hI){
 	var x = xI,
 	y = yI,

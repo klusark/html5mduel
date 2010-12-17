@@ -2,8 +2,11 @@
 /*global console*/
 if (!console) {
 	console = {};
-	console.log = function(){};
+	console.log = function(i){};
 }
+/**
+ * @constructor
+ */
 function Log() {
 	var debug = false;
 

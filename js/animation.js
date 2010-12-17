@@ -1,4 +1,7 @@
 /*global game, canvas*/
+/**
+ * @constructor
+ */
 function Animation(flippedYOffset, startX, frameTimeI, numFramesI, wI, hI){
 
 	var frameTime = frameTimeI,

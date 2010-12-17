@@ -1,4 +1,7 @@
 /*global image, StaticImage*/
+/**
+ * @constructor
+ */
 function Emitter(xI, yI, typeI) {
 	var img = image.GetSpritesImg(),
 	type = typeI,

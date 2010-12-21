@@ -1,5 +1,4 @@
 /*global Scale, log*/
-var canvas;
 /**
  * @constructor
  */
@@ -55,9 +54,9 @@ function Canvas() {
 		_canvas.width = 320*scale;
 		_canvas.height = 200*scale;
 		log.Log("ScaleChange "+scale);
-		var container = document.getElementById("container").style;
-		container.width = 320*scale;
-		container.height = 200*scale;
+		//var container = document.getElementById("container").style;
+		//container.width = 320*scale;
+		//container.height = 200*scale;
 		/*var windowwidth = window.innerWidth
 		var windowheight = window.innerHeight
 		scale = 1
@@ -67,6 +66,4 @@ function Canvas() {
 		*/
 	};
 }
-
-canvas = new Canvas();
 

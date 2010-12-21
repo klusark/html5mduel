@@ -23,20 +23,21 @@
 <script type="text/javascript" src="js/log.js"></script>
 <script type="text/javascript" src="js/canvas.js"></script>
 <script type="text/javascript" src="js/level.js"></script>
+<style type="text/css" media="screen">
+body {
+padding:0px;
+background-color: #000;
+overflow: hidden;
+margin: 0;
+}
+</style>
 </head>
-<body style="background-color: #000;overflow: hidden">
-<div style="width: 320;height: 200;margin: auto;position:relative;" id="container">
-<canvas id="canvas" width="320" height="200" >
+<body>
+<canvas id="canvas" width="320px" height="200px">
 This text is displayed if your browser does not support HTML5 Canvas.
 </canvas>
-<div id="1"><input type=button OnClick="core.init()" value="Restart"><input type=button OnClick="core.ColourSelect()" value="Colour Select"></div>
-<div id="2" style='display:none'><input type=button OnClick="core.GetSelector().Previous()" value="Previous Colour"><input type=button OnClick="core.GetSelector().Next()" value="Next Colour"><br/>
-<input type=button OnClick="core.GetSelector().StartRun()" value="Start Run"><input type=button OnClick="core.GetSelector().StartIdle()" value="Start Idle"><br/>
-<input type=button OnClick="core.GetSelector().Save(0)" value="Save as Player 1"><input type=button OnClick="core.GetSelector().Save(1)" value="Save as Player 2"><br/>
-<input type=button OnClick="core.GetSelector().End();core.init()" value="Back to game"></div>
 <footer>
 <a href="http://code.google.com/p/html5mduel/issues">Report Bugs</a><br/>
 </footer>
-</div>
 </body>
 </html>

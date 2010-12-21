@@ -20,4 +20,3 @@ function Log() {
 		console.log(message);
 	};
 }
-var log = new Log();

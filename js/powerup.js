@@ -3,6 +3,7 @@
  * @constructor
  */
 function PowerupGun(owner){
+
 	this.image = new StaticImage(image.GetSpritesImg(), 284, 0, 12, 12);
 
 	var ammo = 5,
@@ -58,6 +59,7 @@ function PowerupGun(owner){
 	};
 
 }
+window["PowerupGun"] = PowerupGun;
 
 /**
  * @constructor
@@ -72,6 +74,7 @@ function PowerupSkull(owner){
 	};
 
 }
+window["PowerupSkull"] = PowerupSkull;
 
 /**
  * @constructor
@@ -113,6 +116,7 @@ function PowerupInvis(owner){
 		}
 	};
 }
+window["PowerupInvis"] = PowerupInvis;
 
 /**
  * @constructor
@@ -185,6 +189,7 @@ function PowerupMine(owner) {
 		game.AddEntity(new Mine(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+23), owner));
 	};
 }
+window["PowerupMine"] = PowerupMine;
 
 /**
  * @constructor
@@ -265,13 +270,15 @@ function PowerupNukepuck(owner) {
 	var used = false,
 	inPlayer = false,
 	//HACK!!! fixes "The 'this' problem"
-	self = this;
+	self = this,
+	throwpuck = new Animation(25, 1050, 100, 2, 24, 24);
+	throwpuck.Repeat(false);
 	this.Use = function() {
 		if (!inPlayer || used || !owner.IsIdle()){
 			return;
 		}
 		used = true;
-		owner.InterruptAnimation("throwpuck", true, function(){self.ThrowPuck();});
+		owner.InterruptAnimation(throwpuck, true, function(){self.ThrowPuck();});
 	};
 
 	this.CollidePlayer = function(player) {
@@ -279,11 +286,6 @@ function PowerupNukepuck(owner) {
 			owner.SetDone(true);
 			owner = player;
 			player.CollectPowerup(this);
-			var ownerAnimations = owner.GetAnimations();
-			if (!ownerAnimations.throwpuck){
-				ownerAnimations.throwpuck = new Animation(25, 1050, 100, 2, 24, 24);
-				ownerAnimations.throwpuck.Repeat(false);
-			}
 			inPlayer = true;
 		}
 	};
@@ -293,6 +295,7 @@ function PowerupNukepuck(owner) {
 		game.AddEntity(new Puck(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+22), owner, owner.IsFlipped()));
 	};
 }
+window["PowerupNukepuck"] = PowerupNukepuck;
 
 /**
  * @constructor
@@ -311,6 +314,7 @@ function PowerupDestroy(owner) {
 		}
 	};
 }
+window["PowerupDestroy"] = PowerupDestroy;
 
 /**
  * @constructor
@@ -376,15 +380,16 @@ function PowerupNade(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 297, 13, 12, 12);
 	var used = false,
 	inPlayer = false,
-
+	thrownade = new Animation(25, 1000, 100, 2, 24, 24),
 	//HACK!!! fixes "The 'this' problem"
 	self = this;
+	thrownade.Repeat(false);
 	this.Use = function() {
 		if (!inPlayer || used || !owner.IsIdle()){
 			return;
 		}
 		used = true;
-		owner.InterruptAnimation("thrownade", true, function(){self.ThrowNade();});
+		owner.InterruptAnimation(thrownade, true, function(){self.ThrowNade();});
 	};
 
 	this.CollidePlayer = function(player) {
@@ -392,11 +397,6 @@ function PowerupNade(owner) {
 			owner.SetDone(true);
 			owner = player;
 			player.CollectPowerup(this);
-			var ownerAnimations = owner.GetAnimations();
-			if (!ownerAnimations.thrownade){
-				ownerAnimations.thrownade = new Animation(25, 1000, 100, 2, 24, 24);
-				ownerAnimations.thrownade.Repeat(false);
-			}
 			inPlayer = true;
 		}
 	};
@@ -407,6 +407,7 @@ function PowerupNade(owner) {
 		game.AddEntity(new Nade(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()), owner, owner.IsFlipped()));
 	};
 }
+window["PowerupNade"] = PowerupNade;
 
 /**
  * @constructor
@@ -425,7 +426,7 @@ function PowerupTeleport(owner) {
 	this.CollidePlayer = function(player) {
 		game.CreateEffect(GreenSmoke, player.GetX(), player.GetY());
 		player.SetX(Math.floor(Math.random()*320));
-		player.SetY(Math.floor(Math.random()*150));
+		player.SetY(Math.floor(Math.random()*120));
 		player.StartFall(true);
 		owner.SetDone(true);
 		player.CollectPowerup(false);
@@ -433,6 +434,7 @@ function PowerupTeleport(owner) {
 
 	};
 }
+window["PowerupTeleport"] = PowerupTeleport;
 
 /**
  * @constructor
@@ -442,7 +444,9 @@ function PowerupChute(owner) {
 	var inPlayer = false,
 	self = this,
 	active = false,
-	v = 40;
+	v = 40,
+	chute = new Animation(25, 1100, 1, 1, 24, 24);
+	chute.Repeat(false);
 	this.Use = function() {
 		if (!inPlayer || owner.IsOnGround() || owner.IsOnRope() || owner.GetYVelocity() < 0){
 			return;
@@ -477,11 +481,6 @@ function PowerupChute(owner) {
 			owner.SetDone(true);
 			owner = player;
 			player.CollectPowerup(this);
-			var ownerAnimations = owner.GetAnimations();
-			if (!ownerAnimations.chute){
-				ownerAnimations.chute = new Animation(25, 1100, 1, 1, 24, 24);
-				ownerAnimations.chute.Repeat(false);
-			}
 			inPlayer = true;
 		}
 	};
@@ -505,9 +504,10 @@ function PowerupChute(owner) {
 	};
 
 	this.Animate = function() {
-		owner.InterruptAnimation("chute", true);
+		owner.InterruptAnimation(chute, true);
 	};
 }
+window["PowerupChute"] = PowerupChute;
 
 /**
  * @constructor
@@ -536,7 +536,7 @@ function Powerup1000v(owner) {
 			}
 			player.SetYVelocity(-1000);
 			player.SetXVelocity(100);
-			player.InterruptAnimation("explode", true);
+			player.InterruptAnimation(owner.InterruptAnimation(owner.GetAnimations().explode, true));
 			player.StartFall(true);
 			owner.DontCollide();
 			game.CreateEffect(Lightning, player.GetX(), player.GetY());
@@ -559,6 +559,7 @@ function Powerup1000v(owner) {
 		owner.SetImage(orrigImg);
 	};
 }
+window["Powerup1000v"] = Powerup1000v;
 
 /**
  * @constructor
@@ -574,9 +575,7 @@ function PowerupBoots(owner) {
 			owner.SetDone(true);
 			owner = player;
 			player.CollectPowerup(this);
-			//orrigImg = owner.GetImage();
 			inPlayer = true;
-
 		}
 	};
 
@@ -596,6 +595,7 @@ function PowerupBoots(owner) {
 	};
 
 }
+window["PowerupBoots"] = PowerupBoots;
 
 /**
  * @constructor
@@ -603,20 +603,14 @@ function PowerupBoots(owner) {
 function PowerupHook(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 323, 13, 12, 12);
 	var inPlayer = false,
-	active = false;
+	active = false,
+	hook = new Animation(25, 1200, 100, 2, 24, 24);
 	this.CollidePlayer = function(player) {
 		if (!inPlayer) {
 			owner.SetDone(true);
 			owner = player;
 			player.CollectPowerup(this);
-			//orrigImg = owner.GetImage();
-			var ownerAnimations = owner.GetAnimations();
-			if (!ownerAnimations.hook){
-				ownerAnimations.hook = new Animation(25, 1200, 100, 2, 24, 24);
-				//ownerAnimations["hook"].Repeat(false);
-			}
 			inPlayer = true;
-
 		}
 	};
 
@@ -642,7 +636,7 @@ function PowerupHook(owner) {
 		var i, other, test, platforms;
 		if (!active) {
 			active = true;
-			owner.InterruptAnimation("hook", true);
+			owner.InterruptAnimation(hook, true);
 		}
 		platforms = game.GetPlatforms();
 		for (i = 0; i < platforms.length; i += 1){
@@ -676,3 +670,4 @@ function PowerupHook(owner) {
 		this.Disable();
 	};
 }
+window["PowerupHook"] = PowerupHook;

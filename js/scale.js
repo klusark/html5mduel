@@ -11,7 +11,11 @@ function ScaleT(){
 		callbacks.push(callback);
 	};
 
-	this.SetScale = function(scale) {
+	this.SetScale = function(_scale) {
+		if (typeof(_scale) !== "number" || _scale < 1 || _scale > 10){
+			return;
+		}
+		scale = _scale;
 		var i;
 		for (i = 0; i < callbacks.length; i += 1){
 			callbacks[i](scale);
@@ -22,5 +26,3 @@ function ScaleT(){
 		return scale;
 	};
 }
-
-var Scale = new ScaleT();

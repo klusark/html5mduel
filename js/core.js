@@ -1,5 +1,9 @@
 /*global Scale, canvas, sound, Effect, log, powerups, Bubble, Selector, Level, window, Player, image, Mallow, Emitter*/
-var game;
+
+/*TODO:
+ * bug with interupt animation in player that the player could come out of a death animation
+ *
+ * */
 
 /**
  * @constructor
@@ -9,8 +13,8 @@ function Game() {
 	emitters, effects, bubbles, entities,
 	debug,
 	gameOver = false,
-	selector,
-	inSelectMode,
+	/*selector,
+	inSelectMode,*/
 
 	gameInterval,
 
@@ -18,6 +22,7 @@ function Game() {
 	startTime,
 	timeStarted,
 	stoppedTime,
+	level,
 	timescale = 1,
 	scale = 1,
 	FPS = 30,
@@ -37,9 +42,9 @@ function Game() {
 
 	this.Draw = function() {
 		canvas.Clear();
-		if (this.InSelectMode()){
+		/*if (this.InSelectMode()){
 			selector.Draw();
-		}else{
+		}else{*/
 			this.ArrayDraw(platforms);
 			this.ArrayDraw(ropes);
 			this.ArrayDraw(emitters);
@@ -50,7 +55,7 @@ function Game() {
 
 			//might need to place this somewhere else
 			this.ArrayDraw(entities);
-		}
+		//}
 	};
 
 	this.ArrayDraw = function(array) {
@@ -72,9 +77,9 @@ function Game() {
 
 
 	this.Update = function() {
-		if (this.InSelectMode()){
+		/*if (this.InSelectMode()){
 			selector.Update();
-		}else{
+		}else{*/
 			this.ArrayUpdate(players);
 			this.ArrayUpdate(mallows);
 			this.ArrayUpdate(entities);
@@ -115,7 +120,7 @@ function Game() {
 
 			}
 
-		}
+		//}
 		this.GetCollitionsOf(players[0]);
 	};
 
@@ -202,9 +207,9 @@ function Game() {
 		nextBubbleTime = this.GetTime() + Math.random()*maxTimeBetweenBubbles;
 	};
 
-	this.InSelectMode = function() {
+	/*this.InSelectMode = function() {
 		return inSelectMode;
-	};
+	};*/
 
 	this.ArrayUpdate = function(array) {
 		var i;
@@ -213,14 +218,14 @@ function Game() {
 		}
 	};
 
-	this.ColourSelect = function() {
+	/*this.ColourSelect = function() {
 		inSelectMode = true;
 		selector = new Selector(0, 0, scale);
 	};
 
 	this.GetSelector = function() {
 		return selector;
-	};
+	};*/
 
 
 	this.Restart = function() {
@@ -233,7 +238,7 @@ function Game() {
 		canvas.Clear();
 
 
-		var params, frame, loadingInterval, level, i;
+		var params, frame, loadingInterval, i;
 
 		stoppedTime = 0;
 		platforms = [];
@@ -246,7 +251,7 @@ function Game() {
 		entities = [];
 		debug = false;
 		gameOver = false;
-		inSelectMode = false;
+		//inSelectMode = false;
 		timeStarted = false;
 
 		powerups = new PowerupManager();
@@ -262,6 +267,9 @@ function Game() {
 		level = new Level();
 		level.SetupPlatforms();
 		level.SetupRopes(platforms, ropes);
+
+		document.onkeyup = function(e){game.OnKeyUp(e);};
+		document.onkeydown = function(e){game.OnKeyDown(e);};
 
 
 		players[0] = new Player(28, 144, image.GetPlayer1Img());
@@ -313,6 +321,10 @@ function Game() {
 	this.IsLoaded = function() {
 		return image.IsLoaded();
 	};
+
+	this.MakeFloor = function(x1,x2,y) {
+		level.MakeFloor(x1, x2, y);
+	}
 
 	this.IsOnGround = function(yb, ya, entity) {
 		if (ya < yb){
@@ -402,6 +414,7 @@ function Game() {
 
 
 	this.OnKeyDown = function(event) {
+		//log.Log(event.keyCode);
 		if (players){
 			players[0].KeyDown(event.keyCode);
 			players[1].KeyDown(event.keyCode);
@@ -409,6 +422,12 @@ function Game() {
 	};
 
 	this.OnKeyUp = function(event) {
+		if (event.keyCode == 109){
+			Scale.SetScale(Scale.GetScale()-1);
+		}else if (event.keyCode == 107){
+			Scale.SetScale(Scale.GetScale()+1);
+		}
+		//log.Log(event.keyCode);
 		if (players){
 			players[0].KeyUp(event.keyCode);
 			players[1].KeyUp(event.keyCode);
@@ -428,15 +447,17 @@ function Game() {
 
 
 }
-
+var Scale, log, sound, image, canvas, game;
 window.onload = function()
 {
+	Scale = new ScaleT();
+	log = new Log();
+	sound = new Sound();
+	image = new ImageManager();
+	canvas = new Canvas();
 	canvas.DocumentLoaded();
 	Scale.SetScale(3);
 	game = new Game();
-	document.onkeyup = function(e){game.OnKeyUp(e);};
-	document.onkeydown = function(e){game.OnKeyDown(e);};
-
 
 	game.init();
 };

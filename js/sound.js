@@ -18,6 +18,3 @@ function Sound() {
 		sounds[name].play();
 	};
 }
-
-var sound = new Sound();
-

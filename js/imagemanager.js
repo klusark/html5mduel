@@ -1,5 +1,5 @@
 /*global Scale, window*/
-var image;
+
 /**
  * @constructor
  */
@@ -10,9 +10,10 @@ function ImageManager()
 	spritesImg = new Image(),
 
 	//make this not needed.
-	lightningImg = new Image();
+	lightningImg = new Image(),
+	self = this;
 
-	Scale.ScaleCallback(function(scale){image.ScaleChange(scale);});
+	Scale.ScaleCallback(function(scale){self.ScaleChange(scale);});
 
 	/*if (this.IsOnAppEngine()){
 		this.SetScale(scale)
@@ -52,5 +53,3 @@ function ImageManager()
 		return player1Img.complete && player2Img.complete && spritesImg.complete;
 	};
 }
-
-image = new ImageManager();

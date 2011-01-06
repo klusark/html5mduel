@@ -1,11 +1,7 @@
 /**
  * @constructor
  */
-function Bounds(xI, yI, wI, hI){
-	var x = xI,
-	y = yI,
-	w = wI,
-	h = hI;
+function Bounds(x, y, w, h){
 	this.GetX = function() {
 		return x;
 	};

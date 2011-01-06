@@ -2,13 +2,9 @@
 /**
  * @constructor
  */
-function Emitter(xI, yI, typeI) {
+function Emitter(x, y, type) {
 	var img = image.GetSpritesImg(),
-	type = typeI,
-	emitter = new StaticImage(img, type*16+type+92, 9, 16, 16),
-
-	x = xI,
-	y = yI;
+	emitter = new StaticImage(img, type*16+type+92, 9, 16, 16);
 
 
 	this.Draw = function() {

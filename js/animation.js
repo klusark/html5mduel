@@ -2,14 +2,9 @@
 /**
  * @constructor
  */
-function Animation(flippedYOffset, startX, frameTimeI, numFramesI, wI, hI){
-
-	var frameTime = frameTimeI,
-	numFrames = numFramesI,
-	NextFrameTime = time.Get() + frameTime,
+function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
+	var NextFrameTime = time.Get() + frameTime,
 	frame = 0,
-	w = wI,
-	h = hI,
 	repeat = true,
 	startReverse = false,
 	reverse = false,

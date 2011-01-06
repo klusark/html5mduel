@@ -2,7 +2,7 @@
 /**
  * @constructor
  */
-function Bubble(xI, yI, xVelocityI, yVelocityI) {
+function Bubble(x, y, xVelocity, yVelocity) {
 	var img = image.GetSpritesImg(),
 	lastUpdateTime = time.Get(),
 
@@ -10,10 +10,6 @@ function Bubble(xI, yI, xVelocityI, yVelocityI) {
 
 
 	powerup,
-	x = xI,
-	y = yI,
-	yVelocity = yVelocityI,
-	xVelocity = xVelocityI,
 
 	done = false,
 

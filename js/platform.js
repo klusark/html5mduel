@@ -2,12 +2,8 @@
 /**
  * @constructor
  */
-function Platform(xI, yI, numPlatformsI) {
+function Platform(x, y, numPlatforms) {
 	var img = image.GetSpritesImg(),
-
-	x = xI,
-	y = yI,
-	numPlatforms = numPlatformsI,
 
 	platform = new StaticImage(img, 143, 0, 14, 8),
 

@@ -2,7 +2,7 @@
 /**
  * @constructor
  */
-function Player(xI, yI, imgI){
+function Player(x, y, img){
 	var lastUpdateTime = time.Get(),
 	animations = [],
 	keyCodes = [],
@@ -13,9 +13,6 @@ function Player(xI, yI, imgI){
 
 	flipped = false,
 
-	x = xI,
-	y = yI,
-	img = imgI,
 	yVelocity = 0,
 	yMaxVelocity = 180,
 	xVelocity = 0,

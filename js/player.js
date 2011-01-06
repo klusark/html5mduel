@@ -3,7 +3,7 @@
  * @constructor
  */
 function Player(xI, yI, imgI){
-	var lastUpdateTime = game.GetTime(),
+	var lastUpdateTime = time.Get(),
 	animations = [],
 	keyCodes = [],
 	keys = [],
@@ -141,7 +141,7 @@ function Player(xI, yI, imgI){
 	};
 
 	this.Update = function(){
-		var currentTime = game.GetTime(),
+		var currentTime = time.Get(),
 		deltaT = (currentTime - lastUpdateTime)/1000;
 
 		if (currentPowerup && currentPowerup.Update){

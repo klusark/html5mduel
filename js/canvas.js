@@ -17,6 +17,8 @@ function Canvas() {
 		//hopefuly chrome gets a similar setting soon
 		//this really has no use because of my appengine scaling
 		ctx.mozImageSmoothingEnabled = false;
+
+		this.Clear();
 	};
 
 	this.DrawImage = function(image, sx, sy, sw, sh, dx, dy, dw, dh) {
@@ -33,6 +35,13 @@ function Canvas() {
 			return;
 		}
 		ctx.fillRect(x*scale, y*scale, w*scale, h*scale);
+	};
+
+	this.FillText = function(text, x, y) {
+		if (!ctx){
+			return;
+		}
+		ctx.fillText(text, x*scale, y*scale);
 	};
 
 	this.FillStyle = function(style) {
@@ -53,7 +62,8 @@ function Canvas() {
 		scale = _scale;
 		_canvas.width = 320*scale;
 		_canvas.height = 200*scale;
-		log.Log("ScaleChange "+scale);
+		//log.Log("ScaleChange "+scale);
+		this.Clear();
 		//var container = document.getElementById("container").style;
 		//container.width = 320*scale;
 		//container.height = 200*scale;
@@ -64,6 +74,10 @@ function Canvas() {
 			++scale
 		var canvas = document.getElementById('canvas')
 		*/
+	};
+
+	this.GetContext = function() {
+		return ctx;
 	};
 }
 

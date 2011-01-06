@@ -6,7 +6,7 @@ function Animation(flippedYOffset, startX, frameTimeI, numFramesI, wI, hI){
 
 	var frameTime = frameTimeI,
 	numFrames = numFramesI,
-	NextFrameTime = game.GetTime() + frameTime,
+	NextFrameTime = time.Get() + frameTime,
 	frame = 0,
 	w = wI,
 	h = hI,
@@ -23,7 +23,7 @@ function Animation(flippedYOffset, startX, frameTimeI, numFramesI, wI, hI){
 	isAnimationDone = false;
 
 	this.Update = function() {
-		var currentTime = game.GetTime();
+		var currentTime = time.Get();
 		while (NextFrameTime < currentTime) {
 			NextFrameTime += frameTime;
 			frame += 1;
@@ -51,7 +51,7 @@ function Animation(flippedYOffset, startX, frameTimeI, numFramesI, wI, hI){
 	};
 
 	this.ChangeTo = function(bflipped) {
-		NextFrameTime = game.GetTime() + frameTime;
+		NextFrameTime = time.Get() + frameTime;
 		flipped = bflipped;
 		frame = 0;
 		isAnimationDone = false;

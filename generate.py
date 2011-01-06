@@ -21,7 +21,6 @@ class MainHandler(webapp.RequestHandler):
 		sprites = False
 		sample = False
 		colour = 0
-		m=1
 		colours = [\
 		((97, 112, 0, 0), (115, 0, 0, 255), (131, 0, 0, 255), (147, 0, 0, 255), (215, 43, 0, 255), (115, 115, 115, 255), (255, 255, 19, 255), (255, 255, 255, 255)),\
 		((97, 112, 0, 0), (20, 20, 199, 255), (0, 69, 186, 255), (0, 56, 199, 255), (0, 81, 174, 255), (115, 115, 115, 255), (0, 199, 0, 255), (255, 255, 255, 255)),\
@@ -41,6 +40,9 @@ class MainHandler(webapp.RequestHandler):
 				colour = 0
 		if u'm' in self.request.GET:
 			m = int(self.request.GET['m'])
+		
+		if m > 10:
+			return
 
 		key = "m"+str(m)
 		if sprites:
@@ -63,11 +65,9 @@ class MainHandler(webapp.RequestHandler):
 		else:
 			palette = colours[colour]
 		w = png.Writer(width=width*m, height=height*m, palette=palette, compression=9)
-		#f = open('./test.png', 'wb')
 		result = w.write_array(f, pixels)
 		
 
-			
 		image = Image(key_name=key)
 		image.image = result
 		image.put()

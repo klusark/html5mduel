@@ -4,7 +4,7 @@
  */
 function Bubble(xI, yI, xVelocityI, yVelocityI) {
 	var img = image.GetSpritesImg(),
-	lastUpdateTime = game.GetTime(),
+	lastUpdateTime = time.Get(),
 
 	animation = new Animation(25, 336, 200, 3, 16, 16),
 
@@ -29,7 +29,7 @@ function Bubble(xI, yI, xVelocityI, yVelocityI) {
 	};
 
 	this.Update = function() {
-		var currentTime = game.GetTime(),
+		var currentTime = time.Get(),
 		deltaT = (currentTime - lastUpdateTime)/1000,
 
 		ya = y+ deltaT*yVelocity,

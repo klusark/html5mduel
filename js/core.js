@@ -17,24 +17,19 @@ function Game() {
 	inSelectMode,*/
 
 	gameInterval,
+	loadingInterval,
 
 	nextBubbleTime,
-	startTime,
-	timeStarted,
-	stoppedTime,
 	level,
-	timescale = 1,
 	scale = 1,
 	FPS = 30,
 	maxBubbles = 3,
 	maxTimeBetweenBubbles = 3000,
-	powerups;
+	powerups,
+	gameEndTime = 0,
+	winner;
 
 	sound.Preload("buzz");
-
-	this.GetTime = function() {
-		return timeStarted ? new Date().getTime() * timescale - startTime : stoppedTime;
-	};
 
 	this.CreateEffect = function(name, x, y) {
 		effects.push(new name(x, y));
@@ -45,20 +40,20 @@ function Game() {
 		/*if (this.InSelectMode()){
 			selector.Draw();
 		}else{*/
-			this.ArrayDraw(platforms);
-			this.ArrayDraw(ropes);
-			this.ArrayDraw(emitters);
-			this.ArrayDraw(players);
-			this.ArrayDraw(mallows);
-			this.ArrayDraw(bubbles);
-			this.ArrayDraw(effects);
+			ArrayDraw(platforms);
+			ArrayDraw(ropes);
+			ArrayDraw(emitters);
+			ArrayDraw(players);
+			ArrayDraw(mallows);
+			ArrayDraw(bubbles);
+			ArrayDraw(effects);
 
 			//might need to place this somewhere else
-			this.ArrayDraw(entities);
+			ArrayDraw(entities);
 		//}
 	};
 
-	this.ArrayDraw = function(array) {
+	function ArrayDraw(array) {
 		var i;
 		for (i = 0; i < array.length; i += 1){
 			if (array[i].Draw){
@@ -75,14 +70,17 @@ function Game() {
 		return platforms;
 	};
 
+	this.GetWinner = function() {
+		return winner;
+	};
 
 	this.Update = function() {
 		/*if (this.InSelectMode()){
 			selector.Update();
 		}else{*/
-			this.ArrayUpdate(players);
-			this.ArrayUpdate(mallows);
-			this.ArrayUpdate(entities);
+			ArrayUpdate(players);
+			ArrayUpdate(mallows);
+			ArrayUpdate(entities);
 			this.UpdateBubbles();
 
 			var i;
@@ -100,19 +98,23 @@ function Game() {
 				players[0].DisableInput();
 				players[1].DisableInput();
 				if(players[0].IsDead() && players[1].IsDead()){
-					this.DebugLog("tie");
+					log.DebugLog("tie");
 					gameOver = true;
+					winner = 2;
 				}else if (players[0].IsDead() && players[1].IsInPositionToWin()){
 					log.DebugLog("Player 2 wins");
 					players[1].Win();
 					gameOver = true;
+					winner = 1;
 				}else if (players[1].IsDead() && players[0].IsInPositionToWin()){
 					log.DebugLog("Player 1 wins");
 					players[0].Win();
 					gameOver = true;
+					winner = 0;
 				}
 				if (gameOver){
-					this.SetNextBubbleTime();
+					gameEndTime = time.Get();
+					SetNextBubbleTime();
 					for(i = 0; i < bubbles.length; i += 1){
 						bubbles[i].SetDone(true);
 					}
@@ -122,6 +124,10 @@ function Game() {
 
 		//}
 		this.GetCollitionsOf(players[0]);
+	};
+
+	this.GetGameEndTime = function() {
+		return gameEndTime;
 	};
 
 	//this collisions system kind of sucks... but it works for mduel
@@ -163,12 +169,12 @@ function Game() {
 				bubbles.splice(i, 1);
 				i -= 1;
 				if (bubbles.length < maxBubbles){
-					this.SetNextBubbleTime();
+					SetNextBubbleTime();
 				}
 			}
 		}
 
-		if (!gameOver && bubbles.length < maxBubbles && this.GetTime() > nextBubbleTime) {
+		if (!gameOver && bubbles.length < maxBubbles && time.Get() > nextBubbleTime) {
 
 			if (emittor === 1) {
 				x = 14;
@@ -198,20 +204,20 @@ function Game() {
 			newBubble.SetCurrentPowerup(powerups.GetRandomPowerup(newBubble));
 			bubbles.push(newBubble);
 			this.CreateEffect(PurpleSmoke, ex, ey);
-			this.SetNextBubbleTime();
+			SetNextBubbleTime();
 
 		}
 	};
 
-	this.SetNextBubbleTime = function() {
-		nextBubbleTime = this.GetTime() + Math.random()*maxTimeBetweenBubbles;
-	};
+	function SetNextBubbleTime() {
+		nextBubbleTime = time.Get() + Math.random()*maxTimeBetweenBubbles;
+	}
 
 	/*this.InSelectMode = function() {
 		return inSelectMode;
 	};*/
 
-	this.ArrayUpdate = function(array) {
+	function ArrayUpdate(array) {
 		var i;
 		for(i = 0; i < array.length; i += 1){
 			array[i].Update();
@@ -238,7 +244,7 @@ function Game() {
 		canvas.Clear();
 
 
-		var params, frame, loadingInterval, i;
+		var params, frame, i;
 
 		stoppedTime = 0;
 		platforms = [];
@@ -257,7 +263,7 @@ function Game() {
 		powerups = new PowerupManager();
 		powerups.ReigisterPowerups();
 
-		this.SetNextBubbleTime();
+		SetNextBubbleTime();
 
 		params = location.href.split("?");
 		if (params[1] === "debug"){
@@ -267,9 +273,6 @@ function Game() {
 		level = new Level();
 		level.SetupPlatforms();
 		level.SetupRopes(platforms, ropes);
-
-		document.onkeyup = function(e){game.OnKeyUp(e);};
-		document.onkeydown = function(e){game.OnKeyDown(e);};
 
 
 		players[0] = new Player(28, 144, image.GetPlayer1Img());
@@ -294,27 +297,26 @@ function Game() {
 		emitters.push(new Emitter(152, 0, 1));
 		emitters.push(new Emitter(320-16, 92, 2));
 
-		loadingInterval = setInterval(function(){
-			if (game.IsLoaded()){
-				window.clearInterval(loadingInterval);
-				game.FinishLoading();
-			}
-		}, 25);
+		loadingInterval = setInterval(CheckLoadedInterval, 25);
 	};
 
-	this.StartTime = function() {
-		startTime = new Date().getTime() * timescale;
-		timeStarted = true;
+	this.End = function() {
+		//Clean stuff up
+		clearInterval(gameInterval);
 	};
 
-	this.StopTime = function() {
-		stoppedTime = new Date().getTime() * timescale;
-		timeStarted = false;
-	};
+	function CheckLoadedInterval() {
+		if (game.IsLoaded()){
+			clearInterval(loadingInterval);
+			game.FinishLoading();
+		}
+	}
+
+
 
 	this.FinishLoading = function() {
 		sound.Play("buzz");
-		this.StartTime();
+		time.StartTime();
 		gameInterval = setInterval(function(){game.Update();game.Draw();}, 1000 / FPS);
 	};
 
@@ -447,17 +449,3 @@ function Game() {
 
 
 }
-var Scale, log, sound, image, canvas, game;
-window.onload = function()
-{
-	Scale = new ScaleT();
-	log = new Log();
-	sound = new Sound();
-	image = new ImageManager();
-	canvas = new Canvas();
-	canvas.DocumentLoaded();
-	Scale.SetScale(3);
-	game = new Game();
-
-	game.init();
-};

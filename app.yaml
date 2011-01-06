@@ -1,5 +1,5 @@
 application: html5mduel
-version: 734
+version: 7
 runtime: python
 api_version: 1
 
@@ -27,7 +27,7 @@ handlers:
 
 - url: /playersample
   script: images/spites.png
-  
+
 - url: /js
   static_dir: js
 

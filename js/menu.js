@@ -1,163 +1,94 @@
 function Menu() {
-	var scale
-	var avail
-	var inGame
-	var buttonDir = false
-	var gamesPerSeries
-	this.Setup = function() {
-		var windowwidth = window.innerWidth
-		var windowheight = window.innerHeight
-		scale = 1
-		while (320*(scale+1) < windowwidth && 200*(scale+1) < windowheight)
-			++scale
-		var canvas = document.getElementById('canvas')
-		canvas.width = 320*scale
-		canvas.height = 200*scale
-		var container = document.getElementById("container").style
-		container.width = 320*scale
-		container.height = 200*scale
-		
-		var menuid = document.getElementById("menu").style
-		menuid.width = 320*scale
-		menuid.height = 200*scale
-	}
-	
+	var drawInterval,
+	buttons = [],
+	currentButton = 0,
+	self = this,
+	ingameMenu = [],
+	gameManager;
+
+	this.Init = function() {
+		buttons[0] = new Button(110, 20, 100, 20, "Start Game", self.StartGame);
+		buttons[0].Select();
+		buttons[1] = new Button(110, 50, 100, 20, "Load Character", self.LoadCharacter);
+		buttons[2] = new Button(110, 80, 100, 20, "Somthing Else", self.LoadCharacter);
+		DrawMenu();
+
+		document.onkeyup = function(e){self.OnKeyUp(e);};
+		document.onkeydown = function(e){self.OnKeyDown(e);};
+		drawInterval = setInterval(UpdateMenu, 10);
+	};
+
+	function UpdateMenu() {
+		if (!gameManager) {
+			DrawMenu();
+		} else if (gameManager.IsGameOver()){
+			gameManager = null;
+		}
+
+	};
+
+	function DrawMenu() {
+		var i;
+		canvas.Clear();
+		for (i = 0; i < buttons.length; i += 1){
+			buttons[i].Draw();
+		}
+	};
+
+	this.OnKeyDown = function(event) {
+		if (game) {
+			game.OnKeyDown(event);
+		}
+	};
+
+	this.OnKeyUp = function(event) {
+		if (event.keyCode === 109) {
+			Scale.SetScale(Scale.GetScale()-1);
+		} else if (event.keyCode === 107){
+			Scale.SetScale(Scale.GetScale()+1);
+		}
+		//console.log(event.keyCode);
+		if (game) {
+			game.OnKeyUp(event);
+		} else if (gameManager) {
+			//this is intentionally left blank.
+		} else if (event.keyCode === 38) {
+			buttons[currentButton].Deselect();
+			currentButton -= 1;
+			if (currentButton < 0) {
+				currentButton = buttons.length-1;
+			}
+			buttons[currentButton].Select();
+		} else if (event.keyCode === 40) {
+			buttons[currentButton].Deselect();
+			currentButton += 1;
+			if (currentButton > buttons.length-1) {
+				currentButton = 0;
+			}
+			buttons[currentButton].Select();
+		} else if (event.keyCode === 13) {
+			buttons[currentButton].Click();
+		}
+	};
+
 	this.StartGame = function() {
-		if (inGame.length < 2)
-			return
-		gamesPerSeries = document.getElementById("numgames").value
-		document.getElementById("menu").style.display = "none"
-		document.getElementById("canvas").style.display = "block"
-		var players = this.GetPlayersNextRound()
-		core.StartGame(players[0], players[1], function(){menu.GameOver()})
-	}
-	
-	this.GetPlayersNextRound = function() {
-		
-	}
-	
-	this.StartGameMenu = function() {
-		avail = []
-		inGame = []
-		var result = ""
-		var playersjson = window.localStorage["players"]
-		if (playersjson) {
-			var players = JSON.parse(playersjson)
-			for (var i in players){
-				avail.push(i)
-				result += "<option>" + i + "</option>"
-			}
-		}
-		
-		document.getElementById("playersavail").innerHTML = result
-	
-		document.getElementById("main").style.display = "none"
-		document.getElementById("gamesettings").style.display = "block"
-	}
-	
-	this.GetScale = function() {
-		return scale
-	}
-	
-	this.Players = function() {
-		var result = "<tr id='pth'><td>Name</td><td>Wins</td><td>Losses</td><td>FIDS</td></tr>"
-		var table = document.getElementById("playerstable")
-		
-		var playersjson = window.localStorage["players"]
-		if (playersjson) {
-			var players = JSON.parse(playersjson)
-			for (var i in players){
-				var player = players[i]
-				result += "<tr><td>"
-				result += i
-				result += "</td><td>"
-				result += player.wins
-				result += "</td><td>"
-				result += player.losses
-				result += "</td><td>"
-				result += player.fids
-				result += "</td></tr>"
-			}
-		}
-		
-		table.innerHTML = result
-		document.getElementById("main").style.display = "none"
-		document.getElementById("players").style.display = "block"
-	}
-	
-	this.CreatePlayer = function() {
-		document.getElementById("players").style.display = "none"
-		document.getElementById("createPlayer").style.display = "block"
-	}
-	
-	this.CreateNewPlayer = function() {
-		var playersjson = window.localStorage["players"]
-		var players
-		if (playersjson) {
-			players = JSON.parse(playersjson)
-		} else {
-			players = {}
-		}
-		var player = new StoredPlayer()
-		var name = document.getElementById("playername")
-		if (name && name.value) {
-			players[name.value] = player
-			window.localStorage["players"] = JSON.stringify(players)
-		}
-		this.CancelCreateNewPlayer()
-	}
-	
-	this.CancelCreateNewPlayer = function() {
-		this.Players()
-		document.getElementById("createPlayer").style.display = "none"
-	}
-	
-	this.ClickPlayersAvail = function() {
-		var button = document.getElementById("playersbutton")
-		var playersgame = document.getElementById("playersgame")
-		playersgame.selectedIndex = -1
-		button.innerHTML = "->"
-		buttonDir = true
-	}
-	
-	this.ClickPlayersGame = function() {
-		var button = document.getElementById("playersbutton")
-		var playersavail = document.getElementById("playersavail")
-		playersavail.selectedIndex = -1
-		button.innerHTML = "<-"
-		buttonDir = false
-	}
-	
-	this.MoveSelectedPlayer = function() {
-		var playersgame = document.getElementById("playersgame")
-		var playersavail = document.getElementById("playersavail")
-		if (playersgame.selectedIndex == -1 && playersavail.selectedIndex == -1)
-			return
-		if (buttonDir) {
-			var selected = playersavail.selectedIndex
-			inGame.push(avail.splice(selected, 1)[0])
-		} else {
-			var selected = playersgame.selectedIndex
-			avail.push(inGame.splice(selected, 1)[0])
-		}
-		var result = ""
-		for (var i in avail){
-			result += "<option>" + avail[i] + "</option>"
-		}
-		playersavail.innerHTML = result
-		result = ""
-		for (var i in inGame){
-			result += "<option>" + inGame[i] + "</option>"
-		}
-		playersgame.innerHTML = result
-		var gamesettingstartgame = document.getElementById("gamesettingstartgame")
-		if (inGame.length < 2)
-			gamesettingstartgame.disabled = "yes"
-		else
-			gamesettingstartgame.disabled = null
-	}
+		//clearInterval(drawInterval);
+		gameManager = new GameManager();
+		//game = new Game();
+		//game.init();
+	};
 }
-var menu = new Menu()
 
 
-window.onload = function(){menu.Setup()}
+window.onload = function()
+{
+
+	canvas.DocumentLoaded();
+	Scale.SetScale(3);
+	menu.Init();
+	/*canvas.DocumentLoaded();
+	Scale.SetScale(3);
+	game = new Game();
+
+	game.init();*/
+};

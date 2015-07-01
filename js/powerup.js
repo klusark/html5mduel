@@ -99,14 +99,14 @@ function PowerupInvis(owner){
 	};
 
 	this.Use = function() {
-		if (game.GetTime() < nextAllowedTime || !owner.IsIdle()){
+		if (time.Get() < nextAllowedTime || !owner.IsIdle()){
 			return;
 		}
 		if (!invis) {
 			sound.Play("beep3");
 			invis = true;
 			owner.SetDraw(false);
-			nextAllowedTime = game.GetTime() + 300;
+			nextAllowedTime = time.Get() + 300;
 		} else {
 			sound.Play("beep2");
 			disabled = true;
@@ -199,14 +199,14 @@ function Puck(x, y, owner, direction) {
 	animation = new Animation(0, 310, 200, 2, 12, 12),
 	xVelocity = direction ? -90 : 90,
 	yVelocity = 70,
-	lastUpdateTime = game.GetTime();
+	lastUpdateTime = time.Get();
 
 	this.Draw = function() {
 		animation.Draw(img, x-4, y-6);
 	};
 
 	this.Update = function() {
-		var currentTime = game.GetTime(),
+		var currentTime = time.Get(),
 		deltaT = (currentTime - lastUpdateTime)/1000,
 		ya, platform, collision, entities, i;
 		animation.Update();
@@ -322,14 +322,14 @@ function Nade(x, y, owner, direction) {
 	xVelocity = direction ? -70 : 70,
 	yVelocity = -150,
 	yAcceleration = 350,
-	lastUpdateTime = game.GetTime();
+	lastUpdateTime = time.Get();
 
 	this.Draw = function() {
 		animation.Draw(x, y);
 	};
 
 	this.Update = function() {
-		var currentTime = game.GetTime(),
+		var currentTime = time.Get(),
 		deltaT = (currentTime - lastUpdateTime)/1000,
 		ya, platform;
 

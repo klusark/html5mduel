@@ -2,19 +2,18 @@ function Menu() {
 	var drawInterval,
 	buttons = [],
 	currentButton = 0,
-	self = this,
 	ingameMenu = [],
 	gameManager;
 
 	this.Init = function() {
-		buttons[0] = new Button(110, 20, 100, 20, "Start Game", self.StartGame);
+		buttons[0] = new Button(110, 20, 100, 20, "Start Game", this.StartGame);
 		buttons[0].Select();
-		buttons[1] = new Button(110, 50, 100, 20, "Load Character", self.LoadCharacter);
-		buttons[2] = new Button(110, 80, 100, 20, "Somthing Else", self.LoadCharacter);
+		buttons[1] = new Button(110, 50, 100, 20, "Load Character", this.LoadCharacter);
+		buttons[2] = new Button(110, 80, 100, 20, "Somthing Else", this.LoadCharacter);
 		DrawMenu();
 
-		document.onkeyup = function(e){self.OnKeyUp(e);};
-		document.onkeydown = function(e){self.OnKeyDown(e);};
+		document.onkeyup = function(e){this.OnKeyUp(e);}.bind(this);
+		document.onkeydown = function(e){this.OnKeyDown(e);}.bind(this);
 		drawInterval = setInterval(UpdateMenu, 10);
 	};
 

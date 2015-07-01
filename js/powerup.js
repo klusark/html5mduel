@@ -11,15 +11,14 @@ function PowerupGun(owner){
 	inPlayer = false,
 	gundown = new Animation(25, 450, 100, 2, 24, 24),
 	gunup = new Animation(25, 450, 100, 2, 24, 24),
-	//HACK!!! fixes "The 'this' problem"
-	self = this,
 	other;
+
 	gundown.Repeat(false);
 	gunup.Repeat(false);
 	gunup.Reverse(true);
 	this.Use = function() {
 		if (inPlayer && ammo && !firing && owner.IsIdle()){
-			owner.InterruptAnimation(gundown, true, function(){self.CheckForKill();owner.InterruptAnimation(gunup, true, function(){firing=false;});});
+			owner.InterruptAnimation(gundown, true, function(){this.CheckForKill();owner.InterruptAnimation(gunup, true, function(){firing=false;});}.bind(this));
 			ammo -= 1;
 			firing = true;
 		}
@@ -163,15 +162,14 @@ function Mine(x, y, owner) {
 function PowerupMine(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 271, 13, 12, 12);
 	var used = false,
-	//HACK!!! fixes "The 'this' problem"
-	self = this,
 	inPlayer = false;
+
 	this.Use = function() {
 		if (!inPlayer || used || !owner.IsIdle()){
 			return;
 		}
 		used = true;
-		owner.InterruptAnimation(owner.GetAnimations().crouch, true, function(){self.LayMine();owner.InterruptAnimation(owner.GetAnimations().uncrouch, true);});
+		owner.InterruptAnimation(owner.GetAnimations().crouch, true, function(){this.LayMine();owner.InterruptAnimation(owner.GetAnimations().uncrouch, true);}.bind());
 	};
 
 	this.CollidePlayer = function(player) {
@@ -269,8 +267,6 @@ function PowerupNukepuck(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 310, 0, 12, 12);
 	var used = false,
 	inPlayer = false,
-	//HACK!!! fixes "The 'this' problem"
-	self = this,
 	throwpuck = new Animation(25, 1050, 100, 2, 24, 24);
 	throwpuck.Repeat(false);
 	this.Use = function() {
@@ -278,7 +274,7 @@ function PowerupNukepuck(owner) {
 			return;
 		}
 		used = true;
-		owner.InterruptAnimation(throwpuck, true, function(){self.ThrowPuck();});
+		owner.InterruptAnimation(throwpuck, true, function(){this.ThrowPuck();}.bind(this));
 	};
 
 	this.CollidePlayer = function(player) {
@@ -380,16 +376,14 @@ function PowerupNade(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 297, 13, 12, 12);
 	var used = false,
 	inPlayer = false,
-	thrownade = new Animation(25, 1000, 100, 2, 24, 24),
-	//HACK!!! fixes "The 'this' problem"
-	self = this;
+	thrownade = new Animation(25, 1000, 100, 2, 24, 24);
 	thrownade.Repeat(false);
 	this.Use = function() {
 		if (!inPlayer || used || !owner.IsIdle()){
 			return;
 		}
 		used = true;
-		owner.InterruptAnimation(thrownade, true, function(){self.ThrowNade();});
+		owner.InterruptAnimation(thrownade, true, function(){this.ThrowNade();}.bind(this));
 	};
 
 	this.CollidePlayer = function(player) {
@@ -442,7 +436,6 @@ window["PowerupTeleport"] = PowerupTeleport;
 function PowerupChute(owner) {
 	this.image = new StaticImage(image.GetSpritesImg(), 310, 13, 12, 12);
 	var inPlayer = false,
-	self = this,
 	active = false,
 	v = 40,
 	chute = new Animation(25, 1100, 1, 1, 24, 24);

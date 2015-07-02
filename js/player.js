@@ -1,5 +1,4 @@
 var animation = require("./animation");
-var time = require("./time");
 var bounds = require("./bounds");
 var log = require("./log");
 var effect = require("./effect");
@@ -8,8 +7,7 @@ var effect = require("./effect");
  * @constructor
  */
 function Player(x, y, img, game){
-	var lastUpdateTime = time.time.Get(),
-	animations = [],
+	var animations = [],
 	keyCodes = [],
 	keys = [],
 	keysLastFrame = [],
@@ -142,12 +140,10 @@ function Player(x, y, img, game){
 		}
 	};
 
-	this.Update = function(){
-		var currentTime = time.time.Get(),
-		deltaT = (currentTime - lastUpdateTime)/1000;
+	this.Update = function(deltaT) {
 
 		if (currentPowerup && currentPowerup.Update){
-			currentPowerup.Update();
+			currentPowerup.Update(deltaT);
 		}
 
 		if (!isDisolving){
@@ -307,7 +303,7 @@ function Player(x, y, img, game){
 
 		//game.GetCollitionsOf(this)
 
-		currentAnimation.Update();
+		currentAnimation.Update(deltaT);
 		this.UpdateKeysLastFrame();
 
 		wasOnGround = onGround;
@@ -319,7 +315,6 @@ function Player(x, y, img, game){
 		wasRunningRight = runningRight;
 		wasRolling = isRolling;
 		wasOnRope = isOnRope;
-		lastUpdateTime = currentTime;
 
 	};
 

@@ -70,8 +70,8 @@ function Effect(x, y, type){
 		}
 	};
 
-	this.Update = function(){
-		currentAnimation.Update();
+	this.Update = function(deltaT) {
+		currentAnimation.Update(deltaT);
 		if (currentAnimation.IsAnimationDone()){
 			//handle the animation finishing
 			draw = false;

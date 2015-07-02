@@ -1,6 +1,5 @@
 /*global game, image, Animation, Bounds*/
 
-var time = require("./time");
 var imagemanager = require("./imagemanager");
 var animation = require("./animation");
 var bounds = require("./bounds");
@@ -10,7 +9,6 @@ var bounds = require("./bounds");
  */
 function Bubble(x, y, xVelocity, yVelocity, game) {
 	var img = imagemanager.image.GetSpritesImg(),
-	lastUpdateTime = time.time.Get(),
 
 	animation_ = new animation.Animation(25, 336, 200, 3, 16, 16),
 
@@ -30,17 +28,12 @@ function Bubble(x, y, xVelocity, yVelocity, game) {
 		powerup.image.Draw(x+2, y+2);
 	};
 
-	this.Update = function() {
-		var currentTime = time.time.Get(),
-		deltaT = (currentTime - lastUpdateTime)/1000,
-
-		ya = y+ deltaT*yVelocity,
-		platform;
-
+	this.Update = function(deltaT) {
+		var ya = y+ deltaT*yVelocity;
 
 		x += deltaT*xVelocity;
 		if (powerup && powerup.CollidePlatform){
-			platform = game.IsOnGround(y, ya, this);
+			var platform = game.IsOnGround(y, ya, this);
 			if (platform){
 				powerup.CollidePlatform(platform);
 			}
@@ -65,10 +58,7 @@ function Bubble(x, y, xVelocity, yVelocity, game) {
 			xVelocity *= -1;
 		}
 
-		animation_.Update();
-
-		lastUpdateTime = currentTime;
-
+		animation_.Update(deltaT);
 	};
 
 	this.CollidePlayer = function(player) {

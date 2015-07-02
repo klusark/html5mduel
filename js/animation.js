@@ -1,11 +1,10 @@
-var time = require("./time");
 var canvas = require("./canvas");
 
 /**
  * @constructor
  */
 function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
-	var NextFrameTime = time.time.Get() + frameTime,
+	var timeCount = 0,
 	frame = 0,
 	repeat = true,
 	startReverse = false,
@@ -19,10 +18,10 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 	//only usefull if repeat is off
 	isAnimationDone = false;
 
-	this.Update = function() {
-		var currentTime = time.time.Get();
-		while (NextFrameTime < currentTime) {
-			NextFrameTime += frameTime;
+	this.Update = function(deltaT) {
+		timeCount += deltaT*1000;
+		while (timeCount > frameTime) {
+			timeCount -= frameTime;
 			frame += 1;
 			if (frame === numFrames) {
 				if (reverseOnFinish && !reversed) {
@@ -48,7 +47,7 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 	};
 
 	this.ChangeTo = function(bflipped) {
-		NextFrameTime = time.time.Get() + frameTime;
+		timeCount = 0;
 		flipped = bflipped;
 		frame = 0;
 		isAnimationDone = false;
@@ -70,10 +69,6 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 
 	this.SetFrame = function(framenum) {
 		frame = framenum;
-	};
-
-	this.SetNextFrameTime = function(time_) {
-		NextFrameTime = time_;
 	};
 
 	this.GetNumLoops = function() {

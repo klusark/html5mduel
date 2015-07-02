@@ -40,7 +40,8 @@ function Game() {
 	maxTimeBetweenBubbles = 3000,
 	powerups,
 	gameEndTime = 0,
-	winner;
+	winner,
+	lastTime = time.time.Get();
 
 	if (typeof document !== 'undefined') {
 		document.onkeyup = function(e){this.OnKeyUp(e);}.bind(this);
@@ -93,17 +94,18 @@ function Game() {
 	};
 
 	this.Update = function() {
+		var currentTime = time.time.Get();
+		var deltaT = (currentTime - lastTime)/1000;
 		/*if (this.InSelectMode()){
 			selector.Update();
 		}else{*/
-			ArrayUpdate(players);
-			ArrayUpdate(mallows);
-			ArrayUpdate(entities);
-			this.UpdateBubbles();
+			ArrayUpdate(players, deltaT);
+			ArrayUpdate(mallows, deltaT);
+			ArrayUpdate(entities, deltaT);
+			this.UpdateBubbles(deltaT);
 
-			var i;
-			for(i = 0; i < effects.length; i += 1){
-				effects[i].Update();
+			for(var i = 0; i < effects.length; i += 1){
+				effects[i].Update(deltaT);
 				if (!effects[i].IsDraw()){
 					effects.splice(i, 1);
 					i -= 1;
@@ -142,6 +144,7 @@ function Game() {
 
 		//}
 		this.GetCollitionsOf(players[0]);
+		lastTime = currentTime;
 	};
 
 	this.GetGameEndTime = function() {
@@ -170,12 +173,12 @@ function Game() {
 				entity.GetY()+entitybounds.GetY() < other.GetY()+otherbounds.GetY()+otherbounds.GetHeight();
 	};
 
-	this.UpdateBubbles = function() {
+	this.UpdateBubbles = function(deltaT) {
 		var emittor = Math.floor(Math.random()*3+1),
 		x, y, ey, ex, xVelocity, yVelocity, newBubble, i;
 
 		for(i = 0; i < bubbles.length; i += 1){
-			bubbles[i].Update();
+			bubbles[i].Update(deltaT);
 
 			if(this.DoesCollide(bubbles[i], players[0])){
 				bubbles[i].CollidePlayer(players[0]);
@@ -235,10 +238,9 @@ function Game() {
 		return inSelectMode;
 	};*/
 
-	function ArrayUpdate(array) {
-		var i;
-		for(i = 0; i < array.length; i += 1){
-			array[i].Update();
+	function ArrayUpdate(array, deltaT) {
+		for (var i = 0; i < array.length; i += 1){
+			array[i].Update(deltaT);
 		}
 	}
 

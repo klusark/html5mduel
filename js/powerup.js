@@ -202,17 +202,14 @@ function Puck(x, y, owner, direction, game) {
 	bounds_ = new bounds.Bounds(0, 0, 5, 2),
 	animation_ = new animation.Animation(0, 310, 200, 2, 12, 12),
 	xVelocity = direction ? -90 : 90,
-	yVelocity = 70,
-	lastUpdateTime = time.time.Get();
+	yVelocity = 70;
 
 	this.Draw = function() {
 		animation_.Draw(img, x-4, y-6);
 	};
 
-	this.Update = function() {
-		var currentTime = time.time.Get(),
-		deltaT = (currentTime - lastUpdateTime)/1000,
-		ya, platform, collision, entities, i;
+	this.Update = function(deltaT) {
+		var ya, platform, collision, entities, i;
 		animation_.Update();
 		x += xVelocity * deltaT;
 		ya = y + yVelocity * deltaT;
@@ -248,7 +245,6 @@ function Puck(x, y, owner, direction, game) {
 			game.CreateEffect(effect.SmallSplash, x-11, y-20);
 			return;
 		}
-		lastUpdateTime = currentTime;
 	};
 
 	this.GetX = function() {
@@ -323,17 +319,14 @@ function Nade(x, y, owner, direction, game) {
 	animation_ = new staticimage.StaticImage(img, 300, 18, 5, 4),
 	xVelocity = direction ? -70 : 70,
 	yVelocity = -150,
-	yAcceleration = 350,
-	lastUpdateTime = time.time.Get();
+	yAcceleration = 350;
 
 	this.Draw = function() {
 		animation_.Draw(x, y);
 	};
 
-	this.Update = function() {
-		var currentTime = time.time.Get(),
-		deltaT = (currentTime - lastUpdateTime)/1000,
-		ya, platform;
+	this.Update = function(deltaT) {
+		var ya, platform;
 
 		x += xVelocity * deltaT;
 		yVelocity += yAcceleration * deltaT;
@@ -355,7 +348,6 @@ function Nade(x, y, owner, direction, game) {
 			game.CreateEffect(effect.SmallSplash, x - 11, y - 20);
 			return;
 		}
-		lastUpdateTime = currentTime;
 	};
 
 	this.GetX = function() {

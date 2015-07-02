@@ -18,8 +18,8 @@ function Mallow(x, y, frame){
 		mallowTopAnimation.Draw(img, x, y);
 	};
 
-	this.Update = function(){
-		mallowTopAnimation.Update();
+	this.Update = function(deltaT) {
+		mallowTopAnimation.Update(deltaT);
 	};
 
 	this.GetY = function(){

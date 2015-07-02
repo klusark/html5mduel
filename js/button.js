@@ -1,3 +1,6 @@
+var canvas = require("./canvas");
+var Scale = require("./scale");
+
 function Button(x, y, w, h, text, onclick) {
 	var selected = false,
 	boarder = 2,
@@ -18,17 +21,21 @@ function Button(x, y, w, h, text, onclick) {
 	};
 
 	this.Draw = function() {
-		canvas.FillStyle(selected ? selectedColour : unselectedColour);
-		canvas.FillRect(x, y, w, h);
-		canvas.FillStyle(backgroundColour);
-		canvas.FillRect(x+boarder, y+boarder, w-(boarder*2), h-(boarder*2));
+		canvas.canvas.FillStyle(selected ? selectedColour : unselectedColour);
+		canvas.canvas.FillRect(x, y, w, h);
+		canvas.canvas.FillStyle(backgroundColour);
+		canvas.canvas.FillRect(x+boarder, y+boarder, w-(boarder*2), h-(boarder*2));
 
-		var ctx = canvas.GetContext();
-		canvas.FillStyle(selected ? selectedColour : unselectedColour);
+		canvas.canvas.FillStyle(selected ? selectedColour : unselectedColour);
 
 		//TODO: Add a way to scale the font.
-		ctx.font = Scale.GetScale()*.75 + "em 'Allerta'";
-		ctx.textAlign = "center";
-		canvas.FillText(text, x+w/2, y+15);
+		canvas.canvas.setFont(Scale.scale.GetScale()*.75 + "em 'Allerta'");
+		canvas.canvas.setTextAlign("center");
+		canvas.canvas.FillText(text, x+w/2, y+15);
 	};
 }
+
+module.exports = {
+  Button: Button
+};
+

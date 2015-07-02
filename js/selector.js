@@ -19,7 +19,7 @@ function Selector(x, y, scale){
 	var scale = scale*8
 	var colour = 0
 	var colours = 5
-	var url = "generate?sample&m="+scale+"&c="
+	var url = "http://html5mduel.appspot.com/generate?sample&m="+scale+"&c="
 	img.src = url + colour
 
 	this.Draw = function(){

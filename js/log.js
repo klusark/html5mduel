@@ -1,9 +1,9 @@
 //make it so that browsers that do not have console are still supported
 /*global console*/
-if (!console) {
+/*if (!console) {
 	console = {};
 	console.log = function(i){};
-}
+}*/
 /**
  * @constructor
  */
@@ -20,3 +20,8 @@ function Log() {
 		console.log(message);
 	};
 }
+
+module.exports = {
+  Log: Log,
+  log: new Log()
+};

@@ -1,9 +1,16 @@
 /*global game, Bounds, Animation, log, sound */
+
+var animation = require("./animation");
+var time = require("./time");
+var bounds = require("./bounds");
+var log = require("./log");
+var effect = require("./effect");
+
 /**
  * @constructor
  */
 function Player(x, y, img){
-	var lastUpdateTime = time.Get(),
+	var lastUpdateTime = time.time.Get(),
 	animations = [],
 	keyCodes = [],
 	keys = [],
@@ -48,9 +55,9 @@ function Player(x, y, img){
 	draw = true,
 	isExploding = false,
 
-	standingBounds = new Bounds(6, 1, 10, 23),
-	crouchingBounds = new Bounds(6, 10, 10, 14),
-	fallingBounds = new Bounds(6, 1, 10, 23),
+	standingBounds = new bounds.Bounds(6, 1, 10, 23),
+	crouchingBounds = new bounds.Bounds(6, 10, 10, 14),
+	fallingBounds = new bounds.Bounds(6, 1, 10, 23),
 	currentBounds = standingBounds,
 
 	currentRope,
@@ -65,57 +72,57 @@ function Player(x, y, img){
 	JUMPXVELOCITY = 60,
 	EXPLODEVELOCITY = -1000;
 
-	animations.run = new Animation(25, 0, 100, 4, 24, 24);
+	animations.run = new animation.Animation(25, 0, 100, 4, 24, 24);
 
-	animations.idle = new Animation(25, 100, 100, 1, 24, 24);
+	animations.idle = new animation.Animation(25, 100, 100, 1, 24, 24);
 
-	animations.crouch = new Animation(25, 125, 50, 2, 24, 24);
+	animations.crouch = new animation.Animation(25, 125, 50, 2, 24, 24);
 	animations.crouch.Repeat(false);
 
-	animations.uncrouch = new Animation(25, 125, 50, 1, 24, 24);
+	animations.uncrouch = new animation.Animation(25, 125, 50, 1, 24, 24);
 	animations.uncrouch.Repeat(false);
 
-	animations.roll = new Animation(25, 175, 75, 5, 24, 24);
+	animations.roll = new animation.Animation(25, 175, 75, 5, 24, 24);
 	animations.roll.Repeat(false);
 
-	animations.roll2 = new Animation(25, 200, 50, 4, 24, 24);
+	animations.roll2 = new animation.Animation(25, 200, 50, 4, 24, 24);
 	animations.roll2.Repeat(false);
 
-	animations.climbup = new Animation(25, 600, 150, 3, 24, 24);
+	animations.climbup = new animation.Animation(25, 600, 150, 3, 24, 24);
 	animations.climbup.Reverse(false);
 
-	animations.climbdown = new Animation(25, 600, 150, 3, 24, 24);
+	animations.climbdown = new animation.Animation(25, 600, 150, 3, 24, 24);
 	animations.climbdown.Reverse(true);
 
-	animations.climbidle = new Animation(25, 625, 100, 1, 24, 24);
+	animations.climbidle = new animation.Animation(25, 625, 100, 1, 24, 24);
 
-	animations.fall = new Animation(25, 675, 100, 1, 24, 24);
+	animations.fall = new animation.Animation(25, 675, 100, 1, 24, 24);
 
-	animations.standingwin = new Animation(25, 700, 100, 2, 24, 24);
+	animations.standingwin = new animation.Animation(25, 700, 100, 2, 24, 24);
 	animations.standingwin.Repeat(false);
 
-	animations.ropewin = new Animation(25, 750, 100, 2, 24, 24);
+	animations.ropewin = new animation.Animation(25, 750, 100, 2, 24, 24);
 	animations.ropewin.Repeat(false);
 
-	animations.jumpup = new Animation(25, 300, 75, 6, 24, 24);
+	animations.jumpup = new animation.Animation(25, 300, 75, 6, 24, 24);
 	animations.jumpup.Repeat(false);
 
-	animations.jump = new Animation(25, 800, 100, 4, 24, 24);
+	animations.jump = new animation.Animation(25, 800, 100, 4, 24, 24);
 	animations.jump.Repeat(false);
 
-	animations.land = new Animation(25, 300, 50, 1, 24, 24);
+	animations.land = new animation.Animation(25, 300, 50, 1, 24, 24);
 
-	animations.pushedforward = new Animation(25, 900, 100, 2, 24, 24);
+	animations.pushedforward = new animation.Animation(25, 900, 100, 2, 24, 24);
 
-	animations.pushedbackward = new Animation(25, 950, 100, 2, 24, 24);
+	animations.pushedbackward = new animation.Animation(25, 950, 100, 2, 24, 24);
 
-	animations.disolve = new Animation(25, 525, 100, 3, 24, 24);
+	animations.disolve = new animation.Animation(25, 525, 100, 3, 24, 24);
 	animations.disolve.Repeat(false);
 
-	animations.disolve2 = new Animation(25, 1125, 100, 3, 24, 24);
+	animations.disolve2 = new animation.Animation(25, 1125, 100, 3, 24, 24);
 	animations.disolve2.Repeat(false);
 
-	animations.explode = new Animation(25, 500, 100, 2, 24, 24);
+	animations.explode = new animation.Animation(25, 500, 100, 2, 24, 24);
 
 
 	keyCodes.right = 68;
@@ -138,7 +145,7 @@ function Player(x, y, img){
 	};
 
 	this.Update = function(){
-		var currentTime = time.Get(),
+		var currentTime = time.time.Get(),
 		deltaT = (currentTime - lastUpdateTime)/1000;
 
 		if (currentPowerup && currentPowerup.Update){
@@ -151,7 +158,7 @@ function Player(x, y, img){
 
 		if (y > 160 && !dead){
 			dead = true;
-			game.CreateEffect(BigSplash, x, 200-40);
+			game.CreateEffect(effect.BigSplash, x, 200-40);
 		}
 		if (x < 0-currentBounds.GetX() || x > 300){
 			x = x < 0-currentBounds.GetX() ? 0 : 300;
@@ -337,7 +344,7 @@ function Player(x, y, img){
 
 		if (isOnRope || wasOnRope || other.IsOnRope() || other.WasOnRope()) {
 			if ((isOnRope || wasOnRope) && (other.IsOnRope() || other.WasOnRope())) {
-				log.Log("type 11");
+				log.log.Log("type 11");
 				isOnRope = false;
 				if (y < other.GetY()) {
 					flipped = false;
@@ -349,14 +356,14 @@ function Player(x, y, img){
 				this.StartFall(false);
 				this.DontCollide();
 			} else if (isOnRope || wasOnRope) {
-				log.Log("type 12");
+				log.log.Log("type 12");
 				flipped = !other.IsFlipped();
 				isOnRope = false;
 				this.Bounce(false);
 				this.StartFall(false);
 			}
 		} else if ((other.IsRolling()) && wasOnGround && !isCrouched && !isRolling) {
-			log.Log("type 1");
+			log.log.Log("type 1");
 			dontMove = xVelocity === 0 && other.IsRolling();
 			this.Bounce(true);
 			this.StartFall(false);
@@ -365,44 +372,44 @@ function Player(x, y, img){
 			}
 			yVelocity = JUMPYVELOCITY;
 		} else if (xVelocity === 0 && other.GetXVelocity() === 0 && (y > other.GetY())) {
-			log.Log("type 13");
+			log.log.Log("type 13");
 		} else if (xVelocity === 0 && other.GetXVelocity() === 0 && (yVelocity !== 0 || other.GetYVelocity() !== 0)) {
-			log.Log("type 2");
+			log.log.Log("type 2");
 		} else if ((other.IsCrouched() && isRolling) || ((other.IsRolling() || other.WasRolling()) && isCrouched)) {
-			log.Log("type 10");
+			log.log.Log("type 10");
 			x < other.GetX() ? this.Bounce(flipped) : this.Bounce(!flipped);
 			this.StartFall(false);
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else if (other.IsCrouched() ) {
-			log.Log("type 8");
+			log.log.Log("type 8");
 			this.Bounce(true);
 			this.StartFall(false);
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else if (isCrouched && other.GetXVelocity !== 0) {
-			log.Log("type 9");
+			log.log.Log("type 9");
 
 		} else if (!isRolling && other.IsRolling()) {
-			log.Log("type 3");
+			log.log.Log("type 3");
 			this.Bounce(true);
 			this.StartFall(false);
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else if (isRolling && !(other.IsRolling() || other.WasRolling())) {
-			log.Log("type 4");
+			log.log.Log("type 4");
 		} else if (xVelocity !== 0 && other.GetXVelocity() !== 0) {
-			log.Log("type 5");
+			log.log.Log("type 5");
 			isOnRope = false;
 
 			x < other.GetX() ? this.Bounce(flipped) : this.Bounce(!flipped);
 			this.StartFall(false);
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else if (xVelocity === 0 && other.GetXVelocity() !== 0) {
-			log.Log("type 6");
+			log.log.Log("type 6");
 			other.IsFlipped() ? this.Bounce(flipped) : this.Bounce(!flipped);
 			this.StartFall(false);
 			other.DontCollide();
 			yVelocity = JUMPYVELOCITY*2/3;
 		} else {
-			log.Log("type 7");
+			log.log.Log("type 7");
 		}
 	};
 
@@ -642,10 +649,10 @@ function Player(x, y, img){
 			return;
 		}
 		/*if (name !== 'idle'){
-			log.DebugLog("Animation Changed to " + name);
+			log.log.DebugLog("Animation Changed to " + name);
 		}
 		if (!animations[name]){
-			log.Log("Could not find animation " + name);
+			log.log.Log("Could not find animation " + name);
 			return;
 		}*/
 		currentAnimation = name;
@@ -661,38 +668,38 @@ function Player(x, y, img){
 			return;
 		}
 		if (keyCode === keyCodes.right ){
-			log.DebugLog("KeyDown Right");
+			log.log.DebugLog("KeyDown Right");
 			keys.right = true;
 		}else if (keyCode === keyCodes.left ){
-			log.DebugLog("KeyDown Left");
+			log.log.DebugLog("KeyDown Left");
 			keys.left = true;
 		}else if (keyCode === keyCodes.down ){
-			log.DebugLog("KeyDown Down");
+			log.log.DebugLog("KeyDown Down");
 			keys.down = true;
 		}else if (keyCode === keyCodes.up ){
-			log.DebugLog("KeyDown Up");
+			log.log.DebugLog("KeyDown Up");
 			keys.up = true;
 		}else if (keyCode === keyCodes.use ){
-			log.DebugLog("KeyDown Up");
+			log.log.DebugLog("KeyDown Up");
 			keys.use = true;
 		}
 	};
 
 	this.KeyUp = function(keyCode) {
 		if (keyCode === keyCodes.right ){
-			log.DebugLog("KeyUp Right");
+			log.log.DebugLog("KeyUp Right");
 			keys.right = false;
 		}else if (keyCode === keyCodes.left ){
-			log.DebugLog("KeyUp Left");
+			log.log.DebugLog("KeyUp Left");
 			keys.left = false;
 		}else if (keyCode === keyCodes.down ){
-			log.DebugLog("KeyUp Down");
+			log.log.DebugLog("KeyUp Down");
 			keys.down = false;
 		}else if (keyCode === keyCodes.up ){
-			log.DebugLog("KeyUp Up");
+			log.log.DebugLog("KeyUp Up");
 			keys.up = false;
 		}else if (keyCode === keyCodes.use ){
-			log.DebugLog("KeyUp Up");
+			log.log.DebugLog("KeyUp Up");
 			keys.use = false;
 		}
 
@@ -816,3 +823,7 @@ function Player(x, y, img){
 
 	this.SetAnimation(animations.idle);
 }
+
+module.exports = {
+  Player: Player
+};

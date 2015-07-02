@@ -1,9 +1,13 @@
 /*global game, canvas*/
+
+var time = require("./time");
+var canvas = require("./canvas");
+
 /**
  * @constructor
  */
 function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
-	var NextFrameTime = time.Get() + frameTime,
+	var NextFrameTime = time.time.Get() + frameTime,
 	frame = 0,
 	repeat = true,
 	startReverse = false,
@@ -18,7 +22,7 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 	isAnimationDone = false;
 
 	this.Update = function() {
-		var currentTime = time.Get();
+		var currentTime = time.time.Get();
 		while (NextFrameTime < currentTime) {
 			NextFrameTime += frameTime;
 			frame += 1;
@@ -46,7 +50,7 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 	};
 
 	this.ChangeTo = function(bflipped) {
-		NextFrameTime = time.Get() + frameTime;
+		NextFrameTime = time.time.Get() + frameTime;
 		flipped = bflipped;
 		frame = 0;
 		isAnimationDone = false;
@@ -70,8 +74,8 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 		frame = framenum;
 	};
 
-	this.SetNextFrameTime = function(time) {
-		NextFrameTime = time;
+	this.SetNextFrameTime = function(time_) {
+		NextFrameTime = time_;
 	};
 
 	this.GetNumLoops = function() {
@@ -91,6 +95,11 @@ function Animation(flippedYOffset, startX, frameTime, numFrames, w, h){
 		if (reverse){
 			sx = startX + (numFrames-1)*w + numFrames - (frame*w + frame + 1);
 		}
-		canvas.DrawImage(image,  sx, (flipped * flippedYOffset), w, h, x, y, w, h);
+		canvas.canvas.DrawImage(image,  sx, (flipped * flippedYOffset), w, h, x, y, w, h);
 	};
 }
+
+
+module.exports = {
+  Animation: Animation
+};

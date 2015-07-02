@@ -26,3 +26,9 @@ function ScaleT(){
 		return scale;
 	};
 }
+
+module.exports = {
+  ScaleT: ScaleT,
+  scale: new ScaleT()
+};
+

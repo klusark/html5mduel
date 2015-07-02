@@ -1,3 +1,6 @@
+var platform = require("./platform");
+var rope = require("./rope");
+
 /**
  * @constructor
  */
@@ -19,11 +22,11 @@ function Level() {
 	ROPE_X_INT = 32;
 
 	this.MakeFloor = function(x1,x2,y) {
-		game.AddPlatform(new Platform(x1,y, (x2-x1)/BLOCK_SIZE));
+		game.AddPlatform(new platform.Platform(x1,y, (x2-x1)/BLOCK_SIZE));
 	};
 
 	this.Make_Rope = function(x, y1, y2) {
-		game.AddRope(new Rope(x, y1, y2-y1));
+		game.AddRope(new rope.Rope(x, y1, y2-y1));
 	};
 
 	function rand() {
@@ -102,3 +105,7 @@ function Level() {
 		}
 	};
 }
+
+module.exports = {
+  Level: Level
+};

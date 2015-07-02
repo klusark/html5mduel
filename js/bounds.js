@@ -15,3 +15,7 @@ function Bounds(x, y, w, h){
 		return h;
 	};
 }
+
+module.exports = {
+  Bounds: Bounds
+};

@@ -1,10 +1,15 @@
 /*global image, StaticImage, canvas*/
+
+var imagemanager = require("./imagemanager");
+var staticimage = require("./staticimage");
+var canvas = require("./canvas");
+
 /**
  * @constructor
  */
 function Rope(x, y, length){
-	var img = image.GetSpritesImg(),
-	ropeTop = new StaticImage(img, 143, 9, 5, 5);
+	var img = imagemanager.image.GetSpritesImg(),
+	ropeTop = new staticimage.StaticImage(img, 143, 9, 5, 5);
 
 	length -= 2;
 
@@ -14,8 +19,8 @@ function Rope(x, y, length){
 	this.Draw = function(){
 		ropeTop.Draw(x, y);
 
-		canvas.FillStyle("rgb(146,97,0)");
-		canvas.FillRect(x+2, y+5, 1, length);
+		canvas.canvas.FillStyle("rgb(146,97,0)");
+		canvas.canvas.FillRect(x+2, y+5, 1, length);
 	};
 
 	this.Update = function(){
@@ -33,3 +38,8 @@ function Rope(x, y, length){
 		return x+2;
 	};
 }
+
+module.exports = {
+  Rope: Rope
+};
+

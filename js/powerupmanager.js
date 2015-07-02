@@ -1,4 +1,7 @@
 /*global window, localStorage*/
+
+var powerup = require("./powerup");
+
 /**
  * @constructor
  */
@@ -7,20 +10,22 @@ function PowerupManager(){
 	selectedPowerups = [];
 
 	this.RegisterPowerupType = function(name) {
-		if (window[name]){
-			var test = new window[name]();
+		if (powerup[name]){
+			var test = new powerup[name]();
 			if (test.image){
 				registerdPowerups.push(name);
-				if (localStorage[name] !== "disabled") {
+				// TODO: Local storage on node
+				selectedPowerups.push(name);
+				/*if (localStorage[name] !== "disabled") {
 					selectedPowerups.push(name);
-				}
+				}*/
 			}
 		}
 	};
 
 	this.ReigisterPowerups = function() {
 		var p, v;
-		for (p in window){
+		for (p in powerup){
 			if (!p){
 				continue;
 			}
@@ -32,7 +37,11 @@ function PowerupManager(){
 	};
 
 	this.GetRandomPowerup = function(bubble) {
-		return new window[selectedPowerups[Math.floor(Math.random()*selectedPowerups.length)]](bubble);
+		return new powerup[selectedPowerups[Math.floor(Math.random()*selectedPowerups.length)]](bubble);
 	};
 }
+
+module.exports = {
+  PowerupManager: PowerupManager
+};
 

@@ -1,5 +1,13 @@
 /*global Scale, window*/
 
+var Scale = require("./scale");
+
+if (typeof Image === 'undefined') {
+	Image = function() {
+		this.complete = true;
+	}
+}
+
 /**
  * @constructor
  */
@@ -10,10 +18,9 @@ function ImageManager()
 	spritesImg = new Image(),
 
 	//make this not needed.
-	lightningImg = new Image(),
-	self = this;
+	lightningImg = new Image();
 
-	Scale.ScaleCallback(function(scale){self.ScaleChange(scale);});
+	Scale.scale.ScaleCallback(function(scale){this.ScaleChange(scale);}.bind(this));
 
 	/*if (this.IsOnAppEngine()){
 		this.SetScale(scale)
@@ -24,13 +31,13 @@ function ImageManager()
 	}*/
 	this.ScaleChange = function(scale) {
 
-		var base = "generate?m="+scale+"&c=",
+		var base = "http://html5mduel.appspot.com/generate?m="+scale+"&c=",
 		colour0 = window.localStorage.colour0 || 0,
 		colour1 = window.localStorage.colour1 || 1;
 		player1Img.src = base + colour0;
 		player2Img.src = base + colour1;
 		lightningImg.src = base + "4";
-		spritesImg.src = "generate?s&m="+scale;
+		spritesImg.src = "http://html5mduel.appspot.com/generate?s&m="+scale;
 	};
 
 	this.GetSpritesImg = function() {
@@ -53,3 +60,8 @@ function ImageManager()
 		return player1Img.complete && player2Img.complete && spritesImg.complete;
 	};
 }
+
+module.exports = {
+  ImageManager: ImageManager,
+  image: new ImageManager()
+};

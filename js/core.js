@@ -1,5 +1,18 @@
 /*global Scale, canvas, sound, Effect, log, powerups, Bubble, Selector, Level, window, Player, image, Mallow, Emitter*/
 
+var sound = require("./sound");
+var canvas = require("./canvas");
+var powerupmanager = require("./powerupmanager");
+var time = require("./time");
+var level = require("./level");
+var player = require("./player");
+var imagemanager = require("./imagemanager");
+var effect = require("./effect");
+var emitter = require("./emitter");
+var mallow = require("./mallow");
+var bubble = require("./bubble");
+var log = require("./log");
+
 /*TODO:
  * bug with interupt animation in player that the player could come out of a death animation
  *
@@ -20,7 +33,7 @@ function Game() {
 	loadingInterval,
 
 	nextBubbleTime,
-	level,
+	level_,
 	scale = 1,
 	FPS = 30,
 	maxBubbles = 3,
@@ -29,14 +42,19 @@ function Game() {
 	gameEndTime = 0,
 	winner;
 
-	sound.Preload("buzz");
+	if (typeof document !== 'undefined') {
+		document.onkeyup = function(e){this.OnKeyUp(e);}.bind(this);
+		document.onkeydown = function(e){this.OnKeyDown(e);}.bind(this);
+	}
+
+	sound.sound.Preload("buzz");
 
 	this.CreateEffect = function(name, x, y) {
 		effects.push(new name(x, y));
 	};
 
 	this.Draw = function() {
-		canvas.Clear();
+		canvas.canvas.Clear();
 		/*if (this.InSelectMode()){
 			selector.Draw();
 		}else{*/
@@ -98,22 +116,22 @@ function Game() {
 				players[0].DisableInput();
 				players[1].DisableInput();
 				if(players[0].IsDead() && players[1].IsDead()){
-					log.DebugLog("tie");
+					log.log.DebugLog("tie");
 					gameOver = true;
 					winner = 2;
 				}else if (players[0].IsDead() && players[1].IsInPositionToWin()){
-					log.DebugLog("Player 2 wins");
+					log.log.DebugLog("Player 2 wins");
 					players[1].Win();
 					gameOver = true;
 					winner = 1;
 				}else if (players[1].IsDead() && players[0].IsInPositionToWin()){
-					log.DebugLog("Player 1 wins");
+					log.log.DebugLog("Player 1 wins");
 					players[0].Win();
 					gameOver = true;
 					winner = 0;
 				}
 				if (gameOver){
-					gameEndTime = time.Get();
+					gameEndTime = time.time.Get();
 					SetNextBubbleTime();
 					for(i = 0; i < bubbles.length; i += 1){
 						bubbles[i].SetDone(true);
@@ -165,7 +183,7 @@ function Game() {
 				bubbles[i].CollidePlayer(players[1]);
 			}
 			if (bubbles[i].IsDone()){
-				this.CreateEffect(BubbleDisolve, bubbles[i].GetX(), bubbles[i].GetY());
+				this.CreateEffect(effect.BubbleDisolve, bubbles[i].GetX(), bubbles[i].GetY());
 				bubbles.splice(i, 1);
 				i -= 1;
 				if (bubbles.length < maxBubbles){
@@ -174,7 +192,7 @@ function Game() {
 			}
 		}
 
-		if (!gameOver && bubbles.length < maxBubbles && time.Get() > nextBubbleTime) {
+		if (!gameOver && bubbles.length < maxBubbles && time.time.Get() > nextBubbleTime) {
 
 			if (emittor === 1) {
 				x = 14;
@@ -200,17 +218,17 @@ function Game() {
 			if (Math.random()>0.5){
 				yVelocity *= -1;
 			}
-			newBubble = new Bubble(x, y, xVelocity, yVelocity);
+			newBubble = new bubble.Bubble(x, y, xVelocity, yVelocity);
 			newBubble.SetCurrentPowerup(powerups.GetRandomPowerup(newBubble));
 			bubbles.push(newBubble);
-			this.CreateEffect(PurpleSmoke, ex, ey);
+			this.CreateEffect(effect.PurpleSmoke, ex, ey);
 			SetNextBubbleTime();
 
 		}
 	};
 
 	function SetNextBubbleTime() {
-		nextBubbleTime = time.Get() + Math.random()*maxTimeBetweenBubbles;
+		nextBubbleTime = time.time.Get() + Math.random() * maxTimeBetweenBubbles;
 	}
 
 	/*this.InSelectMode = function() {
@@ -241,7 +259,7 @@ function Game() {
 	};
 
 	this.init = function() {
-		canvas.Clear();
+		canvas.canvas.Clear();
 
 
 		var params, frame, i;
@@ -260,44 +278,46 @@ function Game() {
 		//inSelectMode = false;
 		timeStarted = false;
 
-		powerups = new PowerupManager();
+		powerups = new powerupmanager.PowerupManager();
 		powerups.ReigisterPowerups();
 
 		SetNextBubbleTime();
 
-		params = location.href.split("?");
-		if (params[1] === "debug"){
-			debug = true;
+		if (typeof location != 'undefined') {
+			params = location.href.split("?");
+			if (params[1] === "debug"){
+				debug = true;
+			}
 		}
 
-		level = new Level();
-		level.SetupPlatforms();
-		level.SetupRopes(platforms, ropes);
+		level_ = new level.Level();
+		level_.SetupPlatforms();
+		level_.SetupRopes(platforms, ropes);
 
 
-		players[0] = new Player(28, 144, image.GetPlayer1Img());
-		players[1] = new Player(268, 144, image.GetPlayer2Img());
+		players[0] = new player.Player(28, 144, imagemanager.image.GetPlayer1Img());
+		players[1] = new player.Player(268, 144, imagemanager.image.GetPlayer2Img());
 		players[1].SetKeys(38, 40, 37, 39, 13);
 		players[1].SetFlipped(true);
 
 
-		this.CreateEffect(GreenSmoke, 28, 144);
-		this.CreateEffect(GreenSmoke, 268, 144);
+		this.CreateEffect(effect.GreenSmoke, 28, 144);
+		this.CreateEffect(effect.GreenSmoke, 268, 144);
 
 		frame = 0;
 		for (i = 0; i < 20; i += 1){
-			mallows.push(new Mallow(i*16, 176, frame));
+			mallows.push(new mallow.Mallow(i*16, 176, frame));
 			frame += 1;
 			if (frame === 4){
 				frame = 0;
 			}
 		}
 
-		emitters.push(new Emitter(0, 92, 0));
-		emitters.push(new Emitter(152, 0, 1));
-		emitters.push(new Emitter(320-16, 92, 2));
+		emitters.push(new emitter.Emitter(0, 92, 0));
+		emitters.push(new emitter.Emitter(152, 0, 1));
+		emitters.push(new emitter.Emitter(320-16, 92, 2));
 
-		loadingInterval = setInterval(CheckLoadedInterval, 25);
+		loadingInterval = setInterval(CheckLoadedInterval.bind(this), 25);
 	};
 
 	this.End = function() {
@@ -306,26 +326,26 @@ function Game() {
 	};
 
 	function CheckLoadedInterval() {
-		if (game.IsLoaded()){
+		if (this.IsLoaded()){
 			clearInterval(loadingInterval);
-			game.FinishLoading();
+			this.FinishLoading();
 		}
 	}
 
 
 
 	this.FinishLoading = function() {
-		sound.Play("buzz");
-		time.StartTime();
-		gameInterval = setInterval(function(){game.Update();game.Draw();}, 1000 / FPS);
+		sound.sound.Play("buzz");
+		time.time.StartTime();
+		gameInterval = setInterval(function(){this.Update();this.Draw();}.bind(this), 1000 / FPS);
 	};
 
 	this.IsLoaded = function() {
-		return image.IsLoaded();
+		return imagemanager.image.IsLoaded();
 	};
 
 	this.MakeFloor = function(x1,x2,y) {
-		level.MakeFloor(x1, x2, y);
+		level_.MakeFloor(x1, x2, y);
 	}
 
 	this.IsOnGround = function(yb, ya, entity) {
@@ -449,3 +469,8 @@ function Game() {
 
 
 }
+
+
+module.exports = {
+  Game: Game
+};

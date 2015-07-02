@@ -1,13 +1,20 @@
 /*global image, Bounds, StaticImage, game, sound*/
+
+var image = require("./imagemanager");
+var staticimage = require("./staticimage");
+var bounds = require("./bounds");
+var effect = require("./effect");
+var sound = require("./sound");
+
 /**
  * @constructor
  */
 function Platform(x, y, numPlatforms) {
-	var img = image.GetSpritesImg(),
+	var img = image.image.GetSpritesImg(),
 
-	platform = new StaticImage(img, 143, 0, 14, 8),
+	platform = new staticimage.StaticImage(img, 143, 0, 14, 8),
 
-	bounds = new Bounds(0, 0, numPlatforms * 16, 8);
+	bounds_ = new bounds.Bounds(0, 0, numPlatforms * 16, 8);
 
 	this.Draw = function() {
 		var i;
@@ -33,7 +40,7 @@ function Platform(x, y, numPlatforms) {
 	};
 
 	this.GetCurrentBounds = function() {
-		return bounds;
+		return bounds_;
 	};
 
 	this.Destroy = function(xpos) {
@@ -45,15 +52,19 @@ function Platform(x, y, numPlatforms) {
 			game.MakeFloor((dist - dist%16)+x+32, this.GetNumPlatforms() * 16 + x, y);
 		}
 		//TODO: make this have an effect for each platform that is destroyed
-		game.CreateEffect(BlackSmoke, xpos, y-10);
+		game.CreateEffect(effect.BlackSmoke, xpos, y-10);
 
 		numPlatforms = (dist - dist%16)/16;
-		bounds = new Bounds(0, 0, numPlatforms * 16, 8);
+		bounds_ = new bounds.Bounds(0, 0, numPlatforms * 16, 8);
 		if (numPlatforms === 0){
 			game.RemovePlatform(this);
 		}
-		sound.Play("buzz");
+		sound.sound.Play("buzz");
 
 	};
 
 }
+
+module.exports = {
+  Platform: Platform
+};

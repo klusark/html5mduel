@@ -1,4 +1,5 @@
-/*global Scale, log*/
+var Scale = require("./scale");
+
 /**
  * @constructor
  */
@@ -7,7 +8,7 @@ function Canvas() {
 	_canvas,
 	scale;
 
-	Scale.ScaleCallback(function(scale){canvas.ScaleChange(scale);});
+	Scale.scale.ScaleCallback(function(scale){this.ScaleChange(scale);}.bind(this));
 
 	this.DocumentLoaded = function() {
 		_canvas = document.getElementById('canvas');
@@ -29,7 +30,6 @@ function Canvas() {
 		ctx.drawImage(image, sx*scale, sy*scale, sw*scale, sh*scale, Math.round(dx*scale), Math.round(dy*scale), dw*scale, dh*scale);
 	};
 
-
 	this.FillRect = function(x, y, w, h) {
 		if (!ctx){
 			return;
@@ -47,6 +47,18 @@ function Canvas() {
 	this.FillStyle = function(style) {
 		if (ctx){
 			ctx.fillStyle = style;
+		}
+	};
+
+	this.setFont = function(font) {
+		if (ctx){
+			ctx.font = font;
+		}
+	};
+
+	this.setTextAlign = function(align) {
+		if (ctx){
+			ctx.textAlign = align;
 		}
 	};
 
@@ -80,4 +92,9 @@ function Canvas() {
 		return ctx;
 	};
 }
+
+module.exports = {
+  Canvas: Canvas,
+  canvas: new Canvas()
+};
 

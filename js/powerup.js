@@ -1,16 +1,25 @@
 /*global StaticImage, image, game, Animation, sound, Bounds, powerups*/
+
+var staticimage = require("./staticimage");
+var imagemanager = require("./imagemanager");
+var animation = require("./animation");
+var effect = require("./effect");
+var sound = require("./sound");
+var bounds = require("./bounds");
+var time = require("./time");
+
 /**
  * @constructor
  */
 function PowerupGun(owner){
 
-	this.image = new StaticImage(image.GetSpritesImg(), 284, 0, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 284, 0, 12, 12);
 
 	var ammo = 5,
 	firing = false,
 	inPlayer = false,
-	gundown = new Animation(25, 450, 100, 2, 24, 24),
-	gunup = new Animation(25, 450, 100, 2, 24, 24),
+	gundown = new animation.Animation(25, 450, 100, 2, 24, 24),
+	gunup = new animation.Animation(25, 450, 100, 2, 24, 24),
 	other;
 
 	gundown.Repeat(false);
@@ -45,12 +54,12 @@ function PowerupGun(owner){
 			return owner.GetY()+8;
 		};
 		this.GetCurrentBounds = function() {
-			return new Bounds(0,0,320,1);
+			return new bounds.Bounds(0,0,320,1);
 		};
 	}
 
 	this.CheckForKill = function() {
-		sound.Play("shot");
+		sound.sound.Play("shot");
 		//need to make this work with turning
 		if (game.DoesCollide(new GunCollisionCheck(), other)) {
 			other.Disolve();
@@ -58,28 +67,26 @@ function PowerupGun(owner){
 	};
 
 }
-window["PowerupGun"] = PowerupGun;
 
 /**
  * @constructor
  */
 function PowerupSkull(owner){
-	this.image = new StaticImage(image.GetSpritesImg(), 258, 0, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 258, 0, 12, 12);
 	this.CollidePlayer = function(player) {
 		player.CollectPowerup(false);
 		player.Disolve2();
 		owner.SetDone(true);
-		sound.Play("buzz2");
+		sound.sound.Play("buzz2");
 	};
 
 }
-window["PowerupSkull"] = PowerupSkull;
 
 /**
  * @constructor
  */
 function PowerupInvis(owner){
-	this.image = new StaticImage(image.GetSpritesImg(), 271, 0, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 271, 0, 12, 12);
 	var invis = false,
 	disabled = false,
 	nextAllowedTime = 0,
@@ -99,32 +106,31 @@ function PowerupInvis(owner){
 	};
 
 	this.Use = function() {
-		if (time.Get() < nextAllowedTime || !owner.IsIdle()){
+		if (time.time.Get() < nextAllowedTime || !owner.IsIdle()){
 			return;
 		}
 		if (!invis) {
-			sound.Play("beep3");
+			sound.sound.Play("beep3");
 			invis = true;
 			owner.SetDraw(false);
-			nextAllowedTime = time.Get() + 300;
+			nextAllowedTime = time.time.Get() + 300;
 		} else {
-			sound.Play("beep2");
+			sound.sound.Play("beep2");
 			disabled = true;
 			owner.SetDraw(true);
 			owner.CollectPowerup(false);
 		}
 	};
 }
-window["PowerupInvis"] = PowerupInvis;
 
 /**
  * @constructor
  */
 function Mine(x, y, owner) {
 	var other = game.GetOponentOf(owner),
-	bounds = new Bounds(0, 0, 1, 1);
+	bounds_ = new bounds.Bounds(0, 0, 1, 1);
 
-	sound.Play("beep");
+	sound.sound.Play("beep");
 	this.isMine = true;
 
 	this.Update = function() {
@@ -138,7 +144,7 @@ function Mine(x, y, owner) {
 	};
 
 	this.Explode = function() {
-		game.CreateEffect(Explode, x - 11, y - 20);
+		game.CreateEffect(effect.Explode, x - 11, y - 20);
 		game.RemoveEntity(this);
 	};
 
@@ -152,7 +158,7 @@ function Mine(x, y, owner) {
 	};
 
 	this.GetCurrentBounds = function() {
-		return bounds;
+		return bounds_;
 	};
 }
 
@@ -160,7 +166,7 @@ function Mine(x, y, owner) {
  * @constructor
  */
 function PowerupMine(owner) {
-	this.image = new StaticImage(image.GetSpritesImg(), 271, 13, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 271, 13, 12, 12);
 	var used = false,
 	inPlayer = false;
 
@@ -169,7 +175,7 @@ function PowerupMine(owner) {
 			return;
 		}
 		used = true;
-		owner.InterruptAnimation(owner.GetAnimations().crouch, true, function(){this.LayMine();owner.InterruptAnimation(owner.GetAnimations().uncrouch, true);}.bind());
+		owner.InterruptAnimation(owner.GetAnimations().crouch, true, function(){this.LayMine();owner.InterruptAnimation(owner.GetAnimations().uncrouch, true);}.bind(this));
 	};
 
 	this.CollidePlayer = function(player) {
@@ -182,34 +188,33 @@ function PowerupMine(owner) {
 	};
 
 	this.LayMine = function() {
-		sound.Play("beep1");
+		sound.sound.Play("beep1");
 		var xoff = owner.IsFlipped() ? 4 : 20;
 		game.AddEntity(new Mine(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+23), owner));
 	};
 }
-window["PowerupMine"] = PowerupMine;
 
 /**
  * @constructor
  */
 function Puck(x, y, owner, direction) {
-	var img = image.GetSpritesImg(),
+	var img = imagemanager.image.GetSpritesImg(),
 	other = game.GetOponentOf(owner),
-	bounds = new Bounds(0, 0, 5, 2),
-	animation = new Animation(0, 310, 200, 2, 12, 12),
+	bounds_ = new bounds.Bounds(0, 0, 5, 2),
+	animation_ = new animation.Animation(0, 310, 200, 2, 12, 12),
 	xVelocity = direction ? -90 : 90,
 	yVelocity = 70,
-	lastUpdateTime = time.Get();
+	lastUpdateTime = time.time.Get();
 
 	this.Draw = function() {
-		animation.Draw(img, x-4, y-6);
+		animation_.Draw(img, x-4, y-6);
 	};
 
 	this.Update = function() {
-		var currentTime = time.Get(),
+		var currentTime = time.time.Get(),
 		deltaT = (currentTime - lastUpdateTime)/1000,
 		ya, platform, collision, entities, i;
-		animation.Update();
+		animation_.Update();
 		x += xVelocity * deltaT;
 		ya = y + yVelocity * deltaT;
 		platform = game.IsOnGround(y, ya, this);
@@ -221,7 +226,7 @@ function Puck(x, y, owner, direction) {
 		collision = game.DoesCollide(this, owner) ? owner : game.DoesCollide(this, other) ? other : undefined;
 		if (collision){
 			collision.Explode();
-			game.CreateEffect(Explode, x-11, y-20);
+			game.CreateEffect(effect.Explode, x-11, y-20);
 			game.RemoveEntity(this);
 			return;
 		}
@@ -241,7 +246,7 @@ function Puck(x, y, owner, direction) {
 		}
 		if (y > 180){
 			game.RemoveEntity(this);
-			game.CreateEffect(SmallSplash, x-11, y-20);
+			game.CreateEffect(effect.SmallSplash, x-11, y-20);
 			return;
 		}
 		lastUpdateTime = currentTime;
@@ -256,7 +261,7 @@ function Puck(x, y, owner, direction) {
 	};
 
 	this.GetCurrentBounds = function() {
-		return bounds;
+		return bounds_;
 	};
 }
 
@@ -264,10 +269,10 @@ function Puck(x, y, owner, direction) {
  * @constructor
  */
 function PowerupNukepuck(owner) {
-	this.image = new StaticImage(image.GetSpritesImg(), 310, 0, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 310, 0, 12, 12);
 	var used = false,
 	inPlayer = false,
-	throwpuck = new Animation(25, 1050, 100, 2, 24, 24);
+	throwpuck = new animation.Animation(25, 1050, 100, 2, 24, 24);
 	throwpuck.Repeat(false);
 	this.Use = function() {
 		if (!inPlayer || used || !owner.IsIdle()){
@@ -291,13 +296,12 @@ function PowerupNukepuck(owner) {
 		game.AddEntity(new Puck(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+22), owner, owner.IsFlipped()));
 	};
 }
-window["PowerupNukepuck"] = PowerupNukepuck;
 
 /**
  * @constructor
  */
 function PowerupDestroy(owner) {
-	this.image = new StaticImage(image.GetSpritesImg(), 284, 13, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 284, 13, 12, 12);
 
 	this.Update = function() {
 		var platforms = game.GetPlatforms(), i;
@@ -310,26 +314,25 @@ function PowerupDestroy(owner) {
 		}
 	};
 }
-window["PowerupDestroy"] = PowerupDestroy;
 
 /**
  * @constructor
  */
 function Nade(x, y, owner, direction) {
 	var img = image.GetSpritesImg(),
-	bounds = new Bounds(0, 0, 5, 4),
-	animation = new StaticImage(img, 300, 18, 5, 4),
+	bounds_ = new bounds.Bounds(0, 0, 5, 4),
+	animation_ = new staticimage.StaticImage(img, 300, 18, 5, 4),
 	xVelocity = direction ? -70 : 70,
 	yVelocity = -150,
 	yAcceleration = 350,
-	lastUpdateTime = time.Get();
+	lastUpdateTime = time.time.Get();
 
 	this.Draw = function() {
-		animation.Draw(x, y);
+		animation_.Draw(x, y);
 	};
 
 	this.Update = function() {
-		var currentTime = time.Get(),
+		var currentTime = time.time.Get(),
 		deltaT = (currentTime - lastUpdateTime)/1000,
 		ya, platform;
 
@@ -350,7 +353,7 @@ function Nade(x, y, owner, direction) {
 		}
 		if (y > 180){
 			game.RemoveEntity(this);
-			game.CreateEffect(SmallSplash, x - 11, y - 20);
+			game.CreateEffect(effect.SmallSplash, x - 11, y - 20);
 			return;
 		}
 		lastUpdateTime = currentTime;
@@ -373,10 +376,10 @@ function Nade(x, y, owner, direction) {
  * @constructor
  */
 function PowerupNade(owner) {
-	this.image = new StaticImage(image.GetSpritesImg(), 297, 13, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 297, 13, 12, 12);
 	var used = false,
 	inPlayer = false,
-	thrownade = new Animation(25, 1000, 100, 2, 24, 24);
+	thrownade = new animation.Animation(25, 1000, 100, 2, 24, 24);
 	thrownade.Repeat(false);
 	this.Use = function() {
 		if (!inPlayer || used || !owner.IsIdle()){
@@ -401,7 +404,6 @@ function PowerupNade(owner) {
 		game.AddEntity(new Nade(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()), owner, owner.IsFlipped()));
 	};
 }
-window["PowerupNade"] = PowerupNade;
 
 /**
  * @constructor
@@ -418,27 +420,26 @@ function PowerupTeleport(owner) {
 	//this probably needs some work
 
 	this.CollidePlayer = function(player) {
-		game.CreateEffect(GreenSmoke, player.GetX(), player.GetY());
+		game.CreateEffect(effect.GreenSmoke, player.GetX(), player.GetY());
 		player.SetX(Math.floor(Math.random()*320));
 		player.SetY(Math.floor(Math.random()*120));
 		player.StartFall(true);
 		owner.SetDone(true);
 		player.CollectPowerup(false);
-		sound.Play("buzz");
+		sound.sound.Play("buzz");
 
 	};
 }
-window["PowerupTeleport"] = PowerupTeleport;
 
 /**
  * @constructor
  */
 function PowerupChute(owner) {
-	this.image = new StaticImage(image.GetSpritesImg(), 310, 13, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 310, 13, 12, 12);
 	var inPlayer = false,
 	active = false,
 	v = 40,
-	chute = new Animation(25, 1100, 1, 1, 24, 24);
+	chute = new animation.Animation(25, 1100, 1, 1, 24, 24);
 	chute.Repeat(false);
 	this.Use = function() {
 		if (!inPlayer || owner.IsOnGround() || owner.IsOnRope() || owner.GetYVelocity() < 0){
@@ -500,15 +501,14 @@ function PowerupChute(owner) {
 		owner.InterruptAnimation(chute, true);
 	};
 }
-window["PowerupChute"] = PowerupChute;
 
 /**
  * @constructor
  */
 function Powerup1000v(owner) {
-	this.image = new StaticImage(image.GetSpritesImg(), 258, 13, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 258, 13, 12, 12);
 	var inPlayer = false,
-	img = image.Get1000vImg(),
+	img = imagemanager.image.Get1000vImg(),
 
 	orrigImg;
 
@@ -532,7 +532,7 @@ function Powerup1000v(owner) {
 			player.InterruptAnimation(owner.InterruptAnimation(owner.GetAnimations().explode, true));
 			player.StartFall(true);
 			owner.DontCollide();
-			game.CreateEffect(Lightning, player.GetX(), player.GetY());
+			game.CreateEffect(effect.Lightning, player.GetX(), player.GetY());
 			return true;
 		}
 	};
@@ -552,13 +552,12 @@ function Powerup1000v(owner) {
 		owner.SetImage(orrigImg);
 	};
 }
-window["Powerup1000v"] = Powerup1000v;
 
 /**
  * @constructor
  */
 function PowerupBoots(owner) {
-	this.image = new StaticImage(image.GetSpritesImg(), 297, 0, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 297, 0, 12, 12);
 	var inPlayer = false,
 	inAir = false,
 	wasInAir = false;
@@ -588,16 +587,15 @@ function PowerupBoots(owner) {
 	};
 
 }
-window["PowerupBoots"] = PowerupBoots;
 
 /**
  * @constructor
  */
 function PowerupHook(owner) {
-	this.image = new StaticImage(image.GetSpritesImg(), 323, 13, 12, 12);
+	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 323, 13, 12, 12);
 	var inPlayer = false,
 	active = false,
-	hook = new Animation(25, 1200, 100, 2, 24, 24);
+	hook = new animation.Animation(25, 1200, 100, 2, 24, 24);
 	this.CollidePlayer = function(player) {
 		if (!inPlayer) {
 			owner.SetDone(true);
@@ -618,7 +616,7 @@ function PowerupHook(owner) {
 			return owner.GetY()+8;
 		};
 		this.GetCurrentBounds = function() {
-			return new Bounds(0,0,1,1);
+			return new bounds.Bounds(0,0,1,1);
 		};
 	}
 
@@ -663,4 +661,19 @@ function PowerupHook(owner) {
 		this.Disable();
 	};
 }
-window["PowerupHook"] = PowerupHook;
+
+
+module.exports = {
+	PowerupGun: PowerupGun,
+	PowerupSkull: PowerupSkull,
+	PowerupInvis: PowerupInvis,
+	PowerupMine: PowerupMine,
+	PowerupNukepuck: PowerupNukepuck,
+	PowerupDestroy: PowerupDestroy,
+	PowerupNade: PowerupNade,
+	PowerupTeleport: PowerupTeleport,
+	PowerupChute: PowerupChute,
+	Powerup1000v: Powerup1000v,
+	PowerupBoots: PowerupBoots,
+	PowerupHook: PowerupHook
+};

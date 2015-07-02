@@ -1,11 +1,16 @@
 /*global image, Animation, StaticImage*/
+
+var imagemanager = require("./imagemanager");
+var staticimage = require("./staticimage");
+var animation = require("./animation");
+
 /**
  * @constructor
  */
 function Mallow(x, y, frame){
-	var img = image.GetSpritesImg(),
-	mallowBottom = new StaticImage(img, 75, 9, 16, 16),
-	mallowTopAnimation = new Animation(null, 75, 1000, 4, 16, 8);
+	var img = imagemanager.image.GetSpritesImg(),
+	mallowBottom = new staticimage.StaticImage(img, 75, 9, 16, 16),
+	mallowTopAnimation = new animation.Animation(null, 75, 1000, 4, 16, 8);
 	mallowTopAnimation.SetFrame(frame);
 
 	this.Draw = function(){
@@ -26,3 +31,7 @@ function Mallow(x, y, frame){
 	};
 
 }
+
+module.exports = {
+  Mallow: Mallow
+};

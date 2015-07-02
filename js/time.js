@@ -17,4 +17,11 @@ function Time() {
 		stoppedTime = new Date().getTime() * timescale;
 		timeStarted = false;
 	};
+
+	this.StartTime();
 }
+
+module.exports = {
+  Time: Time,
+  time: new Time()
+};

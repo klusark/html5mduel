@@ -1,3 +1,8 @@
+var time = require("./time");
+var canvas = require("./canvas");
+var Scale = require("./scale");
+var core = require("./core");
+
 function GameManager() {
 	function PlayerInfo(name) {
 		this.name = name;
@@ -7,7 +12,7 @@ function GameManager() {
 	updateInterval,
 	firstRound = true,
 	betweenRounds = true,
-	lastRoundEnd = time.Get(),
+	lastRoundEnd = time.time.Get(),
 	updateInterval = setInterval(Update, 10),
 	gameOver = false,
 	maxScore = 3;
@@ -16,15 +21,14 @@ function GameManager() {
 	players[1] = new PlayerInfo("Player 2");
 
 	this.IsGameOver = function() {
-		return gameOver && time.Get() > lastRoundEnd + 3000;
+		return gameOver && time.time.Get() > lastRoundEnd + 3000;
 	};
 
 	function Draw() {
-		var text, name, s1, s2, ctx, other;
+		var text, name, s1, s2, other;
 
 		if (betweenRounds) {
-			ctx = canvas.GetContext();
-			canvas.Clear();
+			canvas.canvas.Clear();
 			if (firstRound) {
 				text = players[0].name + " vs. " + players[1].name;
 			} else if (players[0].score === maxScore || players[1].score === maxScore) {
@@ -53,26 +57,28 @@ function GameManager() {
 				}
 				text = name + " leads the series, " + s1 + " - " + s2 + ".";
 			}
-			canvas.FillStyle("rgb(166,65,166)");
-			ctx.font = Scale.GetScale() + "em 'Allerta'";
-			ctx.textAlign = "center";
-			canvas.FillText(text, 160, 100);
+			canvas.canvas.FillStyle("rgb(166,65,166)");
+			canvas.canvas.setFont(Scale.scale.GetScale() + "em 'Allerta'");
+			canvas.canvas.setTextAlign("center");
+			canvas.canvas.FillText(text, 160, 100);
 		}
 	}
 
 	function Update() {
 		var endTime, ttime, winner;
 		if (betweenRounds && !gameOver) {
-			ttime = time.Get();
-			if (lastRoundEnd + 2000 < ttime) {
+			ttime = time.time.Get();
+
+			// I think 2000 is for showing the game description screen
+			if (lastRoundEnd /*+ 2000*/ < ttime) {
 				betweenRounds = false;
-				time.StartTime();
-				game = new Game();
+				time.time.StartTime();
+				game = new core.Game();
 				game.init();
 			}
 		} else if (game) {
 			endTime = game.GetGameEndTime();
-			if (endTime !== 0 && endTime + 1000 < time.Get()) {
+			if (endTime !== 0 && endTime + 1000 < time.time.Get()) {
 				firstRound = false;
 				winner = game.GetWinner();
 				if (winner === 0){
@@ -83,9 +89,14 @@ function GameManager() {
 				game.End();
 				game = null;
 				betweenRounds = true;
-				lastRoundEnd = time.Get();
+				lastRoundEnd = time.time.Get();
 			}
 		}
 		Draw();
 	}
+
 }
+
+module.exports = {
+  GameManager: GameManager
+};

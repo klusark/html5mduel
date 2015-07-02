@@ -1,15 +1,19 @@
+var button = require("./button");
+var canvas = require("./canvas");
+var gamemanager = require("./gamemanager");
+
 function Menu() {
 	var drawInterval,
 	buttons = [],
 	currentButton = 0,
 	ingameMenu = [],
-	gameManager;
+	game;
 
 	this.Init = function() {
-		buttons[0] = new Button(110, 20, 100, 20, "Start Game", this.StartGame);
+		buttons[0] = new button.Button(110, 20, 100, 20, "Start Game", this.StartGame);
 		buttons[0].Select();
-		buttons[1] = new Button(110, 50, 100, 20, "Load Character", this.LoadCharacter);
-		buttons[2] = new Button(110, 80, 100, 20, "Somthing Else", this.LoadCharacter);
+		buttons[1] = new button.Button(110, 50, 100, 20, "Load Character", this.LoadCharacter);
+		buttons[2] = new button.Button(110, 80, 100, 20, "Somthing Else", this.LoadCharacter);
 		DrawMenu();
 
 		document.onkeyup = function(e){this.OnKeyUp(e);}.bind(this);
@@ -18,26 +22,26 @@ function Menu() {
 	};
 
 	function UpdateMenu() {
-		if (!gameManager) {
+		if (!game) {
 			DrawMenu();
-		} else if (gameManager.IsGameOver()){
-			gameManager = null;
+		} else if (game.IsGameOver()){
+			game = null;
 		}
 
 	};
 
 	function DrawMenu() {
 		var i;
-		canvas.Clear();
+		canvas.canvas.Clear();
 		for (i = 0; i < buttons.length; i += 1){
 			buttons[i].Draw();
 		}
 	};
 
 	this.OnKeyDown = function(event) {
-		if (game) {
-			game.OnKeyDown(event);
-		}
+		//if (game) {
+		//	game.OnKeyDown(event);
+		//}
 	};
 
 	this.OnKeyUp = function(event) {
@@ -48,8 +52,8 @@ function Menu() {
 		}
 		//console.log(event.keyCode);
 		if (game) {
-			game.OnKeyUp(event);
-		} else if (gameManager) {
+		//	game.OnKeyUp(event);
+		} else if (game) {
 			//this is intentionally left blank.
 		} else if (event.keyCode === 38) {
 			buttons[currentButton].Deselect();
@@ -72,22 +76,15 @@ function Menu() {
 
 	this.StartGame = function() {
 		//clearInterval(drawInterval);
-		gameManager = new GameManager();
+		game = new gamemanager.GameManager();
 		//game = new Game();
 		//game.init();
 	};
 }
 
 
-window.onload = function()
-{
 
-	canvas.DocumentLoaded();
-	Scale.SetScale(3);
-	menu.Init();
-	/*canvas.DocumentLoaded();
-	Scale.SetScale(3);
-	game = new Game();
 
-	game.init();*/
+module.exports = {
+  Menu: Menu
 };

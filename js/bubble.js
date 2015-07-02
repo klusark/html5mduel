@@ -1,31 +1,37 @@
 /*global game, image, Animation, Bounds*/
+
+var time = require("./time");
+var imagemanager = require("./imagemanager");
+var animation = require("./animation");
+var bounds = require("./bounds");
+
 /**
  * @constructor
  */
 function Bubble(x, y, xVelocity, yVelocity) {
-	var img = image.GetSpritesImg(),
-	lastUpdateTime = time.Get(),
+	var img = imagemanager.image.GetSpritesImg(),
+	lastUpdateTime = time.time.Get(),
 
-	animation = new Animation(25, 336, 200, 3, 16, 16),
+	animation_ = new animation.Animation(25, 336, 200, 3, 16, 16),
 
 
 	powerup,
 
 	done = false,
 
-	currentBounds = new Bounds(0, 0, 16, 16);
+	currentBounds = new bounds.Bounds(0, 0, 16, 16);
 
 	this.SetCurrentPowerup = function(npowerup) {
 		powerup = npowerup;
 	};
 
 	this.Draw = function() {
-		animation.Draw(img, x, y);
+		animation_.Draw(img, x, y);
 		powerup.image.Draw(x+2, y+2);
 	};
 
 	this.Update = function() {
-		var currentTime = time.Get(),
+		var currentTime = time.time.Get(),
 		deltaT = (currentTime - lastUpdateTime)/1000,
 
 		ya = y+ deltaT*yVelocity,
@@ -59,7 +65,7 @@ function Bubble(x, y, xVelocity, yVelocity) {
 			xVelocity *= -1;
 		}
 
-		animation.Update();
+		animation_.Update();
 
 		lastUpdateTime = currentTime;
 
@@ -113,3 +119,7 @@ function Bubble(x, y, xVelocity, yVelocity) {
 	};
 
 }
+
+module.exports = {
+  Bubble: Bubble
+};

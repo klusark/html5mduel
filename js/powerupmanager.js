@@ -5,7 +5,7 @@ var powerup = require("./powerup");
 /**
  * @constructor
  */
-function PowerupManager(){
+function PowerupManager(game){
 	var registerdPowerups = [],
 	selectedPowerups = [];
 
@@ -37,7 +37,7 @@ function PowerupManager(){
 	};
 
 	this.GetRandomPowerup = function(bubble) {
-		return new powerup[selectedPowerups[Math.floor(Math.random()*selectedPowerups.length)]](bubble);
+		return new powerup[selectedPowerups[Math.floor(Math.random()*selectedPowerups.length)]](bubble, game);
 	};
 }
 

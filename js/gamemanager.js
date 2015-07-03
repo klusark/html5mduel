@@ -73,7 +73,7 @@ function GameManager() {
 			if (lastRoundEnd /*+ 2000*/ < ttime) {
 				betweenRounds = false;
 				time.time.StartTime();
-				game = new core.Game();
+				var game = new core.Game();
 				game.init();
 			}
 		} else if (game) {

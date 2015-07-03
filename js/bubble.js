@@ -8,7 +8,7 @@ var bounds = require("./bounds");
 /**
  * @constructor
  */
-function Bubble(x, y, xVelocity, yVelocity) {
+function Bubble(x, y, xVelocity, yVelocity, game) {
 	var img = imagemanager.image.GetSpritesImg(),
 	lastUpdateTime = time.time.Get(),
 

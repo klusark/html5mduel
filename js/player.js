@@ -9,7 +9,7 @@ var effect = require("./effect");
 /**
  * @constructor
  */
-function Player(x, y, img){
+function Player(x, y, img, game){
 	var lastUpdateTime = time.time.Get(),
 	animations = [],
 	keyCodes = [],

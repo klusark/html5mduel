@@ -9,7 +9,7 @@ var sound = require("./sound");
 /**
  * @constructor
  */
-function Platform(x, y, numPlatforms) {
+function Platform(x, y, numPlatforms, game) {
 	var img = image.image.GetSpritesImg(),
 
 	platform = new staticimage.StaticImage(img, 143, 0, 14, 8),

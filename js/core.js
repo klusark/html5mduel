@@ -218,7 +218,7 @@ function Game() {
 			if (Math.random()>0.5){
 				yVelocity *= -1;
 			}
-			newBubble = new bubble.Bubble(x, y, xVelocity, yVelocity);
+			newBubble = new bubble.Bubble(x, y, xVelocity, yVelocity, this);
 			newBubble.SetCurrentPowerup(powerups.GetRandomPowerup(newBubble));
 			bubbles.push(newBubble);
 			this.CreateEffect(effect.PurpleSmoke, ex, ey);
@@ -278,7 +278,7 @@ function Game() {
 		//inSelectMode = false;
 		timeStarted = false;
 
-		powerups = new powerupmanager.PowerupManager();
+		powerups = new powerupmanager.PowerupManager(this);
 		powerups.ReigisterPowerups();
 
 		SetNextBubbleTime();
@@ -290,13 +290,13 @@ function Game() {
 			}
 		}
 
-		level_ = new level.Level();
+		level_ = new level.Level(this);
 		level_.SetupPlatforms();
 		level_.SetupRopes(platforms, ropes);
 
 
-		players[0] = new player.Player(28, 144, imagemanager.image.GetPlayer1Img());
-		players[1] = new player.Player(268, 144, imagemanager.image.GetPlayer2Img());
+		players[0] = new player.Player(28, 144, imagemanager.image.GetPlayer1Img(), this);
+		players[1] = new player.Player(268, 144, imagemanager.image.GetPlayer2Img(), this);
 		players[1].SetKeys(38, 40, 37, 39, 13);
 		players[1].SetFlipped(true);
 

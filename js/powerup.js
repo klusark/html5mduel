@@ -11,7 +11,7 @@ var time = require("./time");
 /**
  * @constructor
  */
-function PowerupGun(owner){
+function PowerupGun(owner, game){
 
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 284, 0, 12, 12);
 
@@ -126,7 +126,7 @@ function PowerupInvis(owner){
 /**
  * @constructor
  */
-function Mine(x, y, owner) {
+function Mine(x, y, owner, game) {
 	var other = game.GetOponentOf(owner),
 	bounds_ = new bounds.Bounds(0, 0, 1, 1);
 
@@ -165,7 +165,7 @@ function Mine(x, y, owner) {
 /**
  * @constructor
  */
-function PowerupMine(owner) {
+function PowerupMine(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 271, 13, 12, 12);
 	var used = false,
 	inPlayer = false;
@@ -190,14 +190,14 @@ function PowerupMine(owner) {
 	this.LayMine = function() {
 		sound.sound.Play("beep1");
 		var xoff = owner.IsFlipped() ? 4 : 20;
-		game.AddEntity(new Mine(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+23), owner));
+		game.AddEntity(new Mine(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+23), owner, game));
 	};
 }
 
 /**
  * @constructor
  */
-function Puck(x, y, owner, direction) {
+function Puck(x, y, owner, direction, game) {
 	var img = imagemanager.image.GetSpritesImg(),
 	other = game.GetOponentOf(owner),
 	bounds_ = new bounds.Bounds(0, 0, 5, 2),
@@ -268,7 +268,7 @@ function Puck(x, y, owner, direction) {
 /**
  * @constructor
  */
-function PowerupNukepuck(owner) {
+function PowerupNukepuck(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 310, 0, 12, 12);
 	var used = false,
 	inPlayer = false,
@@ -293,14 +293,14 @@ function PowerupNukepuck(owner) {
 
 	this.ThrowPuck = function() {
 		var xoff = owner.IsFlipped() ? 0 : 20;
-		game.AddEntity(new Puck(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+22), owner, owner.IsFlipped()));
+		game.AddEntity(new Puck(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+22), owner, owner.IsFlipped(), game));
 	};
 }
 
 /**
  * @constructor
  */
-function PowerupDestroy(owner) {
+function PowerupDestroy(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 284, 13, 12, 12);
 
 	this.Update = function() {
@@ -318,7 +318,7 @@ function PowerupDestroy(owner) {
 /**
  * @constructor
  */
-function Nade(x, y, owner, direction) {
+function Nade(x, y, owner, direction, game) {
 	var img = image.GetSpritesImg(),
 	bounds_ = new bounds.Bounds(0, 0, 5, 4),
 	animation_ = new staticimage.StaticImage(img, 300, 18, 5, 4),
@@ -375,7 +375,7 @@ function Nade(x, y, owner, direction) {
 /**
  * @constructor
  */
-function PowerupNade(owner) {
+function PowerupNade(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 297, 13, 12, 12);
 	var used = false,
 	inPlayer = false,
@@ -401,14 +401,14 @@ function PowerupNade(owner) {
 
 	this.ThrowNade = function() {
 		var xoff = owner.IsFlipped() ? 0 : 20;
-		game.AddEntity(new Nade(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()), owner, owner.IsFlipped()));
+		game.AddEntity(new Nade(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()), owner, owner.IsFlipped(), game));
 	};
 }
 
 /**
  * @constructor
  */
-function PowerupTeleport(owner) {
+function PowerupTeleport(owner, game) {
 	/**
 	 * @constructor
 	 */
@@ -505,7 +505,7 @@ function PowerupChute(owner) {
 /**
  * @constructor
  */
-function Powerup1000v(owner) {
+function Powerup1000v(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 258, 13, 12, 12);
 	var inPlayer = false,
 	img = imagemanager.image.Get1000vImg(),
@@ -591,7 +591,7 @@ function PowerupBoots(owner) {
 /**
  * @constructor
  */
-function PowerupHook(owner) {
+function PowerupHook(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 323, 13, 12, 12);
 	var inPlayer = false,
 	active = false,

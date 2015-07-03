@@ -4,7 +4,7 @@ var rope = require("./rope");
 /**
  * @constructor
  */
-function Level() {
+function Level(game) {
 	//TODO: redo all of this code to make a more fair level generator
 	var HIGH_FLOOR_Y = 40,
 	HIGH_FLOOR_X = 48,
@@ -22,7 +22,7 @@ function Level() {
 	ROPE_X_INT = 32;
 
 	this.MakeFloor = function(x1,x2,y) {
-		game.AddPlatform(new platform.Platform(x1,y, (x2-x1)/BLOCK_SIZE));
+		game.AddPlatform(new platform.Platform(x1,y, (x2-x1)/BLOCK_SIZE, game));
 	};
 
 	this.Make_Rope = function(x, y1, y2) {

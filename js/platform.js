@@ -61,6 +61,10 @@ function Platform(x, y, numPlatforms, game) {
 
 	};
 
+	this.Serialize = function() {
+		return  {x: x, y: y, numPlatforms: numPlatforms};
+	};
+
 }
 
 module.exports = {

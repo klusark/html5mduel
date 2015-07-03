@@ -472,6 +472,57 @@ function Game(time) {
 	};
 
 
+	this.Serialize = function() {
+		var output = {};
+
+		output.platforms = [];
+		for (var i = 0; i < platforms.length; ++i) {
+			output.platforms.push(platforms[i].Serialize());
+		}
+
+		output.ropes = [];
+		for (var i = 0; i < ropes.length; ++i) {
+			output.ropes.push(ropes[i].Serialize());
+		}
+
+		output.bubbles = [];
+		for (var i = 0; i < bubbles.length; ++i) {
+			output.bubbles.push(bubbles[i].Serialize());
+		}
+
+		output.players = [];
+		for (var i = 0; i < players.length; ++i) {
+			output.players.push(players[i].Serialize());
+		}
+
+		return output;
+	};
+	
+	this.Deserialize = function(data) {
+
+		/*for (var i = 0; i < data.platforms.length; ++i) {
+			platforms[i].Deserialize(data.platforms[i]));
+		}
+
+		output.ropes = [];
+		for (var i = 0; i < ropes.length; ++i) {
+			output.ropes.push(ropes[i].Serialize());
+		}
+
+		output.bubbles = [];
+		for (var i = 0; i < bubbles.length; ++i) {
+			output.bubbles.push(bubbles[i].Serialize());
+		}
+
+		output.players = [];
+		for (var i = 0; i < players.length; ++i) {
+			output.players.push(players[i].Serialize());
+		}*/
+
+		for (var i = 0; i < data.players.length; ++i) {
+			players[i].Deserialize(data.players[i]));
+		}
+	};
 }
 
 

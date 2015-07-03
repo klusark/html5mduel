@@ -108,6 +108,9 @@ function Bubble(x, y, xVelocity, yVelocity, game) {
 		return currentBounds;
 	};
 
+	this.Serialize = function() {
+		return  {x: x, y: y, xVelocity: xVelocity, yVelocity: yVelocity};
+	};
 }
 
 module.exports = {

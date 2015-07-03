@@ -814,7 +814,18 @@ function Player(x, y, img, game){
 		return currentBounds;
 	};
 
+	this.Serialize = function() {
+		return  {x: x, y: y, xVelocity: xVelocity, yVelocity: yVelocity};
+	};
+	
+	this.Deserialize = function(data) {
+		x = data.x;
+		y = data.y;
+		xVelocity = data.xVelocity;
+		yVelocity = data.yVelocity;
+	};
 
+	// TODO: don't put code here
 	this.SetAnimation(animations.idle);
 }
 

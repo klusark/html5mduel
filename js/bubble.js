@@ -40,7 +40,7 @@ function Bubble(x, y, xVelocity, yVelocity, game) {
 		}
 		y = ya;
 		if (powerup && powerup.Update){
-			powerup.Update();
+			powerup.Update(deltaT);
 		}
 
 		if (y > 163){
@@ -110,6 +110,13 @@ function Bubble(x, y, xVelocity, yVelocity, game) {
 
 	this.Serialize = function() {
 		return  {x: x, y: y, xVelocity: xVelocity, yVelocity: yVelocity};
+	};
+	
+	this.Deserialize = function(data) {
+		x = data.x;
+		y = data.y;
+		xVelocity = data.xVelocity;
+		yVelocity = data.yVelocity;
 	};
 }
 

@@ -11,6 +11,7 @@ var emitter = require("./emitter");
 var mallow = require("./mallow");
 var bubble = require("./bubble");
 var log = require("./log");
+var platform = require("./platform");
 
 /*TODO:
  * bug with interupt animation in player that the player could come out of a death animation
@@ -43,8 +44,8 @@ function Game(time) {
 	lastTime = time.Get();
 
 	if (typeof document !== 'undefined') {
-		document.onkeyup = function(e){this.OnKeyUp(e);}.bind(this);
-		document.onkeydown = function(e){this.OnKeyDown(e);}.bind(this);
+		document.onkeyup = function(e){this.OnKeyUp(e, true);}.bind(this);
+		document.onkeydown = function(e){this.OnKeyDown(e, true);}.bind(this);
 	}
 
 	sound.sound.Preload("buzz");
@@ -439,7 +440,9 @@ function Game(time) {
 	};
 
 
-	this.OnKeyDown = function(event) {
+	this.OnKeyDown = function(event, emit) {
+		if (typeof socket != "undefined" && emit)
+		socket.emit("keydown", event.keyCode);
 		//log.Log(event.keyCode);
 		if (players){
 			players[0].KeyDown(event.keyCode);
@@ -447,7 +450,9 @@ function Game(time) {
 		}
 	};
 
-	this.OnKeyUp = function(event) {
+	this.OnKeyUp = function(event, emit) {
+		if (typeof socket != "undefined" && emit)
+		socket.emit("keyup", event.keyCode);
 		if (event.keyCode == 109){
 			Scale.SetScale(Scale.GetScale()-1);
 		}else if (event.keyCode == 107){
@@ -500,10 +505,23 @@ function Game(time) {
 	
 	this.Deserialize = function(data) {
 
-		/*for (var i = 0; i < data.platforms.length; ++i) {
-			platforms[i].Deserialize(data.platforms[i]));
+		platforms = [];
+		for (var i = 0; i < data.platforms.length; ++i) {
+			var newplat = new platform.Platform(0,0,0);
+			newplat.Deserialize(data.platforms[i]);
+			platforms.push(newplat);
+			//platforms[i].Deserialize(data.platforms[i]);
 		}
-
+		
+		bubbles = [];
+		for (var i = 0; i < data.bubbles.length; ++i) {
+			//newBubble = new bubble.Bubble(x, y, xVelocity, yVelocity);
+			var newBubble = new bubble.Bubble(0, 0, 0, 0);
+			newBubble.SetCurrentPowerup(powerups.GetRandomPowerup(newBubble));
+			newBubble.Deserialize(data.bubbles[i]);
+			bubbles.push(newBubble);
+		}
+/*
 		output.ropes = [];
 		for (var i = 0; i < ropes.length; ++i) {
 			output.ropes.push(ropes[i].Serialize());
@@ -520,7 +538,7 @@ function Game(time) {
 		}*/
 
 		for (var i = 0; i < data.players.length; ++i) {
-			players[i].Deserialize(data.players[i]));
+			players[i].Deserialize(data.players[i]);
 		}
 	};
 }

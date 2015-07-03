@@ -11,9 +11,9 @@ function Log() {
 	var debug = false;
 
 	this.DebugLog = function(message) {
-		if (debug) {
+		//if (debug) {
 			console.log(message);
-		}
+		//}
 	};
 
 	this.Log = function(message) {

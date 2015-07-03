@@ -64,6 +64,13 @@ function Platform(x, y, numPlatforms, game) {
 	this.Serialize = function() {
 		return  {x: x, y: y, numPlatforms: numPlatforms};
 	};
+	
+	this.Deserialize = function(data) {
+		x = data.x;
+		y = data.y;
+		numPlatforms = data.numPlatforms;
+		return  {x: x, y: y, numPlatforms: numPlatforms};
+	};
 
 }
 

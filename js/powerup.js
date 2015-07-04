@@ -314,7 +314,7 @@ function PowerupDestroy(owner, game) {
  * @constructor
  */
 function Nade(x, y, owner, direction, game) {
-	var img = image.GetSpritesImg(),
+	var img = imagemanager.image.GetSpritesImg(),
 	bounds_ = new bounds.Bounds(0, 0, 5, 4),
 	animation_ = new staticimage.StaticImage(img, 300, 18, 5, 4),
 	xVelocity = direction ? -70 : 70,

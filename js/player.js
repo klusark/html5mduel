@@ -2,6 +2,7 @@ var animation = require("./animation");
 var bounds = require("./bounds");
 var log = require("./log");
 var effect = require("./effect");
+var sound = require("./sound");
 
 /**
  * @constructor
@@ -464,7 +465,7 @@ function Player(x, y, img, game){
 		xVelocity = 0;
 		yVelocity = EXPLODEVELOCITY;
 		this.SetAnimation(animations.explode);
-		sound.Play("buzz");
+		sound.sound.Play("buzz");
 	};
 
 	this.InterruptAnimation = function(name, controls, callback) {

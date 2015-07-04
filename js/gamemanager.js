@@ -15,7 +15,8 @@ function GameManager() {
 	lastRoundEnd = time.time.Get(),
 	updateInterval = setInterval(Update, 10),
 	gameOver = false,
-	maxScore = 3;
+	maxScore = 3,
+	game;
 
 	players[0] = new PlayerInfo("Player 1");
 	players[1] = new PlayerInfo("Player 2");
@@ -73,7 +74,7 @@ function GameManager() {
 			if (lastRoundEnd /*+ 2000*/ < ttime) {
 				betweenRounds = false;
 				time.time.StartTime();
-				var game = new core.Game();
+				game = new core.Game();
 				game.init();
 			}
 		} else if (game) {

@@ -8,6 +8,10 @@ function Menu() {
 	currentButton = 0,
 	ingameMenu = [],
 	game;
+	
+	this.getManager = function() {
+		return game;
+	};
 
 	this.Init = function() {
 		buttons[0] = new button.Button(110, 20, 100, 20, "Start Game", this.StartGame);

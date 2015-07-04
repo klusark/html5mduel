@@ -507,7 +507,7 @@ function Game(time) {
 
 		platforms = [];
 		for (var i = 0; i < data.platforms.length; ++i) {
-			var newplat = new platform.Platform(0,0,0);
+			var newplat = new platform.Platform(0,0,0, this);
 			newplat.Deserialize(data.platforms[i]);
 			platforms.push(newplat);
 			//platforms[i].Deserialize(data.platforms[i]);
@@ -516,7 +516,7 @@ function Game(time) {
 		bubbles = [];
 		for (var i = 0; i < data.bubbles.length; ++i) {
 			//newBubble = new bubble.Bubble(x, y, xVelocity, yVelocity);
-			var newBubble = new bubble.Bubble(0, 0, 0, 0);
+			var newBubble = new bubble.Bubble(0, 0, 0, 0, this);
 			newBubble.SetCurrentPowerup(powerups.GetRandomPowerup(newBubble));
 			newBubble.Deserialize(data.bubbles[i]);
 			bubbles.push(newBubble);

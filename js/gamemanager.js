@@ -21,6 +21,10 @@ function GameManager() {
 
 	players[0] = new PlayerInfo("Player 1");
 	players[1] = new PlayerInfo("Player 2");
+	
+	this.getGame = function() {
+		return game;
+	};
 
 	this.IsGameOver = function() {
 		return gameOver && time.Get() > lastRoundEnd + 3000;

@@ -22,6 +22,5 @@ function Time() {
 }
 
 module.exports = {
-  Time: Time,
-  time: new Time()
+  Time: Time
 };

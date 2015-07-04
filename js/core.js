@@ -3,7 +3,6 @@
 var sound = require("./sound");
 var canvas = require("./canvas");
 var powerupmanager = require("./powerupmanager");
-var time = require("./time");
 var level = require("./level");
 var player = require("./player");
 var imagemanager = require("./imagemanager");
@@ -21,7 +20,7 @@ var log = require("./log");
 /**
  * @constructor
  */
-function Game() {
+function Game(time) {
 	var platforms, ropes, players, mallows,
 	emitters, effects, bubbles, entities,
 	debug,
@@ -35,13 +34,13 @@ function Game() {
 	nextBubbleTime,
 	level_,
 	scale = 1,
-	FPS = 30,
+	FPS = 60,
 	maxBubbles = 3,
 	maxTimeBetweenBubbles = 3000,
 	powerups,
 	gameEndTime = 0,
 	winner,
-	lastTime = time.time.Get();
+	lastTime = time.Get();
 
 	if (typeof document !== 'undefined') {
 		document.onkeyup = function(e){this.OnKeyUp(e);}.bind(this);
@@ -49,6 +48,10 @@ function Game() {
 	}
 
 	sound.sound.Preload("buzz");
+
+	this.getTime = function() {
+		return time.Get();
+	}
 
 	this.CreateEffect = function(name, x, y) {
 		effects.push(new name(x, y));
@@ -94,7 +97,7 @@ function Game() {
 	};
 
 	this.Update = function() {
-		var currentTime = time.time.Get();
+		var currentTime = time.Get();
 		var deltaT = (currentTime - lastTime)/1000;
 		/*if (this.InSelectMode()){
 			selector.Update();
@@ -133,7 +136,7 @@ function Game() {
 					winner = 0;
 				}
 				if (gameOver){
-					gameEndTime = time.time.Get();
+					gameEndTime = time.Get();
 					SetNextBubbleTime();
 					for(i = 0; i < bubbles.length; i += 1){
 						bubbles[i].SetDone(true);
@@ -195,7 +198,7 @@ function Game() {
 			}
 		}
 
-		if (!gameOver && bubbles.length < maxBubbles && time.time.Get() > nextBubbleTime) {
+		if (!gameOver && bubbles.length < maxBubbles && time.Get() > nextBubbleTime) {
 
 			if (emittor === 1) {
 				x = 14;
@@ -231,7 +234,7 @@ function Game() {
 	};
 
 	function SetNextBubbleTime() {
-		nextBubbleTime = time.time.Get() + Math.random() * maxTimeBetweenBubbles;
+		nextBubbleTime = time.Get() + Math.random() * maxTimeBetweenBubbles;
 	}
 
 	/*this.InSelectMode = function() {
@@ -338,7 +341,6 @@ function Game() {
 
 	this.FinishLoading = function() {
 		sound.sound.Play("buzz");
-		time.time.StartTime();
 		gameInterval = setInterval(function(){this.Update();this.Draw();}.bind(this), 1000 / FPS);
 	};
 

@@ -5,7 +5,6 @@ var animation = require("./animation");
 var effect = require("./effect");
 var sound = require("./sound");
 var bounds = require("./bounds");
-var time = require("./time");
 
 /**
  * @constructor
@@ -84,7 +83,7 @@ function PowerupSkull(owner){
 /**
  * @constructor
  */
-function PowerupInvis(owner){
+function PowerupInvis(owner, game){
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 271, 0, 12, 12);
 	var invis = false,
 	disabled = false,
@@ -105,14 +104,14 @@ function PowerupInvis(owner){
 	};
 
 	this.Use = function() {
-		if (time.time.Get() < nextAllowedTime || !owner.IsIdle()){
+		if (game.getTime() < nextAllowedTime || !owner.IsIdle()){
 			return;
 		}
 		if (!invis) {
 			sound.sound.Play("beep3");
 			invis = true;
 			owner.SetDraw(false);
-			nextAllowedTime = time.time.Get() + 300;
+			nextAllowedTime = game.getTime() + 300;
 		} else {
 			sound.sound.Play("beep2");
 			disabled = true;

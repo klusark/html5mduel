@@ -1,4 +1,4 @@
-var time = require("./time");
+var time_ = require("./time");
 var canvas = require("./canvas");
 var Scale = require("./scale");
 var core = require("./core");
@@ -8,11 +8,12 @@ function GameManager() {
 		this.name = name;
 		this.score = 0;
 	}
-	var players = [],
+	var time = new time_.Time(),
+	players = [],
 	updateInterval,
 	firstRound = true,
 	betweenRounds = true,
-	lastRoundEnd = time.time.Get(),
+	lastRoundEnd = time.Get(),
 	updateInterval = setInterval(Update, 10),
 	gameOver = false,
 	maxScore = 3,
@@ -22,7 +23,7 @@ function GameManager() {
 	players[1] = new PlayerInfo("Player 2");
 
 	this.IsGameOver = function() {
-		return gameOver && time.time.Get() > lastRoundEnd + 3000;
+		return gameOver && time.Get() > lastRoundEnd + 3000;
 	};
 
 	function Draw() {
@@ -68,18 +69,18 @@ function GameManager() {
 	function Update() {
 		var endTime, ttime, winner;
 		if (betweenRounds && !gameOver) {
-			ttime = time.time.Get();
+			ttime = time.Get();
 
 			// I think 2000 is for showing the game description screen
 			if (lastRoundEnd /*+ 2000*/ < ttime) {
 				betweenRounds = false;
-				time.time.StartTime();
-				game = new core.Game();
+				time.StartTime();
+				game = new core.Game(time);
 				game.init();
 			}
 		} else if (game) {
 			endTime = game.GetGameEndTime();
-			if (endTime !== 0 && endTime + 1000 < time.time.Get()) {
+			if (endTime !== 0 && endTime + 1000 < time.Get()) {
 				firstRound = false;
 				winner = game.GetWinner();
 				if (winner === 0){
@@ -90,7 +91,7 @@ function GameManager() {
 				game.End();
 				game = null;
 				betweenRounds = true;
-				lastRoundEnd = time.time.Get();
+				lastRoundEnd = time.Get();
 			}
 		}
 		Draw();

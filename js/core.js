@@ -12,6 +12,7 @@ var mallow = require("./mallow");
 var bubble = require("./bubble");
 var log = require("./log");
 var platform = require("./platform");
+var rope = require("./rope");
 
 /*TODO:
  * bug with interupt animation in player that the player could come out of a death animation
@@ -41,7 +42,8 @@ function Game(time) {
 	powerups,
 	gameEndTime = 0,
 	winner,
-	lastTime = time.Get();
+	lastTime = time.Get(),
+	bubbleDisabled = false;
 
 	if (typeof document !== 'undefined') {
 		document.onkeyup = function(e){this.OnKeyUp(e, true);}.bind(this);
@@ -178,10 +180,8 @@ function Game(time) {
 	};
 
 	this.UpdateBubbles = function(deltaT) {
-		var emittor = Math.floor(Math.random()*3+1),
-		x, y, ey, ex, xVelocity, yVelocity, newBubble, i;
 
-		for(i = 0; i < bubbles.length; i += 1){
+		for(var i = 0; i < bubbles.length; i += 1){
 			bubbles[i].Update(deltaT);
 
 			if(this.DoesCollide(bubbles[i], players[0])){
@@ -199,8 +199,9 @@ function Game(time) {
 			}
 		}
 
-		if (!gameOver && bubbles.length < maxBubbles && time.Get() > nextBubbleTime) {
-
+		if (!gameOver && bubbles.length < maxBubbles && time.Get() > nextBubbleTime && !bubbleDisabled) {
+			var emittor = Math.floor(Math.random()*3+1);
+			var x, y, ey, ex, xVelocity, yVelocity, newBubble;
 			if (emittor === 1) {
 				x = 14;
 				y = 92;
@@ -476,6 +477,9 @@ function Game(time) {
 		return scale;
 	};
 
+	this.SetBubbleDisabled = function(val) {
+		bubbleDisabled = val;
+	};
 
 	this.Serialize = function() {
 		var output = {};
@@ -502,7 +506,7 @@ function Game(time) {
 
 		return output;
 	};
-	
+
 	this.Deserialize = function(data) {
 
 		platforms = [];
@@ -512,14 +516,20 @@ function Game(time) {
 			platforms.push(newplat);
 			//platforms[i].Deserialize(data.platforms[i]);
 		}
-		
+
 		bubbles = [];
 		for (var i = 0; i < data.bubbles.length; ++i) {
-			//newBubble = new bubble.Bubble(x, y, xVelocity, yVelocity);
 			var newBubble = new bubble.Bubble(0, 0, 0, 0, this);
-			newBubble.SetCurrentPowerup(powerups.GetRandomPowerup(newBubble));
 			newBubble.Deserialize(data.bubbles[i]);
+			newBubble.SetCurrentPowerup(powerups.CreatePowerupByName(newBubble.GetPowerupName(), newBubble));
 			bubbles.push(newBubble);
+		}
+
+		ropes = [];
+		for (var i = 0; i < data.ropes.length; ++i) {
+			var newBubble = new rope.Rope(0, 0, 0, this);
+			newBubble.Deserialize(data.ropes[i]);
+			ropes.push(newBubble);
 		}
 /*
 		output.ropes = [];

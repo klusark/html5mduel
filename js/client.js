@@ -30,10 +30,10 @@ window.onload = function()
 	/*canvas.DocumentLoaded();
 	Scale.SetScale(3);
 	game = new Game();
-	
+
 
 	game.init();*/
-	
+
 	var g = new gm.GameManager();
 	socket = io('http://localhost:8000');
 	//socket.on('connection', function (socket) {
@@ -50,7 +50,8 @@ window.onload = function()
 		socket.on("state", function(data) {
 			g.getGame().Deserialize(data);
 			console.log(data);
+			g.getGame().SetBubbleDisabled(true);
 		});
 	//});
-	
+
 };

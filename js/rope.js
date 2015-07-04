@@ -36,9 +36,15 @@ function Rope(x, y, length){
 	this.GetX = function(){
 		return x+2;
 	};
-	
+
 	this.Serialize = function() {
 		return  {x: x, y: y, length: length};
+	}
+
+	this.Deserialize = function(data) {
+		x = data.x;
+		y = data.y;
+		length = data.length;
 	}
 }
 

@@ -37,7 +37,13 @@ function PowerupManager(game){
 	};
 
 	this.GetRandomPowerup = function(bubble) {
-		return new powerup[selectedPowerups[Math.floor(Math.random()*selectedPowerups.length)]](bubble, game);
+		var name = selectedPowerups[Math.floor(Math.random() * selectedPowerups.length)];
+		return {name: name, powerup: new powerup[name](bubble, game)};
+	};
+
+	this.CreatePowerupByName = function(name, bubble) {
+		console.log(name);
+		return {name: name, powerup: new powerup[name](bubble, game)};
 	};
 }
 

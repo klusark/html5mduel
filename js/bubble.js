@@ -17,10 +17,12 @@ function Bubble(x, y, xVelocity, yVelocity, game) {
 
 	done = false,
 
-	currentBounds = new bounds.Bounds(0, 0, 16, 16);
+	currentBounds = new bounds.Bounds(0, 0, 16, 16),
+	name;
 
 	this.SetCurrentPowerup = function(npowerup) {
-		powerup = npowerup;
+		powerup = npowerup.powerup;
+		name = npowerup.name;
 	};
 
 	this.Draw = function() {
@@ -109,15 +111,20 @@ function Bubble(x, y, xVelocity, yVelocity, game) {
 	};
 
 	this.Serialize = function() {
-		return  {x: x, y: y, xVelocity: xVelocity, yVelocity: yVelocity};
+		return  {x: x, y: y, xVelocity: xVelocity, yVelocity: yVelocity, name: name};
 	};
-	
+
 	this.Deserialize = function(data) {
 		x = data.x;
 		y = data.y;
 		xVelocity = data.xVelocity;
 		yVelocity = data.yVelocity;
+		name = data.name;
 	};
+
+	this.GetPowerupName = function() {
+		return name;
+	}
 }
 
 module.exports = {

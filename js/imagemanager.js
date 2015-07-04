@@ -1,11 +1,11 @@
-/*global Scale, window*/
+/*global window*/
 
 var Scale = require("./scale");
 
 if (typeof Image === 'undefined') {
 	Image = function() {
 		this.complete = true;
-	}
+	};
 }
 
 /**

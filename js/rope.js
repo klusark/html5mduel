@@ -1,4 +1,3 @@
-/*global image, StaticImage, canvas*/
 
 var imagemanager = require("./imagemanager");
 var staticimage = require("./staticimage");

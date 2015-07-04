@@ -1,4 +1,4 @@
-/*global Scale, canvas, sound, Effect, log, powerups, Bubble, Selector, Level, window, Player, image, Mallow, Emitter*/
+/*global window*/
 
 var sound = require("./sound");
 var canvas = require("./canvas");
@@ -78,7 +78,7 @@ function Game() {
 				array[i].Draw();
 			}
 		}
-	};
+	}
 
 	this.GetRopes = function() {
 		return ropes;
@@ -240,7 +240,7 @@ function Game() {
 		for(i = 0; i < array.length; i += 1){
 			array[i].Update();
 		}
-	};
+	}
 
 	/*this.ColourSelect = function() {
 		inSelectMode = true;
@@ -346,7 +346,7 @@ function Game() {
 
 	this.MakeFloor = function(x1,x2,y) {
 		level_.MakeFloor(x1, x2, y);
-	}
+	};
 
 	this.IsOnGround = function(yb, ya, entity) {
 		if (ya < yb){

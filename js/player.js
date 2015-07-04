@@ -1,5 +1,3 @@
-/*global game, Bounds, Animation, log, sound */
-
 var animation = require("./animation");
 var time = require("./time");
 var bounds = require("./bounds");

@@ -28,7 +28,7 @@ function Menu() {
 			game = null;
 		}
 
-	};
+	}
 
 	function DrawMenu() {
 		var i;
@@ -36,7 +36,7 @@ function Menu() {
 		for (i = 0; i < buttons.length; i += 1){
 			buttons[i].Draw();
 		}
-	};
+	}
 
 	this.OnKeyDown = function(event) {
 		//if (game) {

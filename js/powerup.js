@@ -1,4 +1,3 @@
-/*global StaticImage, image, game, Animation, sound, Bounds, powerups*/
 
 var staticimage = require("./staticimage");
 var imagemanager = require("./imagemanager");

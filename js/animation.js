@@ -1,5 +1,3 @@
-/*global game, canvas*/
-
 var time = require("./time");
 var canvas = require("./canvas");
 

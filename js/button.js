@@ -29,7 +29,7 @@ function Button(x, y, w, h, text, onclick) {
 		canvas.canvas.FillStyle(selected ? selectedColour : unselectedColour);
 
 		//TODO: Add a way to scale the font.
-		canvas.canvas.setFont(Scale.scale.GetScale()*.75 + "em 'Allerta'");
+		canvas.canvas.setFont(Scale.scale.GetScale()*0.75 + "em 'Allerta'");
 		canvas.canvas.setTextAlign("center");
 		canvas.canvas.FillText(text, x+w/2, y+15);
 	};

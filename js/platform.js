@@ -1,5 +1,3 @@
-/*global image, Bounds, StaticImage, game, sound*/
-
 var image = require("./imagemanager");
 var staticimage = require("./staticimage");
 var bounds = require("./bounds");

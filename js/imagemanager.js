@@ -31,13 +31,13 @@ function ImageManager()
 	}*/
 	this.ScaleChange = function(scale) {
 
-		var base = "http://html5mduel.appspot.com/generate?m="+scale+"&c=",
+		var base = "http://mduel.teichroeb.net:5000/generate?m="+scale+"&c=",
 		colour0 = window.localStorage.colour0 || 0,
 		colour1 = window.localStorage.colour1 || 1;
 		player1Img.src = base + colour0;
 		player2Img.src = base + colour1;
 		lightningImg.src = base + "4";
-		spritesImg.src = "http://html5mduel.appspot.com/generate?s&m="+scale;
+		spritesImg.src = "http://mduel.teichroeb.net:5000/generate?s&m="+scale;
 	};
 
 	this.GetSpritesImg = function() {

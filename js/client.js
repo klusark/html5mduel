@@ -35,7 +35,7 @@ window.onload = function()
 	game.init();*/
 
 	var g = new gm.GameManager();
-	socket = io('http://localhost:8000');
+	socket = io('http://mduel.teichroeb.net:8000');
 	//socket.on('connection', function (socket) {
 		console.log("connect");
 		socket.emit("joingame", gameToJoin);

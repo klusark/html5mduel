@@ -10,12 +10,8 @@
     }
   ],
   "bin": {
-    "module-name": "./bin/module-name"
   },
   "scripts": {
-    "test": "vows --spec --isolate",
-    "start": "node index.js",
-    "prepublish": "coffee --bare --compile --output lib/foo src/foo/*.coffee"
   },
   "main": "lib/foo.js",
   "repository": {

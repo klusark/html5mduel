@@ -552,92 +552,92 @@ export class Player {
 		return wasOnRope;
 	};
 
-	this.IsRunning = function() {
+	IsRunning() {
 		return (runningLeft || runningRight) && (!isRolling);
 	};
 
-	this.IsRolling = function() {
+	IsRolling() {
 		return isRolling;
 	};
 
-	this.IsIdle = function() {
+	IsIdle() {
 		return isIdle;
 	};
 
-	this.WasRolling = function() {
+	WasRolling() {
 		return wasRolling;
 	};
 
-	this.GetCurrentPowerup = function() {
+	GetCurrentPowerup() {
 		return currentPowerup;
 	};
 
-	this.GetY = function(){
+	GetY(){
 		return y;
 	};
 
-	this.GetX = function(){
+	GetX(){
 		return x;
 	};
 
-	this.GetXVelocity = function() {
+	GetXVelocity() {
 		return xVelocity;
 	};
 
-	this.GetYVelocity = function() {
+	GetYVelocity() {
 		return yVelocity;
 	};
 
-	this.SetXVelocity = function(v) {
+	SetXVelocity(v) {
 		xVelocity = v;
 	};
 
-	this.SetYVelocity = function(v) {
+	SetYVelocity(v) {
 		yVelocity = v;
 	};
 
-	this.SetY = function(ny) {
+	SetY(ny) {
 		y = ny;
 	};
 
-	this.SetX = function(nx) {
+	SetX(nx) {
 		x = nx;
 	};
 
-	this.DisableGravity = function() {
+	DisableGravity() {
 		gravityEnabled = false;
 	};
 
-	this.EnableGravity = function() {
+	EnableGravity() {
 		gravityEnabled = true;
 	};
 
-	this.SetFlipped = function(nf) {
+	SetFlipped(nf) {
 		flipped = nf;
 		currentAnimation.SetFlipped(flipped);
 	};
 
-	this.IsFlipped = function() {
+	IsFlipped() {
 		return flipped;
 	};
 
-	this.IsDead = function(){
+	IsDead(){
 		return dead;
 	};
 
-	this.IsCrouched = function() {
+	IsCrouched() {
 		return isCrouched;
 	};
 
-	this.IsJumpingUp = function() {
+	IsJumpingUp() {
 		return isJumpingUp;
 	};
 
-	this.IsJumping = function() {
+	IsJumping() {
 		return isJumping;
 	};
 
-	this.SetInteruptInput = function(interupt){
+	SetInteruptInput(interupt){
 		interuptInput = interupt;
 	};
 
@@ -656,11 +656,11 @@ export class Player {
 		currentAnimation.ChangeTo(flipped);
 	};
 
-	this.GetKeys = function() {
+	GetKeys() {
 		return keys;
 	};
 
-	this.KeyDown = function(keyCode) {
+	KeyDown(keyCode) {
 		if (interuptInput){
 			return;
 		}
@@ -682,7 +682,7 @@ export class Player {
 		}
 	};
 
-	this.KeyUp = function(keyCode) {
+	KeyUp(keyCode) {
 		if (keyCode === keyCodes.right ){
 			log.log.DebugLog("KeyUp Right");
 			keys.right = false;
@@ -702,7 +702,7 @@ export class Player {
 
 	};
 
-	this.DisableInput = function() {
+	DisableInput() {
 		keys.right = false;
 		keys.left = false;
 		keys.up = false;
@@ -710,7 +710,7 @@ export class Player {
 		keys.use = false;
 	};
 
-	this.UpdateKeysLastFrame = function() {
+	UpdateKeysLastFrame() {
 		keysLastFrame.right = keys.right;
 		keysLastFrame.left = keys.left;
 		keysLastFrame.up = keys.up;
@@ -718,7 +718,7 @@ export class Player {
 		keysLastFrame.use = keys.use;
 	};
 
-	this.SetKeys = function(up, down, left, right, use) {
+	SetKeys(up, down, left, right, use) {
 		keyCodes.up = up;
 		keyCodes.down = down;
 		keyCodes.left = left;
@@ -726,7 +726,7 @@ export class Player {
 		keyCodes.use = use;
 	};
 
-	this.SimulateGravity = function(deltaT) {
+	SimulateGravity(deltaT) {
 
 		if (!isOnRope && gravityEnabled){
 			yVelocity += yAcceleration * deltaT;
@@ -767,7 +767,7 @@ export class Player {
 		y = ny;
 	};
 
-	this.IsTouchingRope = function() {
+	IsTouchingRope() {
 
 		var ropes = game.GetRopes(),
 		i,
@@ -782,7 +782,7 @@ export class Player {
 		currentRope = null;
 	};
 
-	this.StartFall = function(animate) {
+	StartFall(animate) {
 		isOnRope = false;
 		falling = true;
 		onGround = false;
@@ -795,7 +795,7 @@ export class Player {
 
 	};
 
-	this.Land = function() {
+	Land() {
 		onGround = true;
 		isJumping = false;
 		isJumpingUp = false;
@@ -813,11 +813,11 @@ export class Player {
 
 	};
 
-	this.GetCurrentBounds = function() {
+	GetCurrentBounds() {
 		return currentBounds;
 	};
 
-	this.Serialize = function() {
+	Serialize() {
 		return  {x: x, y: y, xVelocity: xVelocity, yVelocity: yVelocity};
 	};
 	

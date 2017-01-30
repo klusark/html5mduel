@@ -11,19 +11,19 @@ function Emitter(x, y, type) {
 	emitter = new staticimage.StaticImage(img, type*16+type+92, 9, 16, 16);
 
 
-	this.Draw = function() {
+	Draw() {
 		emitter.Draw(x, y);
 	};
 
-	this.Update = function() {
+	Update() {
 
 	};
 
-	this.GetY = function() {
+	GetY() {
 		return y;
 	};
 
-	this.GetX = function() {
+	GetX() {
 		return x;
 	};
 }

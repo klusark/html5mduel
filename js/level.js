@@ -21,7 +21,7 @@ function Level(game) {
 	MIN_DIST_FROM_EDGE = 7,
 	ROPE_X_INT = 32;
 
-	this.MakeFloor = function(x1,x2,y) {
+	MakeFloor(x1,x2,y) {
 		game.AddPlatform(new platform.Platform(x1,y, (x2-x1)/BLOCK_SIZE, game));
 	};
 
@@ -33,7 +33,7 @@ function Level(game) {
 		return Math.random() * 2147483648;
 	}
 
-	this.SetupPlatforms = function()
+	SetupPlatforms()
 	{
 		var cur_x1,
 		cur_x2,
@@ -67,7 +67,7 @@ function Level(game) {
 		}
 	};
 
-	this.SetupRopes = function(platforms, ropes)
+	SetupRopes(platforms, ropes)
 	{
 
 		var cur_floor, cur_rope, cur_x, i, j, y1, y2, rope_here,

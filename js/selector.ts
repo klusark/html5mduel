@@ -23,13 +23,13 @@ export class Selector {
 	constructor (x, y, scale) {
 	}
 
-	this.Draw = function(){
+	Draw(){
 
 		currentAnimation.Draw(img, x, y, scale)
 
 	}
 
-	this.Update = function(){
+	Update(){
 		currentTime = core.GetTime()
 		var deltaT = (currentTime - lastUpdateTime)/1000
 
@@ -40,15 +40,15 @@ export class Selector {
 
 	}
 
-	this.StartRun = function() {
+	StartRun() {
 		this.SetAnimation("run")
 	}
 
-	this.StartIdle = function() {
+	StartIdle() {
 		this.SetAnimation("idle")
 	}
 
-	this.Next = function() {
+	Next() {
 		++colour
 		if (colour == colours)
 			colour = 0
@@ -57,7 +57,7 @@ export class Selector {
 		core.DebugLog(img.src)
 	}
 
-	this.Previous = function() {
+	Previous() {
 		--colour
 		if (colour == -1)
 			colour = colours-1
@@ -66,40 +66,40 @@ export class Selector {
 		core.DebugLog(img.src)
 	}
 
-	this.Save = function(player) {
+	Save(player) {
 		window.localStorage['colour'+player] = colour
 		//this.End()
 	}
 
-	this.End = function() {
+	End() {
 		document.getElementById("1").style.display = "block"
 		document.getElementById("2").style.display = "none"
 	}
 
-	this.SetImage = function(image){
+	SetImage(image){
 		img = image
 	}
 
 
-	this.GetY = function(){
+	GetY(){
 		return y;
 	}
 
-	this.GetX = function(){
+	GetX(){
 		return x;
 	}
 
-	this.SetY = function(ny) {
+	SetY(ny) {
 		y = ny
 	}
 
-	this.SetX = function(nx) {
+	SetX(nx) {
 		x = nx
 	}
 
 
 
-	this.SetAnimation = function(name){
+	SetAnimation(name){
 		core.DebugLog("Animation Changed to " + name)
 		currentAnimation = animations[name];
 		currentAnimation.ChangeTo(false);

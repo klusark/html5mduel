@@ -1,26 +1,26 @@
 var canvas = require("./canvas");
 var Scale = require("./scale");
 
-function Button(x, y, w, h, text, onclick) {
-	var selected = false,
-	boarder = 2,
-	selectedColour = "rgb(14,97,54)",
-	unselectedColour = "rgb(146,97,0)",
+export class Button(x, y, w, h, text, onclick) {
+	var selected = false;
+	boarder = 2;
+	selectedColour = "rgb(14,97,54)";
+	unselectedColour = "rgb(146,97,0)";
 	backgroundColour = "rgb(0,0,0)";
 
-	this.Select = function() {
+	Select() {
 		selected = true;
 	};
 
-	this.Deselect = function() {
+	Deselect() {
 		selected = false;
 	};
 
-	this.Click = function() {
+	Click() {
 		onclick();
 	};
 
-	this.Draw = function() {
+	Draw() {
 		canvas.canvas.FillStyle(selected ? selectedColour : unselectedColour);
 		canvas.canvas.FillRect(x, y, w, h);
 		canvas.canvas.FillStyle(backgroundColour);

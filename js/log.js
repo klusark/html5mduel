@@ -10,13 +10,13 @@
 function Log() {
 	var debug = false;
 
-	this.DebugLog = function(message) {
+	DebugLog(message) {
 		//if (debug) {
 			console.log(message);
 		//}
 	};
 
-	this.Log = function(message) {
+	Log(message) {
 		console.log(message);
 	};
 }

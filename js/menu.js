@@ -9,11 +9,11 @@ function Menu() {
 	ingameMenu = [],
 	game;
 	
-	this.getManager = function() {
+	getManager() {
 		return game;
 	};
 
-	this.Init = function() {
+	Init() {
 		buttons[0] = new button.Button(110, 20, 100, 20, "Start Game", this.StartGame);
 		buttons[0].Select();
 		buttons[1] = new button.Button(110, 50, 100, 20, "Load Character", this.LoadCharacter);
@@ -42,13 +42,13 @@ function Menu() {
 		}
 	}
 
-	this.OnKeyDown = function(event) {
+	OnKeyDown(event) {
 		//if (game) {
 		//	game.OnKeyDown(event);
 		//}
 	};
 
-	this.OnKeyUp = function(event) {
+	OnKeyUp(event) {
 		if (event.keyCode === 109) {
 			Scale.SetScale(Scale.GetScale()-1);
 		} else if (event.keyCode === 107){
@@ -78,7 +78,7 @@ function Menu() {
 		}
 	};
 
-	this.StartGame = function() {
+	StartGame() {
 		//clearInterval(drawInterval);
 		game = new gamemanager.GameManager();
 		//game = new Game();

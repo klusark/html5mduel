@@ -9,7 +9,7 @@ function PowerupManager(game){
 	var registerdPowerups = [],
 	selectedPowerups = [];
 
-	this.RegisterPowerupType = function(name) {
+	RegisterPowerupType(name) {
 		if (powerup[name]){
 			var test = new powerup[name]();
 			if (test.image){
@@ -23,7 +23,7 @@ function PowerupManager(game){
 		}
 	};
 
-	this.ReigisterPowerups = function() {
+	ReigisterPowerups() {
 		var p, v;
 		for (p in powerup){
 			if (!p){
@@ -36,12 +36,12 @@ function PowerupManager(game){
 		}
 	};
 
-	this.GetRandomPowerup = function(bubble) {
+	GetRandomPowerup(bubble) {
 		var name = selectedPowerups[Math.floor(Math.random() * selectedPowerups.length)];
 		return {name: name, powerup: new powerup[name](bubble, game)};
 	};
 
-	this.CreatePowerupByName = function(name, bubble) {
+	CreatePowerupByName(name, bubble) {
 		console.log(name);
 		return {name: name, powerup: new powerup[name](bubble, game)};
 	};

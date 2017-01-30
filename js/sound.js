@@ -4,7 +4,7 @@
 function Sound() {
 	var sounds = [];
 
-	this.Preload = function(name) {
+	Preload(name) {
 		if (typeof Audio !== 'undefined') {
 			var sound = new Audio();
 			sound.src = "sound/" + name + ".ogg";
@@ -12,7 +12,7 @@ function Sound() {
 		}
 	};
 
-	this.Play = function(name) {
+	Play(name) {
 		if (!sounds[name]){
 			//log.Log("Sound "+name+" was not preloaded.");
 			return;

@@ -243,7 +243,7 @@ export class Game {
 		nextBubbleTime = time.Get() + Math.random() * maxTimeBetweenBubbles;
 	}
 
-	/*this.InSelectMode = function() {
+	/*InSelectMode() {
 		return inSelectMode;
 	};*/
 
@@ -253,12 +253,12 @@ export class Game {
 		}
 	}
 
-	/*this.ColourSelect = function() {
+	/*ColourSelect() {
 		inSelectMode = true;
 		selector = new Selector(0, 0, scale);
 	};
 
-	this.GetSelector = function() {
+	GetSelector() {
 		return selector;
 	};*/
 

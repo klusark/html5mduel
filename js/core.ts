@@ -1,25 +1,19 @@
-/*var sound = require("./sound");
-var canvas = require("./canvas");
-var powerupmanager = require("./powerupmanager");
-var level = require("./level");
-var player = require("./player");
-var imagemanager = require("./imagemanager");
-var effect = require("./effect");
-var emitter = require("./emitter");
-var mallow = require("./mallow");
-var bubble = require("./bubble");
-var log = require("./log");
-var platform = require("./platform");
-var rope = require("./rope");*/
-
 import { Time } from "./time";
 import { Canvas } from "./canvas";
+import { Scale } from "./scale";
 import { Sound } from "./sound";
 import { Player } from "./player";
 import { Rope } from "./rope";
 import { Bubble } from "./bubble";
 import { Platform } from "./platform";
 import { Emitter } from "./emitter";
+import { Log } from "./log";
+import { Level } from "./level";
+import { PowerupManager } from "./powerupmanager";
+import { ImageManager } from "./imagemanager";
+import { Effect, GreenSmoke } from "./effect";
+import { Mallow } from "./mallow";
+import { Powerup } from "./powerup";
 
 
 /*TODO:
@@ -28,40 +22,42 @@ import { Emitter } from "./emitter";
  * */
 
 export class Game {
-	platforms;
-	ropes;
-	players;
-	mallows;
-	emitters;
-	effects;
-	bubbles;
-	entities;
-	debug;
+	platforms: Platform[];
+	ropes: Rope[];
+	players: Player[];
+	mallows: Mallow[];
+	emitters: Emitter[];
+	effects: Effect[];
+	bubbles: Bubble[];
+	entities: any[] /*TODO*/;
+	debug: boolean;
 	gameOver = false;
 	/*selector,
 	inSelectMode,*/
 
-	gameInterval;
-	loadingInterval;
+	gameInterval: number;
+	loadingInterval: number;
 
-	nextBubbleTime;
-	level_;
-	scale = 1;
+	nextBubbleTime: number;
+	level_: Level;
 	FPS = 60;
 	maxBubbles = 3;
 	maxTimeBetweenBubbles = 3000;
-	powerups;
+	powerups: PowerupManager;
 	gameEndTime = 0;
-	winner;
+	winner: number;
 	lastTime = this.time.Get();
 	bubbleDisabled = false;
 	canvas = new Canvas();
+	log = new Log();
+	imagemanager = new ImageManager();
+	scale = new Scale();
 
 
 	constructor(private time: Time) {
 		if (typeof document !== 'undefined') {
-			document.onkeyup = function(e){this.OnKeyUp(e, true);}.bind(this);
-			document.onkeydown = function(e){this.OnKeyDown(e, true);}.bind(this);
+			document.onkeyup = function(e: KeyboardEvent){this.OnKeyUp(e, true);}.bind(this);
+			document.onkeydown = function(e: KeyboardEvent){this.OnKeyDown(e, true);}.bind(this);
 		}
 
 		new Sound().Preload("buzz");
@@ -71,7 +67,7 @@ export class Game {
 		return this.time.Get();
 	}
 
-	CreateEffect(name, x, y) {
+	CreateEffect(name: any /*TODO*/, x: number, y: number) {
 		this.effects.push(new name(x, y));
 	};
 
@@ -139,16 +135,16 @@ export class Game {
 				this.players[0].DisableInput();
 				this.players[1].DisableInput();
 				if(this.players[0].IsDead() && this.players[1].IsDead()){
-					log.log.DebugLog("tie");
+					this.log.DebugLog("tie");
 					this.gameOver = true;
 					this.winner = 2;
 				}else if (this.players[0].IsDead() && this.players[1].IsInPositionToWin()){
-					log.log.DebugLog("Player 2 wins");
+					this.log.DebugLog("Player 2 wins");
 					this.players[1].Win();
 					this.gameOver = true;
 					this.winner = 1;
 				}else if (this.players[1].IsDead() && this.players[0].IsInPositionToWin()){
-					log.log.DebugLog("Player 1 wins");
+					this.log.DebugLog("Player 1 wins");
 					this.players[0].Win();
 					this.gameOver = true;
 					this.winner = 0;
@@ -173,7 +169,7 @@ export class Game {
 	};
 
 	//this collisions system kind of sucks... but it works for mduel
-	GetCollitionsOf = function(entity) {
+	GetCollitionsOf = function(entity: any /*TODO*/) {
 		var other = this.GetOponentOf(entity);
 
 		if (this.DoesCollide(entity,other)){
@@ -185,7 +181,7 @@ export class Game {
 		}
 	};
 
-	DoesCollide = function(entity, other) {
+	DoesCollide = function(entity: any, other: any /*TODO*/) {
 		var entitybounds = entity.GetCurrentBounds(),
 		otherbounds = other.GetCurrentBounds();
 		return  entity.GetX()+entitybounds.GetX() + entitybounds.GetWidth() > other.GetX()+otherbounds.GetX() &&
@@ -194,7 +190,7 @@ export class Game {
 				entity.GetY()+entitybounds.GetY() < other.GetY()+otherbounds.GetY()+otherbounds.GetHeight();
 	};
 
-	UpdateBubbles = function(deltaT) {
+	UpdateBubbles = function(deltaT: number) {
 
 		for(var i = 0; i < this.bubbles.length; i += 1){
 			this.bubbles[i].Update(deltaT);
@@ -258,7 +254,7 @@ export class Game {
 		return inSelectMode;
 	};*/
 
-	private ArrayUpdate(array, deltaT) {
+	private ArrayUpdate(array: any[], deltaT: number) {
 		for (var i = 0; i < array.length; i += 1){
 			array[i].Update(deltaT);
 		}
@@ -286,7 +282,6 @@ export class Game {
 
 		var params, frame, i;
 
-		this.stoppedTime = 0;
 		this.platforms = [];
 		this.ropes = [];
 		this.players = [];
@@ -298,7 +293,6 @@ export class Game {
 		this.debug = false;
 		this.gameOver = false;
 		//inSelectMode = false;
-		this.timeStarted = false;
 
 		this.powerups = new PowerupManager(this);
 		this.powerups.ReigisterPowerups();
@@ -308,7 +302,7 @@ export class Game {
 		if (typeof location != 'undefined') {
 			params = location.href.split("?");
 			if (params[1] === "debug"){
-				debug = true;
+				this.debug = true;
 			}
 		}
 
@@ -317,18 +311,18 @@ export class Game {
 		this.level_.SetupRopes(this.platforms, this.ropes);
 
 
-		this.players[0] = new Player(28, 144, imagemanager.image.GetPlayer1Img(), this);
-		this.players[1] = new Player(268, 144, imagemanager.image.GetPlayer2Img(), this);
+		this.players[0] = new Player(28, 144, this.imagemanager.GetPlayer1Img(), this);
+		this.players[1] = new Player(268, 144, this.imagemanager.GetPlayer2Img(), this);
 		this.players[1].SetKeys(38, 40, 37, 39, 13);
 		this.players[1].SetFlipped(true);
 
 
-		this.CreateEffect(effect.GreenSmoke, 28, 144);
-		this.CreateEffect(effect.GreenSmoke, 268, 144);
+		this.CreateEffect(GreenSmoke, 28, 144);
+		this.CreateEffect(GreenSmoke, 268, 144);
 
 		frame = 0;
 		for (i = 0; i < 20; i += 1){
-			this.mallows.push(new this.mallow.Mallow(i*16, 176, frame));
+			this.mallows.push(new Mallow(i*16, 176, frame));
 			frame += 1;
 			if (frame === 4){
 				frame = 0;
@@ -357,19 +351,19 @@ export class Game {
 
 
 	FinishLoading() {
-		sound.sound.Play("buzz");
-		this.gameInterval = setInterval(function(){this.Update();this.Draw();}.bind(this), 1000 / FPS);
+		new Sound().Play("buzz");
+		this.gameInterval = setInterval(function(){this.Update();this.Draw();}.bind(this), 1000 / this.FPS);
 	};
 
 	IsLoaded = function() {
-		return imagemanager.image.IsLoaded();
+		return this.imagemanager.image.IsLoaded();
 	};
 
-	MakeFloor = function(x1,x2,y) {
+	MakeFloor = function(x1: number, x2: number, y: number) {
 		this.level_.MakeFloor(x1, x2, y);
 	};
 
-	IsOnGround(yb, ya, entity) {
+	IsOnGround(yb: number, ya: number, entity: Player) {
 		if (ya < yb){
 			return;
 		}
@@ -395,19 +389,19 @@ export class Game {
 		}
 	};
 
-	AddPlatform(ent) {
+	AddPlatform(ent: Platform) {
 		this.platforms.push(ent);
 	};
 
-	AddRope(ent) {
+	AddRope(ent: Rope) {
 		this.ropes.push(ent);
 	};
 
-	AddEntity(entity) {
+	AddEntity(entity: any /* TODO */) {
 		this.entities.push(entity);
 	};
 
-	RemoveEntity(entity) {
+	RemoveEntity(entity: any /*TODO*/) {
 		var i;
 		for (i = 0; i < this.entities.length; i += 1){
 			if (this.entities[i] === entity){
@@ -417,7 +411,7 @@ export class Game {
 		}
 	};
 
-	GetEntityCollisionsOf(entity) {
+	GetEntityCollisionsOf(entity: Player) {
 		var collisions = [], i;
 		for (i = 0; i < this.entities.length; i += 1){
 			if (this.DoesCollide(this.entities[i], entity)){
@@ -427,7 +421,7 @@ export class Game {
 		return collisions;
 	};
 
-	RemovePlatform(entity) {
+	RemovePlatform(entity: Platform) {
 		var i;
 		for (i = 0; i < this.platforms.length; i += 1){
 			if (this.platforms[i] === entity){
@@ -437,8 +431,7 @@ export class Game {
 		}
 	};
 
-
-	GetOponentOf(entity): Player {
+	GetOponentOf(entity: Player): Player {
 		if (entity === this.players[0]){
 			return this.players[1];
 		}else if (entity === this.players[1]){
@@ -456,48 +449,38 @@ export class Game {
 	};
 
 
-	OnKeyDown(event, emit) {
-		if (typeof socket != "undefined" && emit) {
+	OnKeyDown(event: KeyboardEvent/*, emit*/) {
+		/*TODOif (typeof socket != "undefined" && emit) {
 			socket.emit("keydown", event.keyCode);
+		}*/
+		//log.Log(event.keyCode);
+		if (this.players){
+			this.players[0].KeyDown(event.keyCode);
+			this.players[1].KeyDown(event.keyCode);
+		}
+	};
+
+	OnKeyUp(event: KeyboardEvent/*, emit*/) {
+		/*TODOif (typeof socket != "undefined" && emit) {
+			socket.emit("keyup", event.keyCode);
+		}*/
+		if (event.keyCode === 109){
+			this.scale.SetScale(this.scale.GetScale()-1);
+		}else if (event.keyCode === 107){
+			this.scale.SetScale(this.scale.GetScale()+1);
 		}
 		//log.Log(event.keyCode);
-		if (players){
-			players[0].KeyDown(event.keyCode);
-			players[1].KeyDown(event.keyCode);
+		if (this.players){
+			this.players[0].KeyUp(event.keyCode);
+			this.players[1].KeyUp(event.keyCode);
 		}
 	};
 
-	OnKeyUp(event, emit) {
-		if (typeof socket != "undefined" && emit)
-		socket.emit("keyup", event.keyCode);
-		if (event.keyCode == 109){
-			Scale.SetScale(Scale.GetScale()-1);
-		}else if (event.keyCode == 107){
-			Scale.SetScale(Scale.GetScale()+1);
-		}
-		//log.Log(event.keyCode);
-		if (players){
-			players[0].KeyUp(event.keyCode);
-			players[1].KeyUp(event.keyCode);
-		}
+	SetBubbleDisabled(val: boolean) {
+		this.bubbleDisabled = val;
 	};
 
-	SetScale(newScale) {
-		scale = newScale;
-
-		//container.line-height = 200*scale
-
-	};
-
-	GetScale() {
-		return scale;
-	};
-
-	SetBubbleDisabled(val) {
-		bubbleDisabled = val;
-	};
-
-	Serialize() {
+	/* TODOSerialize() {
 		var output = {};
 
 		output.platforms = [];
@@ -561,10 +544,10 @@ export class Game {
 		output.players = [];
 		for (var i = 0; i < players.length; ++i) {
 			output.players.push(players[i].Serialize());
-		}*/
+	}*//*TODO
 
 		for (var i = 0; i < data.players.length; ++i) {
 			this.players[i].Deserialize(data.players[i]);
 		}
-	};
+	};*/
 }

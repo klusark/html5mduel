@@ -1,9 +1,7 @@
-//var powerup = require("./powerup");
-
 import { Game } from "./core";
 import { Bubble } from "./bubble";
 
-class PowerupManager {
+export class PowerupManager {
 	registerdPowerups: string[];
 	selectedPowerups: string[];
 	game: Game;

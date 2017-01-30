@@ -16,11 +16,14 @@ export abstract class Powerup {
 	Draw(x: number, y: number) {
 		this.image.Draw(x, y);
 	}
-	CollidePlayer(player: Player) {
+	CollidePlayer(player: Player) : boolean {
+		return true;
 	}
 	CollidePlatform(platform: Platform) {
 	}
 	Update(deltaT: number): void {
+	}
+	ChangeFrom(): void {
 	}
 
 }
@@ -65,6 +68,7 @@ class PowerupGun extends Powerup {
 			player.CollectPowerup(this);
 			this.inPlayer = true;
 		}
+		return true;
 	}
 
 	/*class GunCollisionCheck {

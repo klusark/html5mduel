@@ -1,13 +1,13 @@
 import { ImageManager } from "./imagemanager";
 import { Animation } from "./animation";
 
-function GreenSmoke(x: number, y: number){
+export function GreenSmoke(x: number, y: number){
 	var greenSmoke = new Animation(null, 0, 100, 3, 24, 24);
 	greenSmoke.Repeat(false);
 
 	return new Effect(x, y, greenSmoke);
 }
-function PurpleSmoke(x: number, y: number){
+export function PurpleSmoke(x: number, y: number){
 	var purpleSmoke = new Animation(null, 437, 100, 3, 24, 24);
 	purpleSmoke.Repeat(false);
 
@@ -19,31 +19,31 @@ export function BlackSmoke(x: number, y: number){
 
 	return new Effect(x, y, blackSmoke);
 }
-function BubbleDisolve(x: number, y: number){
+export function BubbleDisolve(x: number, y: number){
 	var bubbleDisolve = new Animation(null, 387, 100, 2, 24, 24);
 	bubbleDisolve.Repeat(false);
 
 	return new Effect(x, y, bubbleDisolve);
 }
-function BigSplash(x: number, y: number){
+export function BigSplash(x: number, y: number){
 	var bigSplash = new Animation(null, 158, 100, 4, 24, 24);
 	bigSplash.Repeat(false);
 
 	return new Effect(x, y, bigSplash);
 }
-function SmallSplash(x: number, y: number){
+export function SmallSplash(x: number, y: number){
 	var smallSplash = new Animation(null, 687, 100, 3, 24, 24);
 	smallSplash.Repeat(false);
 
 	return new Effect(x, y, smallSplash);
 }
-function Explode(x: number, y: number){
+export function Explode(x: number, y: number){
 	var explode = new Animation(null, 612, 100, 3, 24, 24);
 	explode.Repeat(false);
 
 	return new Effect(x, y, explode);
 }
-function Lightning(x: number, y: number){
+export function Lightning(x: number, y: number){
 	var lightning = new Animation(null, 762, 100, 2, 24, 24);
 	lightning.Repeat(false);
 

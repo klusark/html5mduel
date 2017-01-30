@@ -1,9 +1,9 @@
 export class Selector {
 
-	img = new Image()
+	img = new Image();
 
-	var lastUpdateTime = core.GetTime()
-	var animations = new Array();
+	lastUpdateTime = core.GetTime();
+	animations = new Array();
 
 	animations["run"] = new Animation(0, 0, 100, 4, 24, 24);
 
@@ -14,13 +14,13 @@ export class Selector {
 	document.getElementById("1").style.display = "none"
 	document.getElementById("2").style.display = "block"
 
-	var scale = scale*8
-	var colour = 0
-	var colours = 5
-	var url = "http://html5mduel.appspot.com/generate?sample&m="+scale+"&c="
-	img.src = url + colour
-
+	
 	constructor (x, y, scale) {
+		var scale = scale*8;
+		var colour = 0;
+		var colours = 5;
+		var url = "http://html5mduel.appspot.com/generate?sample&m="+scale+"&c=";
+		img.src = url + colour;
 	}
 
 	Draw(){

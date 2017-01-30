@@ -1,41 +1,54 @@
-var canvas = require("./canvas");
-var Scale = require("./scale");
+import { Canvas } from "./canvas";
+import { Scale } from "./scale";
 
-export class Button(x, y, w, h, text, onclick) {
-	var selected = false;
+export class Button {
+	selected = false;
 	boarder = 2;
 	selectedColour = "rgb(14,97,54)";
 	unselectedColour = "rgb(146,97,0)";
 	backgroundColour = "rgb(0,0,0)";
+	canvas = new Canvas();
+	scale = new Scale();
+	x: number;
+	y: number;
+	w: number;
+	h: number;
+	text: string;
+	onclick;
+
+	constructor (x: number, y: number, w: number, h: number, text: string, onclick) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+		this.text = text;
+		this.onclick = onclick;
+	}
 
 	Select() {
-		selected = true;
+		this.selected = true;
 	};
 
 	Deselect() {
-		selected = false;
+		this.selected = false;
 	};
 
 	Click() {
-		onclick();
+		this.onclick();
 	};
 
 	Draw() {
-		canvas.canvas.FillStyle(selected ? selectedColour : unselectedColour);
-		canvas.canvas.FillRect(x, y, w, h);
-		canvas.canvas.FillStyle(backgroundColour);
-		canvas.canvas.FillRect(x+boarder, y+boarder, w-(boarder*2), h-(boarder*2));
+		this.canvas.FillStyle(this.selected ? this.selectedColour : this.unselectedColour);
+		this.canvas.FillRect(this.x, this.y, this.w, this.h);
+		this.canvas.FillStyle(this.backgroundColour);
+		this.canvas.FillRect(this.x+this.boarder, this.y+this.boarder, this.w-(this.boarder*2), this.h-(this.boarder*2));
 
-		canvas.canvas.FillStyle(selected ? selectedColour : unselectedColour);
+		this.canvas.FillStyle(this.selected ? this.selectedColour : this.unselectedColour);
 
 		//TODO: Add a way to scale the font.
-		canvas.canvas.setFont(Scale.scale.GetScale()*0.75 + "em 'Allerta'");
-		canvas.canvas.setTextAlign("center");
-		canvas.canvas.FillText(text, x+w/2, y+15);
+		this.canvas.setFont(this.scale.GetScale()*0.75 + "em 'Allerta'");
+		this.canvas.setTextAlign("center");
+		this.canvas.FillText(this.text, this.x+this.w/2, this.y+15);
 	};
 }
-
-module.exports = {
-  Button: Button
-};
 

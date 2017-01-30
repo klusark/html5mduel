@@ -27,7 +27,7 @@ export class ImageManager {
 		player2Img.src = "/images/player.png"
 		spritesImg.src = "/images/sprites.png"
 	}*/
-	ScaleChange(scale: number) {
+	ScaleChange(scale: number): void {
 
 		var base = "http://mduel.teichroeb.net:5000/generate?m="+scale+"&c=",
 		// TODO: Fix local storage
@@ -39,23 +39,23 @@ export class ImageManager {
 		this.spritesImg.src = "http://mduel.teichroeb.net:5000/generate?s&m="+scale;
 	};
 
-	GetSpritesImg() {
+	GetSpritesImg(): HTMLImageElement {
 		return this.spritesImg;
 	};
 
-	GetPlayer1Img() {
+	GetPlayer1Img(): HTMLImageElement {
 		return this.player1Img;
 	};
 
-	GetPlayer2Img() {
+	GetPlayer2Img(): HTMLImageElement  {
 		return this.player2Img;
 	};
 
-	Get1000vImg() {
+	Get1000vImg(): HTMLImageElement  {
 		return this.lightningImg;
 	};
 
-	IsLoaded() {
+	IsLoaded(): boolean {
 		return this.player1Img.complete && this.player2Img.complete && this.spritesImg.complete;
 	};
 }

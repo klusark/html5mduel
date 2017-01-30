@@ -2,8 +2,8 @@ import { ImageManager } from "./imagemanager";
 import { StaticImage } from "./staticimage";
 import { Bounds } from "./bounds";
 import { Game } from "./core";
-/*var effect = require("./effect");
-var sound = require("./sound");*/
+import { Sound } from "./sound";
+import { BlackSmoke } from "./effect";
 
 export class Platform {
 	imagemanager = new ImageManager();
@@ -61,14 +61,14 @@ export class Platform {
 			this.game.MakeFloor((dist - dist%16)+this.x+32, this.GetNumPlatforms() * 16 + this.x, this.y);
 		}
 		//TODO: make this have an effect for each platform that is destroyed
-		this.game.CreateEffect(effect.BlackSmoke, xpos, this.y-10);
+		this.game.CreateEffect(BlackSmoke, xpos, this.y-10);
 
 		this.numPlatforms = (dist - dist%16)/16;
-		this.bounds_ = new bounds.Bounds(0, 0, this.numPlatforms * 16, 8);
+		this.bounds_ = new Bounds(0, 0, this.numPlatforms * 16, 8);
 		if (this.numPlatforms === 0){
 			this.game.RemovePlatform(this);
 		}
-		sound.sound.Play("buzz");
+		new Sound().Play("buzz");
 
 	};
 

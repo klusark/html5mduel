@@ -13,7 +13,7 @@ function PurpleSmoke(x: number, y: number){
 
 	return new Effect(x, y, purpleSmoke);
 }
-function BlackSmoke(x: number, y: number){
+export function BlackSmoke(x: number, y: number){
 	var blackSmoke = new Animation(null, 512, 100, 4, 24, 24);
 	blackSmoke.Repeat(false);
 
@@ -51,7 +51,7 @@ function Lightning(x: number, y: number){
 }
 
 export class Effect {
-	img = imagemanager.image.GetSpritesImg();
+	img = new ImageManager().GetSpritesImg();
 	currentAnimation: Animation;
 
 	draw = true;

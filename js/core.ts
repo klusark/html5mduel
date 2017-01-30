@@ -12,6 +12,16 @@ var log = require("./log");
 var platform = require("./platform");
 var rope = require("./rope");*/
 
+import { Time } from "./time";
+import { Canvas } from "./canvas";
+import { Sound } from "./sound";
+import { Player } from "./player";
+import { Rope } from "./rope";
+import { Bubble } from "./bubble";
+import { Platform } from "./platform";
+import { Emitter } from "./emitter";
+
+
 /*TODO:
  * bug with interupt animation in player that the player could come out of a death animation
  *
@@ -43,46 +53,47 @@ export class Game {
 	powerups;
 	gameEndTime = 0;
 	winner;
-	lastTime = time.Get();
+	lastTime = this.time.Get();
 	bubbleDisabled = false;
+	canvas = new Canvas();
 
 
-	constructor (time) {
+	constructor(private time: Time) {
 		if (typeof document !== 'undefined') {
 			document.onkeyup = function(e){this.OnKeyUp(e, true);}.bind(this);
 			document.onkeydown = function(e){this.OnKeyDown(e, true);}.bind(this);
 		}
 
-		sound.sound.Preload("buzz");
+		new Sound().Preload("buzz");
 	}
 
 	getTime() {
-		return time.Get();
+		return this.time.Get();
 	}
 
 	CreateEffect(name, x, y) {
-		effects.push(new name(x, y));
+		this.effects.push(new name(x, y));
 	};
 
 	Draw() {
-		canvas.canvas.Clear();
+		this.canvas.Clear();
 		/*if (this.InSelectMode()){
 			selector.Draw();
 		}else{*/
-			ArrayDraw(platforms);
-			ArrayDraw(ropes);
-			ArrayDraw(emitters);
-			ArrayDraw(players);
-			ArrayDraw(mallows);
-			ArrayDraw(bubbles);
-			ArrayDraw(effects);
+			this.ArrayDraw(this.platforms);
+			this.ArrayDraw(this.ropes);
+			this.ArrayDraw(this.emitters);
+			this.ArrayDraw(this.players);
+			this.ArrayDraw(this.mallows);
+			this.ArrayDraw(this.bubbles);
+			this.ArrayDraw(this.effects);
 
 			//might need to place this somewhere else
-			ArrayDraw(entities);
+			this.ArrayDraw(this.entities);
 		//}
 	};
 
-	private ArrayDraw(array) {
+	private ArrayDraw(array: any[]) {
 		var i;
 		for (i = 0; i < array.length; i += 1){
 			if (array[i].Draw){
@@ -91,74 +102,74 @@ export class Game {
 		}
 	}
 
-	GetRopes = function() {
-		return ropes;
-	};
+	GetRopes() {
+		return this.ropes;
+	}
 
-	GetPlatforms = function() {
-		return platforms;
-	};
+	GetPlatforms() {
+		return this.platforms;
+	}
 
-	GetWinner = function() {
-		return winner;
-	};
+	GetWinner() {
+		return this.winner;
+	}
 
-	Update = function() {
-		var currentTime = time.Get();
-		var deltaT = (currentTime - lastTime)/1000;
+	Update() {
+		var currentTime = this.time.Get();
+		var deltaT = (currentTime - this.lastTime)/1000;
 		/*if (this.InSelectMode()){
 			selector.Update();
 		}else{*/
-			ArrayUpdate(players, deltaT);
-			ArrayUpdate(mallows, deltaT);
-			ArrayUpdate(entities, deltaT);
+			this.ArrayUpdate(this.players, deltaT);
+			this.ArrayUpdate(this.mallows, deltaT);
+			this.ArrayUpdate(this.entities, deltaT);
 			this.UpdateBubbles(deltaT);
 
-			for(var i = 0; i < effects.length; i += 1){
-				effects[i].Update(deltaT);
-				if (!effects[i].IsDraw()){
-					effects.splice(i, 1);
+			for(var i = 0; i < this.effects.length; i += 1){
+				this.effects[i].Update(deltaT);
+				if (!this.effects[i].IsDraw()){
+					this.effects.splice(i, 1);
 					i -= 1;
 				}
 			}
 
-			if ((players[0].IsDead() || players[1].IsDead()) && !gameOver){
-				players[0].SetInteruptInput(true);
-				players[1].SetInteruptInput(true);
-				players[0].DisableInput();
-				players[1].DisableInput();
-				if(players[0].IsDead() && players[1].IsDead()){
+			if ((this.players[0].IsDead() || this.players[1].IsDead()) && !this.gameOver){
+				this.players[0].SetInteruptInput(true);
+				this.players[1].SetInteruptInput(true);
+				this.players[0].DisableInput();
+				this.players[1].DisableInput();
+				if(this.players[0].IsDead() && this.players[1].IsDead()){
 					log.log.DebugLog("tie");
-					gameOver = true;
-					winner = 2;
-				}else if (players[0].IsDead() && players[1].IsInPositionToWin()){
+					this.gameOver = true;
+					this.winner = 2;
+				}else if (this.players[0].IsDead() && this.players[1].IsInPositionToWin()){
 					log.log.DebugLog("Player 2 wins");
-					players[1].Win();
-					gameOver = true;
-					winner = 1;
-				}else if (players[1].IsDead() && players[0].IsInPositionToWin()){
+					this.players[1].Win();
+					this.gameOver = true;
+					this.winner = 1;
+				}else if (this.players[1].IsDead() && this.players[0].IsInPositionToWin()){
 					log.log.DebugLog("Player 1 wins");
-					players[0].Win();
-					gameOver = true;
-					winner = 0;
+					this.players[0].Win();
+					this.gameOver = true;
+					this.winner = 0;
 				}
-				if (gameOver){
-					gameEndTime = time.Get();
-					SetNextBubbleTime();
-					for(i = 0; i < bubbles.length; i += 1){
-						bubbles[i].SetDone(true);
+				if (this.gameOver){
+					this.gameEndTime = this.time.Get();
+					this.SetNextBubbleTime();
+					for(i = 0; i < this.bubbles.length; i += 1){
+						this.bubbles[i].SetDone(true);
 					}
 				}
 
 			}
 
 		//}
-		this.GetCollitionsOf(players[0]);
-		lastTime = currentTime;
+		this.GetCollitionsOf(this.players[0]);
+		this.lastTime = currentTime;
 	};
 
 	GetGameEndTime = function() {
-		return gameEndTime;
+		return this.gameEndTime;
 	};
 
 	//this collisions system kind of sucks... but it works for mduel
@@ -185,25 +196,25 @@ export class Game {
 
 	UpdateBubbles = function(deltaT) {
 
-		for(var i = 0; i < bubbles.length; i += 1){
-			bubbles[i].Update(deltaT);
+		for(var i = 0; i < this.bubbles.length; i += 1){
+			this.bubbles[i].Update(deltaT);
 
-			if(this.DoesCollide(bubbles[i], players[0])){
-				bubbles[i].CollidePlayer(players[0]);
-			}else if(this.DoesCollide(bubbles[i], players[1])){
-				bubbles[i].CollidePlayer(players[1]);
+			if(this.DoesCollide(this.bubbles[i], this.players[0])){
+				this.bubbles[i].CollidePlayer(this.players[0]);
+			}else if(this.DoesCollide(this.bubbles[i], this.players[1])){
+				this.bubbles[i].CollidePlayer(this.players[1]);
 			}
-			if (bubbles[i].IsDone()){
-				this.CreateEffect(effect.BubbleDisolve, bubbles[i].GetX(), bubbles[i].GetY());
-				bubbles.splice(i, 1);
+			if (this.bubbles[i].IsDone()){
+				this.CreateEffect(this.effect.BubbleDisolve, this.bubbles[i].GetX(), this.bubbles[i].GetY());
+				this.bubbles.splice(i, 1);
 				i -= 1;
-				if (bubbles.length < maxBubbles){
-					SetNextBubbleTime();
+				if (this.bubbles.length < this.maxBubbles){
+					this.SetNextBubbleTime();
 				}
 			}
 		}
 
-		if (!gameOver && bubbles.length < maxBubbles && time.Get() > nextBubbleTime && !bubbleDisabled) {
+		if (!this.gameOver && this.bubbles.length < this.maxBubbles && this.time.Get() > this.nextBubbleTime && !this.bubbleDisabled) {
 			var emittor = Math.floor(Math.random()*3+1);
 			var x, y, ey, ex, xVelocity, yVelocity, newBubble;
 			if (emittor === 1) {
@@ -230,17 +241,17 @@ export class Game {
 			if (Math.random()>0.5){
 				yVelocity *= -1;
 			}
-			newBubble = new bubble.Bubble(x, y, xVelocity, yVelocity, this);
-			newBubble.SetCurrentPowerup(powerups.GetRandomPowerup(newBubble));
-			bubbles.push(newBubble);
-			this.CreateEffect(effect.PurpleSmoke, ex, ey);
-			SetNextBubbleTime();
+			newBubble = new this.bubble.Bubble(x, y, xVelocity, yVelocity, this);
+			newBubble.SetCurrentPowerup(this.powerups.GetRandomPowerup(newBubble));
+			this.bubbles.push(newBubble);
+			this.CreateEffect(this.effect.PurpleSmoke, ex, ey);
+			this.SetNextBubbleTime();
 
 		}
 	};
 
 	private SetNextBubbleTime() {
-		nextBubbleTime = time.Get() + Math.random() * maxTimeBetweenBubbles;
+		this.nextBubbleTime = this.time.Get() + Math.random() * this.maxTimeBetweenBubbles;
 	}
 
 	/*InSelectMode() {
@@ -264,35 +275,35 @@ export class Game {
 
 
 	Restart() {
-		window.clearInterval(gameInterval);
+		window.clearInterval(this.gameInterval);
 
 		this.init();
 	};
 
 	init() {
-		canvas.canvas.Clear();
+		this.canvas.Clear();
 
 
 		var params, frame, i;
 
-		stoppedTime = 0;
-		platforms = [];
-		ropes = [];
-		players = [];
-		mallows = [];
-		emitters = [];
-		effects = [];
-		bubbles = [];
-		entities = [];
-		debug = false;
-		gameOver = false;
+		this.stoppedTime = 0;
+		this.platforms = [];
+		this.ropes = [];
+		this.players = [];
+		this.mallows = [];
+		this.emitters = [];
+		this.effects = [];
+		this.bubbles = [];
+		this.entities = [];
+		this.debug = false;
+		this.gameOver = false;
 		//inSelectMode = false;
-		timeStarted = false;
+		this.timeStarted = false;
 
-		powerups = new powerupmanager.PowerupManager(this);
-		powerups.ReigisterPowerups();
+		this.powerups = new PowerupManager(this);
+		this.powerups.ReigisterPowerups();
 
-		SetNextBubbleTime();
+		this.SetNextBubbleTime();
 
 		if (typeof location != 'undefined') {
 			params = location.href.split("?");
@@ -301,15 +312,15 @@ export class Game {
 			}
 		}
 
-		level_ = new level.Level(this);
-		level_.SetupPlatforms();
-		level_.SetupRopes(platforms, ropes);
+		this.level_ = new Level(this);
+		this.level_.SetupPlatforms();
+		this.level_.SetupRopes(this.platforms, this.ropes);
 
 
-		players[0] = new player.Player(28, 144, imagemanager.image.GetPlayer1Img(), this);
-		players[1] = new player.Player(268, 144, imagemanager.image.GetPlayer2Img(), this);
-		players[1].SetKeys(38, 40, 37, 39, 13);
-		players[1].SetFlipped(true);
+		this.players[0] = new Player(28, 144, imagemanager.image.GetPlayer1Img(), this);
+		this.players[1] = new Player(268, 144, imagemanager.image.GetPlayer2Img(), this);
+		this.players[1].SetKeys(38, 40, 37, 39, 13);
+		this.players[1].SetFlipped(true);
 
 
 		this.CreateEffect(effect.GreenSmoke, 28, 144);
@@ -317,28 +328,28 @@ export class Game {
 
 		frame = 0;
 		for (i = 0; i < 20; i += 1){
-			mallows.push(new mallow.Mallow(i*16, 176, frame));
+			this.mallows.push(new this.mallow.Mallow(i*16, 176, frame));
 			frame += 1;
 			if (frame === 4){
 				frame = 0;
 			}
 		}
 
-		emitters.push(new emitter.Emitter(0, 92, 0));
-		emitters.push(new emitter.Emitter(152, 0, 1));
-		emitters.push(new emitter.Emitter(320-16, 92, 2));
+		this.emitters.push(new Emitter(0, 92, 0));
+		this.emitters.push(new Emitter(152, 0, 1));
+		this.emitters.push(new Emitter(320-16, 92, 2));
 
-		loadingInterval = setInterval(CheckLoadedInterval.bind(this), 25);
+		this.loadingInterval = setInterval(this.CheckLoadedInterval.bind(this), 25);
 	};
 
 	End() {
 		//Clean stuff up
-		clearInterval(gameInterval);
+		clearInterval(this.gameInterval);
 	};
 
 	private CheckLoadedInterval() {
 		if (this.IsLoaded()){
-			clearInterval(loadingInterval);
+			clearInterval(this.loadingInterval);
 			this.FinishLoading();
 		}
 	}
@@ -347,7 +358,7 @@ export class Game {
 
 	FinishLoading() {
 		sound.sound.Play("buzz");
-		gameInterval = setInterval(function(){this.Update();this.Draw();}.bind(this), 1000 / FPS);
+		this.gameInterval = setInterval(function(){this.Update();this.Draw();}.bind(this), 1000 / FPS);
 	};
 
 	IsLoaded = function() {
@@ -355,7 +366,7 @@ export class Game {
 	};
 
 	MakeFloor = function(x1,x2,y) {
-		level_.MakeFloor(x1, x2, y);
+		this.level_.MakeFloor(x1, x2, y);
 	};
 
 	IsOnGround(yb, ya, entity) {
@@ -365,8 +376,8 @@ export class Game {
 		var entityBounds = entity.GetCurrentBounds(), other,
 		platformsPassedThrough = [],
 		platform, min = 240, i;
-		for (i = 0; i < platforms.length; i += 1){
-			other = platforms[i];
+		for (i = 0; i < this.platforms.length; i += 1){
+			other = this.platforms[i];
 			if (((yb+entityBounds.GetY()+entityBounds.GetHeight() === other.GetY()) || (yb < other.GetY()-(entityBounds.GetY()+entityBounds.GetHeight()) && ya > other.GetY()-(entityBounds.GetY()+entityBounds.GetHeight()))) &&
 				(entity.GetX() + entityBounds.GetX() < other.GetEnd() && entity.GetX() + entityBounds.GetX() + entityBounds.GetWidth() > other.GetX())){
 				platformsPassedThrough.push(other);
@@ -385,22 +396,22 @@ export class Game {
 	};
 
 	AddPlatform(ent) {
-		platforms.push(ent);
+		this.platforms.push(ent);
 	};
 
 	AddRope(ent) {
-		ropes.push(ent);
+		this.ropes.push(ent);
 	};
 
 	AddEntity(entity) {
-		entities.push(entity);
+		this.entities.push(entity);
 	};
 
 	RemoveEntity(entity) {
 		var i;
-		for (i = 0; i < entities.length; i += 1){
-			if (entities[i] === entity){
-				entities.splice(i, 1);
+		for (i = 0; i < this.entities.length; i += 1){
+			if (this.entities[i] === entity){
+				this.entities.splice(i, 1);
 				return;
 			}
 		}
@@ -408,9 +419,9 @@ export class Game {
 
 	GetEntityCollisionsOf(entity) {
 		var collisions = [], i;
-		for (i = 0; i < entities.length; i += 1){
-			if (this.DoesCollide(entities[i], entity)){
-				collisions.push(entities[i]);
+		for (i = 0; i < this.entities.length; i += 1){
+			if (this.DoesCollide(this.entities[i], entity)){
+				collisions.push(this.entities[i]);
 			}
 		}
 		return collisions;
@@ -418,20 +429,20 @@ export class Game {
 
 	RemovePlatform(entity) {
 		var i;
-		for (i = 0; i < platforms.length; i += 1){
-			if (platforms[i] === entity){
-				platforms.splice(i, 1);
+		for (i = 0; i < this.platforms.length; i += 1){
+			if (this.platforms[i] === entity){
+				this.platforms.splice(i, 1);
 				return;
 			}
 		}
 	};
 
 
-	GetOponentOf(entity) {
-		if (entity === players[0]){
-			return players[1];
-		}else if (entity === players[1]){
-			return players[0];
+	GetOponentOf(entity): Player {
+		if (entity === this.players[0]){
+			return this.players[1];
+		}else if (entity === this.players[1]){
+			return this.players[0];
 		}
 		//javascript will return undefined here
 	};
@@ -516,25 +527,25 @@ export class Game {
 
 		platforms = [];
 		for (var i = 0; i < data.platforms.length; ++i) {
-			var newplat = new platform.Platform(0,0,0, this);
+			var newplat = new Platform(0,0,0, this);
 			newplat.Deserialize(data.platforms[i]);
 			platforms.push(newplat);
 			//platforms[i].Deserialize(data.platforms[i]);
 		}
 
-		bubbles = [];
+		this.bubbles = [];
 		for (var i = 0; i < data.bubbles.length; ++i) {
-			var newBubble = new bubble.Bubble(0, 0, 0, 0, this);
+			var newBubble = new Bubble(0, 0, 0, 0, this);
 			newBubble.Deserialize(data.bubbles[i]);
-			newBubble.SetCurrentPowerup(powerups.CreatePowerupByName(newBubble.GetPowerupName(), newBubble));
-			bubbles.push(newBubble);
+			newBubble.SetCurrentPowerup(this.powerups.CreatePowerupByName(newBubble.GetPowerupName(), newBubble));
+			this.bubbles.push(newBubble);
 		}
 
-		ropes = [];
+		this.ropes = [];
 		for (var i = 0; i < data.ropes.length; ++i) {
-			var newBubble = new rope.Rope(0, 0, 0, this);
+			var newBubble = new Rope(0, 0, 0);
 			newBubble.Deserialize(data.ropes[i]);
-			ropes.push(newBubble);
+			this.ropes.push(newBubble);
 		}
 /*
 		output.ropes = [];
@@ -553,7 +564,7 @@ export class Game {
 		}*/
 
 		for (var i = 0; i < data.players.length; ++i) {
-			players[i].Deserialize(data.players[i]);
+			this.players[i].Deserialize(data.players[i]);
 		}
 	};
 }

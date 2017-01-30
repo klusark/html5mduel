@@ -1,5 +1,7 @@
 
-interface ScaleCallbackT { (size: number): void }
+interface ScaleCallbackT {
+	(size: number): void;
+}
 
 export class Scale {
 

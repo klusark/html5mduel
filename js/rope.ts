@@ -7,14 +7,8 @@ export class Rope {
 	canvas = new Canvas();
 
 	ropeTop: StaticImage;
-	x: number;
-	y: number;
-	length: number;
 
-	constructor (x: number, y: number, length: number) {
-		this.x = x;
-		this.y = y;
-		this.length = length;
+	constructor (private x: number, private y: number, private length: number) {
 
 		this.length -= 2;
 

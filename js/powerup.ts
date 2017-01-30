@@ -1,50 +1,73 @@
 
-var staticimage = require("./staticimage");
-var imagemanager = require("./imagemanager");
-var animation = require("./animation");
+/*var animation = require("./animation");
 var effect = require("./effect");
-var sound = require("./sound");
-var bounds = require("./bounds");
+var bounds = require("./bounds");*/
+import { StaticImage } from "./staticimage";
+import { ImageManager } from "./imagemanager";
+import { Animation } from "./animation";
+import { Player } from "./player";
+import { Bubble } from "./Bubble";
+import { Game } from "./core";
+import { Sound } from "./sound";
+import { Platform } from "./platform";
 
-/**
- * @constructor
- */
-function PowerupGun(owner, game){
+export abstract class Powerup {
+	image: StaticImage;
+	Draw(x: number, y: number) {
+		this.image.Draw(x, y);
+	}
+	CollidePlayer(player: Player) {
+	}
+	CollidePlatform(platform: Platform) {
+	}
+	Update(deltaT: number): void {
+	}
 
-	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 284, 0, 12, 12);
+}
 
-	var ammo = 5,
-	firing = false,
-	inPlayer = false,
-	gundown = new animation.Animation(25, 450, 100, 2, 24, 24),
-	gunup = new animation.Animation(25, 450, 100, 2, 24, 24),
-	other;
+class PowerupGun extends Powerup {
+	imagemanager = new ImageManager();
+	image = new StaticImage(this.imagemanager.GetSpritesImg(), 284, 0, 12, 12);
 
-	gundown.Repeat(false);
-	gunup.Repeat(false);
-	gunup.Reverse(true);
+	ammo = 5;
+	firing = false;
+	inPlayer = false;
+	gundown = new Animation(25, 450, 100, 2, 24, 24);
+	gunup = new Animation(25, 450, 100, 2, 24, 24);
+	other: Player;
+	player: Player;
+	bubble: Bubble;
+	game: Game;
+
+	constructor (bubble: Bubble, game: Game) {
+		super();
+		this.bubble = bubble;
+		this.game = game;
+		this.gundown.Repeat(false);
+		this.gunup.Repeat(false);
+		this.gunup.Reverse(true);
+	}
+
 	Use() {
-		if (inPlayer && ammo && !firing && owner.IsIdle()){
-			owner.InterruptAnimation(gundown, true, function(){this.CheckForKill();owner.InterruptAnimation(gunup, true, function(){firing=false;});}.bind(this));
-			ammo -= 1;
-			firing = true;
+		if (this.inPlayer && this.ammo && !this.firing && this.player.IsIdle()){
+			this.player.InterruptAnimation(this.gundown, true, function(){this.CheckForKill();this.owner.InterruptAnimation(this.gunup, true, function(){this.firing=false;});}.bind(this));
+			this.ammo -= 1;
+			this.firing = true;
 		}
 	};
 
-	CollidePlayer(player) {
-		if (!inPlayer) {
-			owner.SetDone(true);
-			owner = player;
+	CollidePlayer(player: Player) {
+		if (!this.inPlayer) {
+			this.bubble.SetDone(true);
+			this.bubble = null;
+			this.player = player;
+			this.other = this.game.GetOponentOf(this.player);
 			player.CollectPowerup(this);
-			other = game.GetOponentOf(owner);
-			inPlayer = true;
+			this.inPlayer = true;
 		}
-	};
+	}
 
-	/**
-	 * @constructor
-	 */
-	function GunCollisionCheck(){
+	/*class GunCollisionCheck {
 		GetX() {
 			return owner.IsFlipped() ? owner.GetX()+23 - 320 : owner.GetX()+23;
 		};
@@ -54,21 +77,18 @@ function PowerupGun(owner, game){
 		GetCurrentBounds() {
 			return new bounds.Bounds(0,0,320,1);
 		};
-	}
+	}*/
 
 	CheckForKill() {
-		sound.sound.Play("shot");
+		new Sound().Play("shot");
 		//need to make this work with turning
-		if (game.DoesCollide(new GunCollisionCheck(), other)) {
-			other.Disolve();
+		if (/*TODO this.game.DoesCollide(new GunCollisionCheck(), this.other)*/ true) {
+			this.other.Disolve();
 		}
 	};
 
 }
-
-/**
- * @constructor
- */
+/*
 function PowerupSkull(owner){
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 258, 0, 12, 12);
 	CollidePlayer(player) {
@@ -80,9 +100,6 @@ function PowerupSkull(owner){
 
 }
 
-/**
- * @constructor
- */
 function PowerupInvis(owner, game){
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 271, 0, 12, 12);
 	var invis = false,
@@ -121,9 +138,6 @@ function PowerupInvis(owner, game){
 	};
 }
 
-/**
- * @constructor
- */
 function Mine(x, y, owner, game) {
 	var other = game.GetOponentOf(owner),
 	bounds_ = new bounds.Bounds(0, 0, 1, 1);
@@ -160,9 +174,6 @@ function Mine(x, y, owner, game) {
 	};
 }
 
-/**
- * @constructor
- */
 function PowerupMine(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 271, 13, 12, 12);
 	var used = false,
@@ -192,9 +203,6 @@ function PowerupMine(owner, game) {
 	};
 }
 
-/**
- * @constructor
- */
 function Puck(x, y, owner, direction, game) {
 	var img = imagemanager.image.GetSpritesImg(),
 	other = game.GetOponentOf(owner),
@@ -259,9 +267,6 @@ function Puck(x, y, owner, direction, game) {
 	};
 }
 
-/**
- * @constructor
- */
 function PowerupNukepuck(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 310, 0, 12, 12);
 	var used = false,
@@ -291,9 +296,6 @@ function PowerupNukepuck(owner, game) {
 	};
 }
 
-/**
- * @constructor
- */
 function PowerupDestroy(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 284, 13, 12, 12);
 
@@ -309,9 +311,6 @@ function PowerupDestroy(owner, game) {
 	};
 }
 
-/**
- * @constructor
- */
 function Nade(x, y, owner, direction, game) {
 	var img = imagemanager.image.GetSpritesImg(),
 	bounds_ = new bounds.Bounds(0, 0, 5, 4),
@@ -362,9 +361,6 @@ function Nade(x, y, owner, direction, game) {
 	};
 }
 
-/**
- * @constructor
- */
 function PowerupNade(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 297, 13, 12, 12);
 	var used = false,
@@ -395,13 +391,7 @@ function PowerupNade(owner, game) {
 	};
 }
 
-/**
- * @constructor
- */
 function PowerupTeleport(owner, game) {
-	/**
-	 * @constructor
-	 */
 	function EmptyImage(){
 		this.Draw=function(dx, dy){
 		};
@@ -421,9 +411,6 @@ function PowerupTeleport(owner, game) {
 	};
 }
 
-/**
- * @constructor
- */
 function PowerupChute(owner) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 310, 13, 12, 12);
 	var inPlayer = false,
@@ -492,9 +479,6 @@ function PowerupChute(owner) {
 	};
 }
 
-/**
- * @constructor
- */
 function Powerup1000v(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 258, 13, 12, 12);
 	var inPlayer = false,
@@ -543,9 +527,6 @@ function Powerup1000v(owner, game) {
 	};
 }
 
-/**
- * @constructor
- */
 function PowerupBoots(owner) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 297, 0, 12, 12);
 	var inPlayer = false,
@@ -578,9 +559,6 @@ function PowerupBoots(owner) {
 
 }
 
-/**
- * @constructor
- */
 function PowerupHook(owner, game) {
 	this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 323, 13, 12, 12);
 	var inPlayer = false,
@@ -595,9 +573,6 @@ function PowerupHook(owner, game) {
 		}
 	};
 
-	/**
-	 * @constructor
-	 */
 	function HookColide() {
 		GetX() {
 			return owner.IsFlipped() ? owner.GetX()+5 : owner.GetX()+19;
@@ -651,19 +626,5 @@ function PowerupHook(owner, game) {
 		this.Disable();
 	};
 }
+*/
 
-
-module.exports = {
-	PowerupGun: PowerupGun,
-	PowerupSkull: PowerupSkull,
-	PowerupInvis: PowerupInvis,
-	PowerupMine: PowerupMine,
-	PowerupNukepuck: PowerupNukepuck,
-	PowerupDestroy: PowerupDestroy,
-	PowerupNade: PowerupNade,
-	PowerupTeleport: PowerupTeleport,
-	PowerupChute: PowerupChute,
-	Powerup1000v: Powerup1000v,
-	PowerupBoots: PowerupBoots,
-	PowerupHook: PowerupHook
-};

@@ -17,23 +17,18 @@ export class Bubble {
 
 	currentBounds = new Bounds(0, 0, 16, 16);
 	name: string;
-	x: number;
-	y: number;
-	xVelocity: number;
-	yVelocity: number;
-	game: Game;
 
-	constructor (x: number, y: number, xVelocity: number, yVelocity: number, game: number) {
+	constructor (private x: number, private y: number, private xVelocity: number, private yVelocity: number, private game: Game) {
 	}
 
-	SetCurrentPowerup(npowerup: Powerup) {
+	SetCurrentPowerup(npowerup: any) {
 		this.powerup = npowerup.powerup;
 		this.name = npowerup.name;
 	}
 
 	Draw() {
 		this.animation_.Draw(this.img, this.x, this.y);
-		this.powerup.image.Draw(this.x+2, this.y+2);
+		this.powerup.Draw(this.x+2, this.y+2);
 	}
 
 	Update(deltaT: number) {

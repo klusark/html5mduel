@@ -4,11 +4,11 @@ import { Animation } from "./animation";
 
 export class Mallow {
 	imgMgr: ImageManager;
-	img;
+	img: HTMLImageElement;
 	mallowBottom: StaticImage;
-	mallowTopAnimation: StaticImage;
+	mallowTopAnimation: Animation;
 
-	constructor(x, y, frame) {
+	constructor(private x: number, private y: number, frame: number) {
 		this.imgMgr = new ImageManager();
 		this.img = this.imgMgr.GetSpritesImg();
 		this.mallowBottom = new StaticImage(this.img, 75, 9, 16, 16);

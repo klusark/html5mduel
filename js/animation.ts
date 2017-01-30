@@ -12,25 +12,13 @@ export class Animation {
 	numLoops = 0;
 	reverseOnFinish = false;
 	reversed = false;
-	flippedYOffset: number;
-	startX: number;
-	frameTime: number;
-	numFrames: number;
-	w: number;
-	h: number;
 
 	// only usefull if repeat is off
 	isAnimationDone = false;
 
 	canvas: Canvas;
 
-	constructor (flippedYOffset: number, startX: number, frameTime: number, numFrames: number, w: number, h: number) {
-		this.flippedYOffset = flippedYOffset;
-		this.startX = startX;
-		this.frameTime = frameTime;
-		this.numFrames = numFrames;
-		this.w = w;
-		this.h = h;
+	constructor (private flippedYOffset: number, private startX: number, private frameTime: number, private numFrames: number, private w: number, private h: number) {
 		this.canvas = new Canvas();
 	}
 

@@ -22,32 +22,32 @@ export class Bubble {
     }
 
     SetCurrentPowerup(npowerup: any) {
-        //this.powerup = npowerup.powerup;
-        //this.name = npowerup.name;
+        // this.powerup = npowerup.powerup;
+        // this.name = npowerup.name;
     }
 
     Draw() {
         this.animation_.Draw(this.img, this.x, this.y);
-        //this.powerup.Draw(this.x+2, this.y+2);
+        // this.powerup.Draw(this.x+2, this.y+2);
     }
 
     Update(deltaT: number) {
         deltaT *= 5;
-        var ya = this.y+ deltaT*this.yVelocity;
+        let ya = this.y + deltaT * this.yVelocity;
 
-        this.x += deltaT*this.xVelocity;
-        if (this.powerup && this.powerup.CollidePlatform){
-            var platform = this.game.IsOnGround(this.y, ya, this);
-            if (platform){
+        this.x += deltaT * this.xVelocity;
+        if (this.powerup && this.powerup.CollidePlatform) {
+            let platform = this.game.IsOnGround(this.y, ya, this);
+            if (platform) {
                 this.powerup.CollidePlatform(platform);
             }
         }
         this.y = ya;
-        if (this.powerup && this.powerup.Update){
+        if (this.powerup && this.powerup.Update) {
             this.powerup.Update(deltaT);
         }
 
-        if (this.y > 163){
+        if (this.y > 163) {
             this.y = 163;
             this.yVelocity *= -1;
         } else if (this.y < -2) {
@@ -66,20 +66,20 @@ export class Bubble {
     }
 
     CollidePlayer(player: Player) {
-        if (this.powerup && this.powerup.CollidePlayer){
+        if (this.powerup && this.powerup.CollidePlayer) {
             this.powerup.CollidePlayer(player);
         }
     }
 
-    SetImage(image: HTMLImageElement){
+    SetImage(image: HTMLImageElement) {
         this.img = image;
     }
 
-    GetY(){
+    GetY() {
         return this.y;
     }
 
-    GetX(){
+    GetX() {
         return this.x;
     }
 

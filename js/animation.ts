@@ -1,7 +1,7 @@
 import { Canvas } from "./canvas";
 
 export class Animation {
-    
+
     timeCount = 0;
     frame = 0;
     repeat = true;
@@ -23,7 +23,7 @@ export class Animation {
     }
 
     Update(deltaT: number) {
-        this.timeCount += deltaT*1000;
+        this.timeCount += deltaT * 1000;
         while (this.timeCount > this.frameTime) {
             this.timeCount -= this.frameTime;
             this.frame += 1;
@@ -32,7 +32,7 @@ export class Animation {
                     this.reverse = !this.reverse;
                     this.reversed = true;
                     this.frame = 0;
-                } else if (this.repeat){
+                } else if (this.repeat) {
                     this.frame = 0;
                     this.numLoops += 1;
                     this.reversed = false;
@@ -88,10 +88,10 @@ export class Animation {
     }
 
     Draw(image: HTMLImageElement, x: number, y: number) {
-        var sx = this.frame*this.w + this.frame + this.startX;
-        if (this.reverse){
-            sx = this.startX + (this.numFrames-1)*this.w + this.numFrames - (this.frame*this.w + this.frame + 1);
+        let sx = this.frame * this.w + this.frame + this.startX;
+        if (this.reverse) {
+            sx = this.startX + (this.numFrames - 1) * this.w + this.numFrames - (this.frame * this.w + this.frame + 1);
         }
-        this.canvas.DrawImage(image,  sx, this.flipped ? this.flippedYOffset: 0, this.w, this.h, x, y, this.w, this.h);
+        this.canvas.DrawImage(image,  sx, this.flipped ? this.flippedYOffset : 0, this.w, this.h, x, y, this.w, this.h);
     }
 }

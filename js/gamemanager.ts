@@ -40,14 +40,14 @@ export class GameManager {
     };
 
     private Draw() {
-        var text, name, s1, s2, other;
+        let text, name, s1, s2, other;
 
         if (this.betweenRounds) {
             this.canvas.Clear();
             if (this.firstRound) {
                 text = this.players[0].name + " vs. " + this.players[1].name;
             } else if (this.players[0].score === this.maxScore || this.players[1].score === this.maxScore) {
-                if (this.players[0].score === this.maxScore){
+                if (this.players[0].score === this.maxScore) {
                     text = this.players[0].name;
                     other = this.players[1].score;
                 } else {
@@ -60,7 +60,7 @@ export class GameManager {
             } else if (this.players[0].score === this.players[1].score) {
                 let score = this.players[0].score;
                 text = "Series tied, " + score + " - " + score + ".";
-            } else{
+            } else {
                 if (this.players[0].score < this.players[1].score) {
                     name = this.players[1].name;
                     s1 = this.players[1].score;
@@ -80,7 +80,7 @@ export class GameManager {
     }
 
     private Update() {
-        var endTime, ttime, winner;
+        let endTime, ttime, winner;
         if (this.betweenRounds && !this.gameOver) {
             ttime = this.time.Get();
 
@@ -96,7 +96,7 @@ export class GameManager {
             if (endTime !== 0 && endTime + 1000 < this.time.Get()) {
                 this.firstRound = false;
                 winner = this.game.GetWinner();
-                if (winner === 0){
+                if (winner === 0) {
                     this.players[0].score += 1;
                 } else if (winner === 1) {
                     this.players[1].score += 1;

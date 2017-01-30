@@ -142,88 +142,88 @@ export class Player {
     }
 
     Draw() {
-        if (this.draw && this.currentAnimation){
+        if (this.draw && this.currentAnimation) {
             this.currentAnimation.Draw(this.img, this.x, this.y);
         }
     }
 
     Update(deltaT: number) {
 
-        if (this.currentPowerup && this.currentPowerup.Update){
+        if (this.currentPowerup && this.currentPowerup.Update) {
             this.currentPowerup.Update(deltaT);
         }
 
-        if (!this.isDisolving){
+        if (!this.isDisolving) {
             this.SimulateGravity(deltaT);
         }
 
-        if (this.y > 160 && !this.dead){
+        if (this.y > 160 && !this.dead) {
             this.dead = true;
-            this.game.CreateEffect(BigSplash, this.x, 200-40);
+            this.game.CreateEffect(BigSplash, this.x, 200 - 40);
         }
-        if (this.x < 0-this.currentBounds.GetX() || this.x > 300){
-            this.x = this.x < 0-this.currentBounds.GetX() ? 0 : 300;
+        if (this.x < 0 - this.currentBounds.GetX() || this.x > 300) {
+            this.x = this.x < 0 - this.currentBounds.GetX() ? 0 : 300;
             this.Bounce(false);
         }
-        if (this.y < -50 && !this.dead){
+        if (this.y < -50 && !this.dead) {
             this.dead = true;
             this.draw = false;
         }
 
         this.isIdle = false;
         if (this.interruptAnimation) {
-            if (this.currentAnimation.IsAnimationDone()){
-                if (this.interruptAnimationInput){
+            if (this.currentAnimation.IsAnimationDone()) {
+                if (this.interruptAnimationInput) {
                     this.interuptInput = false;
                 }
                 this.interruptAnimationInput = false;
                 this.interruptAnimation = false;
-                if (this.interruptAnimationCallback){
+                if (this.interruptAnimationCallback) {
                     this.interruptAnimationCallback();
                 }
             }
 
-        } else if (this.isDisolving){
-            if (this.currentAnimation.IsAnimationDone()){
+        } else if (this.isDisolving) {
+            if (this.currentAnimation.IsAnimationDone()) {
                 this.dead = true;
                 this.draw = false;
             }
         } else if (this.isExploding || this.isWinning) {
 
-        } else if (this.isOnRope){
+        } else if (this.isOnRope) {
             if (!(this.keys.left || this.keys.right)) {
 
                 this.yVelocity = (this.keys.down - this.keys.up) * this.CLIMBSPEED;
-                if (this.keys.up && !this.keysLastFrame.up){
+                if (this.keys.up && !this.keysLastFrame.up) {
                     this.SetAnimation(this.animations.climbup);
-                }else if (this.keys.down && !this.keysLastFrame.down){
+                }else if (this.keys.down && !this.keysLastFrame.down) {
                     this.SetAnimation(this.animations.climbdown);
-                }else if (!this.keys.down && !this.keys.up){
+                }else if (!this.keys.down && !this.keys.up) {
                     this.SetAnimation(this.animations.climbidle);
                 }
             } else if (!(this.keys.up || this.keys.down)) {
                 this.isOnRope = false;
-                this.xVelocity = this.RUNSPEED * (this.keys.right-this.keys.left);
+                this.xVelocity = this.RUNSPEED * (this.keys.right - this.keys.left);
                 this.yVelocity = 0;
                 this.StartFall(true);
             }
         } else if (this.isJumpingUp) {
-            if (this.currentAnimation.IsAnimationDone()){
+            if (this.currentAnimation.IsAnimationDone()) {
                 this.isJumpingUp = false;
                 this.StartFall(true);
             }
 
         } else if (this.isJumping) {
-            if (this.currentAnimation.IsAnimationDone()){
+            if (this.currentAnimation.IsAnimationDone()) {
                 this.isJumping = false;
                 this.StartFall(false);
                 this.onGround = false;
-                //wasOnGround = false
+                // wasOnGround = false
 
             }
         } else if (this.onGround) {
             this.pushed = false;
-            if (this.runningRight && !this.keys.right && !this.isRolling){
+            if (this.runningRight && !this.keys.right && !this.isRolling) {
                 this.runningRight = false;
             }
 
@@ -233,8 +233,8 @@ export class Player {
 
             if (!this.isRolling) {
                 /* TODO: This isn't grea */
-                var r = this.runningRight ? 1 : 0;
-                var l = this.runningLeft ? 1 : 0;
+                let r = this.runningRight ? 1 : 0;
+                let l = this.runningLeft ? 1 : 0;
                 this.xVelocity = this.RUNSPEED * (r - l);
             }
 
@@ -244,31 +244,31 @@ export class Player {
                 else if (keys.left)
                     flipped = true
             }*/
-            if (this.IsTouchingRope() && (this.keys.up || this.keys.down) && !(this.keys.left || this.keys.right) && !this.isCrouched && !this.isRolling){
+            if (this.IsTouchingRope() && (this.keys.up || this.keys.down) && !(this.keys.left || this.keys.right) && !this.isCrouched && !this.isRolling) {
                 this.isOnRope = true;
                 this.onGround = false;
                 this.wasOnGround = false;
-                this.x = this.currentRope.GetX()-11;
-                if (this.keys.down){
+                this.x = this.currentRope.GetX() - 11;
+                if (this.keys.down) {
                     this.SetAnimation(this.animations.climbdown);
-                }else if (this.keys.up){
+                }else if (this.keys.up) {
                     this.SetAnimation(this.animations.climbup);
                 }
-            }else if (this.isCrouched){
-                if (this.isCrouchingUp){
-                    if (this.currentAnimation.IsAnimationDone()){
-                        //this.SetAnimation(animations.run")
+            }else if (this.isCrouched) {
+                if (this.isCrouchingUp) {
+                    if (this.currentAnimation.IsAnimationDone()) {
+                        // this.SetAnimation(animations.run")
                         this.isCrouchingUp = false;
                         this.isCrouched = false;
                         this.justUncrouched = true;
                         this.currentBounds = this.standingBounds;
                     }
-                }else if (!this.keys.down && !this.isCrouchingUp && this.currentAnimation.IsAnimationDone()){
+                }else if (!this.keys.down && !this.isCrouchingUp && this.currentAnimation.IsAnimationDone()) {
                     this.isCrouchingUp = true;
                     this.SetAnimation(this.animations.uncrouch);
                 }
             } else if (this.isRolling) {
-                if (this.currentAnimation.IsAnimationDone()){
+                if (this.currentAnimation.IsAnimationDone()) {
                     this.runningRight = false;
                     this.runningLeft = false;
                     this.isRolling = false;
@@ -278,10 +278,10 @@ export class Player {
                     this.isCrouched = true;
                     this.currentBounds = this.crouchingBounds;
                 }
-            } else if (this.keys.down && (this.runningLeft || this.runningRight)){
+            } else if (this.keys.down && (this.runningLeft || this.runningRight)) {
                 this.isRolling = true;
                 this.SetAnimation(this.animations.roll);
-            }else if (this.keys.down){
+            }else if (this.keys.down) {
                 this.isCrouched = true;
                 this.currentBounds = this.crouchingBounds;
                 this.xVelocity = 0;
@@ -305,13 +305,13 @@ export class Player {
 
         }
 
-        if (this.keys.use && this.currentPowerup && this.currentPowerup.Use){
+        if (this.keys.use && this.currentPowerup && this.currentPowerup.Use) {
             this.currentPowerup.Use();
         }
 
-        this.x += deltaT*this.xVelocity;
+        this.x += deltaT * this.xVelocity;
 
-        //game.GetCollitionsOf(this)
+        // game.GetCollitionsOf(this)
 
         this.currentAnimation.Update(deltaT);
         this.UpdateKeysLastFrame();
@@ -329,19 +329,19 @@ export class Player {
     };
 
     Collide(other: Player) {
-        if (this.pushed || this.dontCollide){
+        if (this.pushed || this.dontCollide) {
             return;
         }
-        var thiscollide = false,
+        let thiscollide = false,
         othercollide = false,
         dontMove;
-        if (this.currentPowerup && this.currentPowerup.CollidePlayer){
+        if (this.currentPowerup && this.currentPowerup.CollidePlayer) {
             thiscollide = this.currentPowerup.CollidePlayer(other);
         }
-        if (other.GetCurrentPowerup() && other.GetCurrentPowerup().CollidePlayer){
+        if (other.GetCurrentPowerup() && other.GetCurrentPowerup().CollidePlayer) {
             othercollide = other.GetCurrentPowerup().CollidePlayer(this);
         }
-        if (thiscollide || othercollide){
+        if (thiscollide || othercollide) {
             return;
         }
 
@@ -370,7 +370,7 @@ export class Player {
             dontMove = this.xVelocity === 0 && other.IsRolling();
             this.Bounce(true);
             this.StartFall(false);
-            if (dontMove){
+            if (dontMove) {
                 this.xVelocity = 0;
             }
             this.yVelocity = this.JUMPYVELOCITY;
@@ -382,12 +382,12 @@ export class Player {
             this.log.Log("type 10");
             this.x < other.GetX() ? this.Bounce(this.flipped) : this.Bounce(!this.flipped);
             this.StartFall(false);
-            this.yVelocity = this.JUMPYVELOCITY*2/3;
+            this.yVelocity = this.JUMPYVELOCITY * 2 / 3;
         } else if (other.IsCrouched() ) {
             this.log.Log("type 8");
             this.Bounce(true);
             this.StartFall(false);
-            this.yVelocity = this.JUMPYVELOCITY*2/3;
+            this.yVelocity = this.JUMPYVELOCITY * 2 / 3;
         } else if (this.isCrouched && other.GetXVelocity() !== 0) {
             this.log.Log("type 9");
 
@@ -395,7 +395,7 @@ export class Player {
             this.log.Log("type 3");
             this.Bounce(true);
             this.StartFall(false);
-            this.yVelocity = this.JUMPYVELOCITY*2/3;
+            this.yVelocity = this.JUMPYVELOCITY * 2 / 3;
         } else if (this.isRolling && !(other.IsRolling() || other.WasRolling())) {
             this.log.Log("type 4");
         } else if (this.xVelocity !== 0 && other.GetXVelocity() !== 0) {
@@ -404,13 +404,13 @@ export class Player {
 
             this.x < other.GetX() ? this.Bounce(this.flipped) : this.Bounce(!this.flipped);
             this.StartFall(false);
-            this.yVelocity = this.JUMPYVELOCITY*2/3;
+            this.yVelocity = this.JUMPYVELOCITY * 2 / 3;
         } else if (this.xVelocity === 0 && other.GetXVelocity() !== 0) {
             this.log.Log("type 6");
             other.IsFlipped() ? this.Bounce(this.flipped) : this.Bounce(!this.flipped);
             this.StartFall(false);
             other.DontCollide();
-            this.yVelocity = this.JUMPYVELOCITY*2/3;
+            this.yVelocity = this.JUMPYVELOCITY * 2 / 3;
         } else {
             this.log.Log("type 7");
         }
@@ -443,10 +443,10 @@ export class Player {
     };
 
     CollectPowerup(powerup: Powerup) {
-        if (this.isWinning || this.dead){
+        if (this.isWinning || this.dead) {
             return;
         }
-        if (this.currentPowerup && this.currentPowerup.ChangeFrom){
+        if (this.currentPowerup && this.currentPowerup.ChangeFrom) {
             this.currentPowerup.ChangeFrom();
         }
 
@@ -506,9 +506,9 @@ export class Player {
 
     Win() {
 
-        if (this.isOnRope){
+        if (this.isOnRope) {
             this.SetAnimation(this.animations.ropewin);
-        }else{
+        } else {
             this.SetAnimation(this.animations.standingwin);
         }
         this.isWinning = true;
@@ -549,7 +549,7 @@ export class Player {
         return this.onGround;
     };
 
-    IsOnRope(){
+    IsOnRope() {
         return this.isOnRope;
     };
 
@@ -578,11 +578,11 @@ export class Player {
         return this.currentPowerup;
     };
 
-    GetY(){
+    GetY() {
         return this.y;
     };
 
-    GetX(){
+    GetX() {
         return this.x;
     };
 
@@ -627,7 +627,7 @@ export class Player {
         return this.flipped;
     }
 
-    IsDead(){
+    IsDead() {
         return this.dead;
     }
 
@@ -643,12 +643,12 @@ export class Player {
         return this.isJumping;
     }
 
-    SetInteruptInput(interupt: boolean){
+    SetInteruptInput(interupt: boolean) {
         this.interuptInput = interupt;
     }
 
-    SetAnimation(animation: Animation){
-        if(this.isWinning || !animation){
+    SetAnimation(animation: Animation) {
+        if (this.isWinning || !animation) {
             return;
         }
         /*if (name !== 'idle'){
@@ -667,41 +667,41 @@ export class Player {
     };
 
     KeyDown(keyCode: number) {
-        if (this.interuptInput){
+        if (this.interuptInput) {
             return;
         }
-        if (keyCode === this.keyCodes.right ){
+        if (keyCode === this.keyCodes.right ) {
             this.log.DebugLog("KeyDown Right");
             this.keys.right = true;
-        }else if (keyCode === this.keyCodes.left ){
+        } else if (keyCode === this.keyCodes.left ) {
             this.log.DebugLog("KeyDown Left");
             this.keys.left = true;
-        }else if (keyCode === this.keyCodes.down ){
+        } else if (keyCode === this.keyCodes.down ) {
             this.log.DebugLog("KeyDown Down");
             this.keys.down = true;
-        }else if (keyCode === this.keyCodes.up ){
+        } else if (keyCode === this.keyCodes.up ) {
             this.log.DebugLog("KeyDown Up");
             this.keys.up = true;
-        }else if (keyCode === this.keyCodes.use ){
+        } else if (keyCode === this.keyCodes.use ) {
             this.log.DebugLog("KeyDown Up");
             this.keys.use = true;
         }
     };
 
     KeyUp(keyCode: number) {
-        if (keyCode === this.keyCodes.right ){
+        if (keyCode === this.keyCodes.right ) {
             this.log.DebugLog("KeyUp Right");
             this.keys.right = false;
-        }else if (keyCode === this.keyCodes.left ){
+        } else if (keyCode === this.keyCodes.left) {
             this.log.DebugLog("KeyUp Left");
             this.keys.left = false;
-        }else if (keyCode === this.keyCodes.down ){
+        } else if (keyCode === this.keyCodes.down) {
             this.log.DebugLog("KeyUp Down");
             this.keys.down = false;
-        }else if (keyCode === this.keyCodes.up ){
+        } else if (keyCode === this.keyCodes.up) {
             this.log.DebugLog("KeyUp Up");
             this.keys.up = false;
-        }else if (keyCode === this.keyCodes.use ){
+        } else if (keyCode === this.keyCodes.use) {
             this.log.DebugLog("KeyUp Up");
             this.keys.use = false;
         }
@@ -734,39 +734,39 @@ export class Player {
 
     SimulateGravity(deltaT: number) {
 
-        if (!this.isOnRope && this.gravityEnabled){
+        if (!this.isOnRope && this.gravityEnabled) {
             this.yVelocity += this.yAcceleration * deltaT;
         }
-        if (this.yMaxVelocity < this.yVelocity){
+        if (this.yMaxVelocity < this.yVelocity) {
             this.yVelocity = this.yMaxVelocity;
         }
-        var yb = this.y,
+        let yb = this.y,
         ny = this.y + deltaT * this.yVelocity,
         platform;
 
-        if (!this.isOnRope && this.yVelocity > 0){
+        if (!this.isOnRope && this.yVelocity > 0) {
             this.onGround = false;
             platform = this.game.IsOnGround(yb, ny, this);
-            if (platform){
-                if (this.currentPowerup && this.currentPowerup.CollidePlatform){
+            if (platform) {
+                if (this.currentPowerup && this.currentPowerup.CollidePlatform) {
                     this.currentPowerup.CollidePlatform(platform);
                 }
-                ny = platform.GetY()-24;
+                ny = platform.GetY() - 24;
                 this.yVelocity = 0;
 
                 this.onGround = true;
-                if (!this.wasOnGround){
+                if (!this.wasOnGround) {
                     this.Land();
                 }
             }
-            if(!this.onGround && this.wasOnGround){
+            if (!this.onGround && this.wasOnGround) {
                 this.StartFall(true);
             }
-        }else if (this.isOnRope){
-            if (ny+4 < this.currentRope.GetY()){
-                ny = this.currentRope.GetY()-4;
-            }else if (ny > this.currentRope.GetY() + this.currentRope.GetLength() - 25){
-                ny = this.currentRope.GetY() + this.currentRope.GetLength()-25;
+        }else if (this.isOnRope) {
+            if (ny + 4 < this.currentRope.GetY()) {
+                ny = this.currentRope.GetY() - 4;
+            }else if (ny > this.currentRope.GetY() + this.currentRope.GetLength() - 25) {
+                ny = this.currentRope.GetY() + this.currentRope.GetLength() - 25;
             }
         }
 
@@ -775,12 +775,12 @@ export class Player {
 
     IsTouchingRope() {
 
-        var ropes = this.game.GetRopes(),
+        let ropes = this.game.GetRopes(),
         i,
         rope;
-        for (i = 0; i < ropes.length; i += 1){
+        for (i = 0; i < ropes.length; i += 1) {
             rope = ropes[i];
-            if (this.x + 6 < rope.GetX() && this.x + 16  > rope.GetX() && this.y > rope.GetY() - 24 && this.y < rope.GetY() + rope.GetLength() ){
+            if (this.x + 6 < rope.GetX() && this.x + 16  > rope.GetX() && this.y > rope.GetY() - 24 && this.y < rope.GetY() + rope.GetLength()) {
                 this.currentRope = rope;
                 return true;
             }
@@ -794,7 +794,7 @@ export class Player {
         this.onGround = false;
         this.isRolling = false;
         this.flipped = (this.keys.right - this.keys.left === 0 ? this.flipped : this.keys.right - this.keys.left < 0);
-        if (animate){
+        if (animate) {
             this.SetAnimation(this.animations.fall);
         }
         this.currentBounds = this.fallingBounds;
@@ -805,11 +805,11 @@ export class Player {
         this.onGround = true;
         this.isJumping = false;
         this.isJumpingUp = false;
-        if (this.pushed){
+        if (this.pushed) {
             this.SetAnimation(this.animations.roll2);
             this.isRolling = true;
             this.pushed = false;
-        }else{
+        } else {
             this.SetAnimation(this.animations.land);
             this.xVelocity = 0;
             this.currentBounds = this.standingBounds;
@@ -826,7 +826,7 @@ export class Player {
     Serialize() {
         return  {x: this.x, y: this.y, xVelocity: this.xVelocity, yVelocity: this.yVelocity};
     };
-    
+
     Deserialize(data: any) {
         this.x = data.x;
         this.y = data.y;

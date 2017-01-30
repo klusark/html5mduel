@@ -24,8 +24,8 @@ window.onload = function() {
 
     canvas.DocumentLoaded();
     scale.SetScale(1);
-    //var m = new menu.Menu();
-    //m.Init();
+    // var m = new menu.Menu();
+    // m.Init();
     /*canvas.DocumentLoaded();
     Scale.SetScale(3);
     game = new Game();
@@ -33,7 +33,7 @@ window.onload = function() {
 
     game.init();*/
 
-    var g = new GameManager();
+    let g = new GameManager();
     /*socket = io('http://mduel.teichroeb.net:8000');
     //socket.on('connection', function (socket) {
         console.log("connect");

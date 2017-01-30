@@ -18,26 +18,26 @@ export class Rope {
         this.ropeTop = new StaticImage(img, 143, 9, 5, 5);
     }
 
-    Draw(){
+    Draw() {
         this.ropeTop.Draw(this.x, this.y);
 
         this.canvas.FillStyle("rgb(146,97,0)");
-        this.canvas.FillRect(this.x+2, this.y+5, 1, length);
+        this.canvas.FillRect(this.x + 2, this.y + 5, 1, length);
     }
 
-    Update(){
+    Update() {
     }
 
-    GetLength(){
+    GetLength() {
         return this.length;
     }
 
-    GetY(){
-        return this.y+5;
+    GetY() {
+        return this.y + 5;
     }
 
-    GetX(){
-        return this.x+2;
+    GetX() {
+        return this.x + 2;
     }
 
     Serialize() {

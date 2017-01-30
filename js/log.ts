@@ -1,4 +1,4 @@
-//make it so that browsers that do not have console are still supported
+// make it so that browsers that do not have console are still supported
 /*global console*/
 /*if (!console) {
     console = {};
@@ -9,9 +9,9 @@ export class Log {
     debug = false;
 
     DebugLog(message: string) {
-        //if (debug) {
+        // if (debug) {
             console.log(message);
-        //}
+        // }
     }
 
     Log(message: string) {

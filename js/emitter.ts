@@ -6,7 +6,7 @@ export class Emitter {
 
     constructor(private x: number, private y: number, type: number) {
         let img = new ImageManager().GetSpritesImg();
-        this.emitter = new StaticImage(img, type*16+type+92, 9, 16, 16);
+        this.emitter = new StaticImage(img, type * 16 + type + 92, 9, 16, 16);
     }
 
     Draw() {

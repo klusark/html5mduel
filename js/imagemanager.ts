@@ -11,18 +11,18 @@ export class ImageManager {
     static player2Img = new Image();
     static spritesImg = new Image();
 
-    //make ImageManager not needed.
+    // make ImageManager not needed.
     static lightningImg = new Image();
     static scale: Scale;
     static initialized: boolean = false;
-    //url: string = "http://mduel.teichroeb.net:5000/";
+    // url: string = "http://mduel.teichroeb.net:5000/";
     url: string = "http://10.0.0.3:5001/";
 
     constructor() {
         if (!ImageManager.initialized) {
             ImageManager.initialized = true;
             ImageManager.scale = new Scale();
-            ImageManager.scale.ScaleCallback((scale: number) => {this.ScaleChange(scale);} );
+            ImageManager.scale.ScaleCallback((scale: number) => {this.ScaleChange(scale); } );
             this.ScaleChange(1);
         }
     }
@@ -36,14 +36,14 @@ export class ImageManager {
     }*/
     ScaleChange(scale: number): void {
 
-        var base = this.url + "generate?m="+scale+"&c=",
+        let base = this.url + "generate?m=" + scale + "&c=",
         // TODO: Fix local storage
         colour0 = /*window.localStorage.colour0 ||*/ 0,
         colour1 = /*window.localStorage.colour1 ||*/ 1;
         ImageManager.player1Img.src = base + colour0;
         ImageManager.player2Img.src = base + colour1;
         ImageManager.lightningImg.src = base + "4";
-        ImageManager.spritesImg.src = this.url + "generate?s&m="+scale;
+        ImageManager.spritesImg.src = this.url + "generate?s&m=" + scale;
     };
 
     GetSpritesImg(): HTMLImageElement {

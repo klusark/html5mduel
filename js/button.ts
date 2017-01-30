@@ -41,14 +41,14 @@ export class Button {
         this.canvas.FillStyle(this.selected ? this.selectedColour : this.unselectedColour);
         this.canvas.FillRect(this.x, this.y, this.w, this.h);
         this.canvas.FillStyle(this.backgroundColour);
-        this.canvas.FillRect(this.x+this.boarder, this.y+this.boarder, this.w-(this.boarder*2), this.h-(this.boarder*2));
+        this.canvas.FillRect(this.x + this.boarder, this.y + this.boarder, this.w - (this.boarder * 2), this.h - (this.boarder * 2));
 
         this.canvas.FillStyle(this.selected ? this.selectedColour : this.unselectedColour);
 
-        //TODO: Add a way to scale the font.
-        this.canvas.setFont(this.scale.GetScale()*0.75 + "em 'Allerta'");
+        // TODO: Add a way to scale the font.
+        this.canvas.setFont(this.scale.GetScale() * 0.75 + "em 'Allerta'");
         this.canvas.setTextAlign("center");
-        this.canvas.FillText(this.text, this.x+this.w/2, this.y+15);
+        this.canvas.FillText(this.text, this.x + this.w / 2, this.y + 15);
     };
 }
 

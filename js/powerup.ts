@@ -13,7 +13,7 @@ export abstract class Powerup {
     Draw(x: number, y: number) {
         this.image.Draw(x, y);
     }
-    CollidePlayer(player: Player) : boolean {
+    CollidePlayer(player: Player): boolean {
         return true;
     }
     CollidePlatform(platform: Platform) {
@@ -51,11 +51,11 @@ class PowerupGun extends Powerup {
     }
 
     Use() {
-        if (this.inPlayer && this.ammo && !this.firing && this.player.IsIdle()){
+        if (this.inPlayer && this.ammo && !this.firing && this.player.IsIdle()) {
             this.player.InterruptAnimation(this.gundown, true, () => {
                 this.CheckForKill();
-                this.player.InterruptAnimation(this.gunup, true,() => {
-                    this.firing=false;
+                this.player.InterruptAnimation(this.gunup, true, () => {
+                    this.firing = false;
                 });
             });
             this.ammo -= 1;
@@ -89,7 +89,7 @@ class PowerupGun extends Powerup {
 
     CheckForKill() {
         new Sound().Play("shot");
-        //need to make this work with turning
+        // need to make this work with turning
         if (/*TODO this.game.DoesCollide(new GunCollisionCheck(), this.other)*/ true) {
             this.other.Disolve();
         }

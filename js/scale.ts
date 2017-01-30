@@ -16,11 +16,11 @@ export class Scale {
     }
 
     SetScale(_scale: number) {
-        if (_scale < 1 || _scale > 10){
+        if (_scale < 1 || _scale > 10) {
             return;
         }
         Scale.scale = _scale;
-        for (var i = 0; i < Scale.callbacks.length; i += 1){
+        for (let i = 0; i < Scale.callbacks.length; i += 1) {
             Scale.callbacks[i](Scale.scale);
         }
     }

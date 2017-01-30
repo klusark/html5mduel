@@ -17,7 +17,7 @@ export class Mallow {
     }
 
     Draw() {
-        this.mallowBottom.Draw(this.x, this.y+8);
+        this.mallowBottom.Draw(this.x, this.y + 8);
         this.mallowTopAnimation.Draw(this.img, this.x, this.y);
     }
 

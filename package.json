@@ -3,13 +3,15 @@
   "version": "10.3.1",
   "description": "An example module to illustrate the usage of a package.json",
   "author": "Your Name <you.name@example.org>",
-  "contributors": [{
-  "name": "Foo Bar",
-  "email": "foo.bar@example.com"
-}],
+  "contributors": [
+    {
+      "name": "Foo Bar",
+      "email": "foo.bar@example.com"
+    }
+  ],
   "bin": {
-  "module-name": "./bin/module-name"
-},
+    "module-name": "./bin/module-name"
+  },
   "scripts": {
     "test": "vows --spec --isolate",
     "start": "node index.js",
@@ -17,27 +19,29 @@
   },
   "main": "lib/foo.js",
   "repository": {
-  "type": "git",
-  "url": "https://github.com/nodejitsu/browsenpm.org"
-},
-  "bugs": {
-  "url": "https://github.com/nodejitsu/browsenpm.org/issues"
-},
-  "keywords": [
-  "nodejitsu",
-  "example",
-  "browsenpm"
-],
-  "dependencies": {
+    "type": "git",
+    "url": "https://github.com/nodejitsu/browsenpm.org"
   },
+  "bugs": {
+    "url": "https://github.com/nodejitsu/browsenpm.org/issues"
+  },
+  "keywords": [
+    "nodejitsu",
+    "example",
+    "browsenpm"
+  ],
+  "dependencies": {},
   "devDependencies": {
+    "awesome-typescript-loader": "^3.0.0-beta.18",
+    "source-map-loader": "^0.1.6",
+    "typescript": "^2.1.4",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^1.16.2"
   },
   "preferGlobal": true,
   "private": true,
   "publishConfig": {
-  "registry": "https://your-private-hosted-npm.registry.nodejitsu.com"
-},
-
-
+    "registry": "https://your-private-hosted-npm.registry.nodejitsu.com"
+  },
   "license": "MIT"
 }

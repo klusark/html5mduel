@@ -263,13 +263,13 @@ export class Game {
 	};*/
 
 
-	Restart = function() {
+	Restart() {
 		window.clearInterval(gameInterval);
 
 		this.init();
 	};
 
-	init = function() {
+	init() {
 		canvas.canvas.Clear();
 
 
@@ -331,7 +331,7 @@ export class Game {
 		loadingInterval = setInterval(CheckLoadedInterval.bind(this), 25);
 	};
 
-	End = function() {
+	End() {
 		//Clean stuff up
 		clearInterval(gameInterval);
 	};
@@ -345,7 +345,7 @@ export class Game {
 
 
 
-	FinishLoading = function() {
+	FinishLoading() {
 		sound.sound.Play("buzz");
 		gameInterval = setInterval(function(){this.Update();this.Draw();}.bind(this), 1000 / FPS);
 	};
@@ -384,19 +384,19 @@ export class Game {
 		}
 	};
 
-	this.AddPlatform = function(ent) {
+	AddPlatform(ent) {
 		platforms.push(ent);
 	};
 
-	this.AddRope = function(ent) {
+	AddRope(ent) {
 		ropes.push(ent);
 	};
 
-	this.AddEntity = function(entity) {
+	AddEntity(entity) {
 		entities.push(entity);
 	};
 
-	this.RemoveEntity = function(entity) {
+	RemoveEntity(entity) {
 		var i;
 		for (i = 0; i < entities.length; i += 1){
 			if (entities[i] === entity){
@@ -406,7 +406,7 @@ export class Game {
 		}
 	};
 
-	this.GetEntityCollisionsOf = function(entity) {
+	GetEntityCollisionsOf(entity) {
 		var collisions = [], i;
 		for (i = 0; i < entities.length; i += 1){
 			if (this.DoesCollide(entities[i], entity)){
@@ -416,7 +416,7 @@ export class Game {
 		return collisions;
 	};
 
-	this.RemovePlatform = function(entity) {
+	RemovePlatform(entity) {
 		var i;
 		for (i = 0; i < platforms.length; i += 1){
 			if (platforms[i] === entity){
@@ -427,7 +427,7 @@ export class Game {
 	};
 
 
-	this.GetOponentOf = function(entity) {
+	GetOponentOf(entity) {
 		if (entity === players[0]){
 			return players[1];
 		}else if (entity === players[1]){
@@ -436,7 +436,7 @@ export class Game {
 		//javascript will return undefined here
 	};
 
-	this.IsOnAppEngine = function() {
+	IsOnAppEngine() {
 		var loc = document.location.href;
 		if (loc.search("appspot.com") === -1 || loc.search("127.0.0.1:8080") === -1){
 			return true;
@@ -445,9 +445,10 @@ export class Game {
 	};
 
 
-	this.OnKeyDown = function(event, emit) {
-		if (typeof socket != "undefined" && emit)
-		socket.emit("keydown", event.keyCode);
+	OnKeyDown(event, emit) {
+		if (typeof socket != "undefined" && emit) {
+			socket.emit("keydown", event.keyCode);
+		}
 		//log.Log(event.keyCode);
 		if (players){
 			players[0].KeyDown(event.keyCode);
@@ -455,7 +456,7 @@ export class Game {
 		}
 	};
 
-	this.OnKeyUp = function(event, emit) {
+	OnKeyUp(event, emit) {
 		if (typeof socket != "undefined" && emit)
 		socket.emit("keyup", event.keyCode);
 		if (event.keyCode == 109){
@@ -470,22 +471,22 @@ export class Game {
 		}
 	};
 
-	this.SetScale = function(newScale) {
+	SetScale(newScale) {
 		scale = newScale;
 
 		//container.line-height = 200*scale
 
 	};
 
-	this.GetScale = function() {
+	GetScale() {
 		return scale;
 	};
 
-	this.SetBubbleDisabled = function(val) {
+	SetBubbleDisabled(val) {
 		bubbleDisabled = val;
 	};
 
-	this.Serialize = function() {
+	Serialize() {
 		var output = {};
 
 		output.platforms = [];
@@ -511,7 +512,7 @@ export class Game {
 		return output;
 	};
 
-	this.Deserialize = function(data) {
+	Deserialize(data) {
 
 		platforms = [];
 		for (var i = 0; i < data.platforms.length; ++i) {

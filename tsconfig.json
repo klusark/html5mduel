@@ -5,6 +5,7 @@
         "sourceMap": true,
         "allowJs": true,
         "noImplicitAny": true,
+        "noImplicitThis": true,
         "outDir": "./built"
     },
     "include": [

@@ -363,7 +363,7 @@ export class Game {
 		this.level_.MakeFloor(x1, x2, y);
 	};
 
-	IsOnGround(yb: number, ya: number, entity: Player) {
+	IsOnGround(yb: number, ya: number, entity: any/*TODO*/) {
 		if (ya < yb){
 			return;
 		}

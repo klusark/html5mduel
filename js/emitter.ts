@@ -4,7 +4,7 @@ import { StaticImage } from "./staticimage";
 export class Emitter {
 	emitter: StaticImage;
 
-	constructor(private x, private y, type) {
+	constructor(private x: number, private y: number, type: number) {
 		let img = new ImageManager().GetSpritesImg();
 		this.emitter = new StaticImage(img, type*16+type+92, 9, 16, 16);
 	}

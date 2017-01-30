@@ -14,9 +14,9 @@ export class Button {
 	w: number;
 	h: number;
 	text: string;
-	onclick;
+	onclick: any/*TODO*/;
 
-	constructor (x: number, y: number, w: number, h: number, text: string, onclick) {
+	constructor (x: number, y: number, w: number, h: number, text: string, onclick: any/*TODO*/) {
 		this.x = x;
 		this.y = y;
 		this.w = w;

@@ -11,7 +11,7 @@ export class PowerupManager {
 	}
 
 	RegisterPowerupType(name: string) {
-		if (powerup[name]){
+		/*if (powerup[name]){
 			var test = new powerup[name]();
 			if (test.image){
 				this.registerdPowerups.push(name);
@@ -19,13 +19,13 @@ export class PowerupManager {
 				this.selectedPowerups.push(name);
 				/*if (localStorage[name] !== "disabled") {
 					selectedPowerups.push(name);
-				}*/
+				}*//*
 			}
-		}
+		}*/
 	};
 
 	ReigisterPowerups() {
-		var p, v;
+		/*var p, v;
 		for (p in powerup){
 			if (!p){
 				continue;
@@ -34,17 +34,17 @@ export class PowerupManager {
 			if (v && v.length && v[0] === "Powerup"){
 				this.RegisterPowerupType(p);
 			}
-		}
+		}*/
 	};
 
 	GetRandomPowerup(bubble: Bubble) {
-		var name = this.selectedPowerups[Math.floor(Math.random() * this.selectedPowerups.length)];
-		return {name: name, powerup: new powerup[name](bubble, this.game)};
+		/*var name = this.selectedPowerups[Math.floor(Math.random() * this.selectedPowerups.length)];
+		return {name: name, powerup: new powerup[name](bubble, this.game)};*/
 	};
 
 	CreatePowerupByName(name: string, bubble: Bubble) {
-		console.log(name);
-		return {name: name, powerup: new powerup[name](bubble, this.game)};
+		/*console.log(name);
+		return {name: name, powerup: new powerup[name](bubble, this.game)};*/
 	};
 }
 

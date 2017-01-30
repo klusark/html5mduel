@@ -3,12 +3,12 @@
         "target": "es6",
         "module": "commonjs",
         "sourceMap": true,
-        "allowJs": true,
+        "allowJs": false,
         "noImplicitAny": true,
         "noImplicitThis": true,
         "outDir": "./built"
     },
     "include": [
-        "./js/*"
+        "./js/*.ts"
     ]
 }

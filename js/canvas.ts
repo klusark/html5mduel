@@ -1,81 +1,81 @@
 import { Scale } from "./scale";
 
 export class Canvas {
-	ctx: any;
-	_canvas: HTMLCanvasElement;
-	scale: number;
-	s: Scale;
+	static ctx: any;
+	static _canvas: HTMLCanvasElement;
+	static scale: number;
+	static s: Scale;
 
     constructor() {
-		this.s = new Scale();
+		Canvas.s = new Scale();
 
-        this.s.ScaleCallback((_scale: number) => {this.ScaleChange(_scale);});
+        Canvas.s.ScaleCallback((_scale: number) => {this.ScaleChange(_scale);});
     }
 
 	DocumentLoaded(): void {
-		this._canvas = <HTMLCanvasElement> document.getElementById('canvas');
-		this.ctx = this._canvas.getContext('2d');
+		Canvas._canvas = <HTMLCanvasElement> document.getElementById('canvas');
+		Canvas.ctx = Canvas._canvas.getContext('2d');
 
 		//only works on firefox 3.6 and up
 		//hopefuly chrome gets a similar setting soon
 		//this really has no use because of my appengine scaling
-		this.ctx.mozImageSmoothingEnabled = false;
+		Canvas.ctx.mozImageSmoothingEnabled = false;
 
 		this.Clear();
 	};
 
 	DrawImage(image: HTMLImageElement, sx: number, sy: number, sw: number, sh: number, dx: number, dy: number, dw: number, dh: number): void {
-		if (!this.ctx || !image || !image.complete){
+		if (!Canvas.ctx || !image || !image.complete){
 			return;
 		}
 
-		this.ctx.drawImage(image, sx*this.scale, sy*this.scale, sw*this.scale, sh*this.scale, Math.round(dx*this.scale), Math.round(dy*this.scale), dw*this.scale, dh*this.scale);
+		Canvas.ctx.drawImage(image, sx*Canvas.scale, sy*Canvas.scale, sw*Canvas.scale, sh*Canvas.scale, Math.round(dx*Canvas.scale), Math.round(dy*Canvas.scale), dw*Canvas.scale, dh*Canvas.scale);
 	};
 
 	FillRect(x: number, y: number, w: number, h: number) {
-		if (!this.ctx){
+		if (!Canvas.ctx){
 			return;
 		}
-		this.ctx.fillRect(x*this.scale, y*this.scale, w*this.scale, h*this.scale);
+		Canvas.ctx.fillRect(x*Canvas.scale, y*Canvas.scale, w*Canvas.scale, h*Canvas.scale);
 	};
 
 	FillText(text: string, x: number, y: number): number {
-		if (!this.ctx){
+		if (!Canvas.ctx){
 			return;
 		}
-		this.ctx.fillText(text, x*this.scale, y*this.scale);
+		Canvas.ctx.fillText(text, x*Canvas.scale, y*Canvas.scale);
 	};
 
 	FillStyle(style: string) {
-		if (this.ctx){
-			this.ctx.fillStyle = style;
+		if (Canvas.ctx){
+			Canvas.ctx.fillStyle = style;
 		}
 	};
 
 	setFont(font: string) {
-		if (this.ctx){
-			this.ctx.font = font;
+		if (Canvas.ctx){
+			Canvas.ctx.font = font;
 		}
 	};
 
 	setTextAlign(align: string) {
-		if (this.ctx){
-			this.ctx.textAlign = align;
+		if (Canvas.ctx){
+			Canvas.ctx.textAlign = align;
 		}
 	};
 
 	Clear() {
-		if (!this.ctx){
+		if (!Canvas.ctx){
 			return;
 		}
-		this.ctx.fillStyle = "rgb(0,0,0)";
-		this.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
+		Canvas.ctx.fillStyle = "rgb(0,0,0)";
+		Canvas.ctx.fillRect(0, 0, Canvas._canvas.width, Canvas._canvas.height);
 	};
 
 	ScaleChange(_scale: number) {
-		this.scale = _scale;
-		this._canvas.width = 320*this.scale;
-		this._canvas.height = 200*this.scale;
+		Canvas.scale = _scale;
+		Canvas._canvas.width = 320*Canvas.scale;
+		Canvas._canvas.height = 200*Canvas.scale;
 		//log.Log("ScaleChange "+scale);
 		this.Clear();
 		//var container = document.getElementById("container").style;
@@ -91,7 +91,7 @@ export class Canvas {
 	};
 
 	GetContext() {
-		return this.ctx;
+		return Canvas.ctx;
 	};
 }
 

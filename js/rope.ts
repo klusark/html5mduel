@@ -23,22 +23,22 @@ export class Rope {
 
 		this.canvas.FillStyle("rgb(146,97,0)");
 		this.canvas.FillRect(this.x+2, this.y+5, 1, length);
-	};
+	}
 
 	Update(){
-	};
+	}
 
 	GetLength(){
 		return this.length;
-	};
+	}
 
 	GetY(){
 		return this.y+5;
-	};
+	}
 
 	GetX(){
 		return this.x+2;
-	};
+	}
 
 	Serialize() {
 		return  {x: this.x, y: this.y, length: this.length};

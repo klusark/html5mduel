@@ -18,14 +18,12 @@ if (gameToJoin == "") {
 */
 
 
-
-
 window.onload = function() {
 	let canvas = new Canvas();
 	let scale = new Scale();
 
 	canvas.DocumentLoaded();
-	scale.SetScale(3);
+	scale.SetScale(1);
 	//var m = new menu.Menu();
 	//m.Init();
 	/*canvas.DocumentLoaded();

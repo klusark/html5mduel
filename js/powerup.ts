@@ -27,7 +27,7 @@ export abstract class Powerup {
 
 }
 
-class PowerupGun extends Powerup {
+export class PowerupGun extends Powerup {
     imagemanager = new ImageManager();
     image = new StaticImage(this.imagemanager.GetSpritesImg(), 284, 0, 12, 12);
 

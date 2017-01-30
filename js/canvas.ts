@@ -39,7 +39,7 @@ export class Canvas {
         Canvas.ctx.fillRect(x * Canvas.scale, y * Canvas.scale, w * Canvas.scale, h * Canvas.scale);
     };
 
-    FillText(text: string, x: number, y: number): number {
+    FillText(text: string, x: number, y: number) {
         if (!Canvas.ctx) {
             return;
         }

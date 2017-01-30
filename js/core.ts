@@ -13,7 +13,6 @@ import { PowerupManager } from "./powerupmanager";
 import { ImageManager } from "./imagemanager";
 import { Effect, GreenSmoke, BubbleDisolve, PurpleSmoke } from "./effect";
 import { Mallow } from "./mallow";
-import { Powerup } from "./powerup";
 
 
 /*TODO:
@@ -364,7 +363,7 @@ export class Game {
 
     IsOnGround(yb: number, ya: number, entity: any/*TODO*/) {
         if (ya < yb) {
-            return;
+            return undefined;
         }
         let entityBounds = entity.GetCurrentBounds(), other,
         platformsPassedThrough = [],
@@ -386,6 +385,7 @@ export class Game {
             }
             return platform;
         }
+        return undefined;
     };
 
     AddPlatform(ent: Platform) {
@@ -436,7 +436,7 @@ export class Game {
         }else if (entity === this.players[1]) {
             return this.players[0];
         }
-        // javascript will return undefined here
+        return undefined;
     };
 
     IsOnAppEngine() {

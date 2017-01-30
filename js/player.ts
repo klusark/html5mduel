@@ -786,6 +786,7 @@ export class Player {
             }
         }
         this.currentRope = null;
+        return false;
     };
 
     StartFall(animate: boolean) {

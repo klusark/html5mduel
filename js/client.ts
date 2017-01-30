@@ -5,11 +5,11 @@ import { Scale } from "./scale";
 import { Canvas } from "./canvas";
 import { GameManager } from "./gamemanager";
 
-function getRandomInt(min: number, max: number) {
+/*function getRandomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-/*var gameToJoin = location.hash;
+var gameToJoin = location.hash;
 
 if (gameToJoin == "") {
     gameToJoin = getRandomInt(1000, 5000);
@@ -33,7 +33,7 @@ window.onload = function() {
 
     game.init();*/
 
-    let g = new GameManager();
+    new GameManager();
     /*socket = io('http://mduel.teichroeb.net:8000');
     //socket.on('connection', function (socket) {
         console.log("connect");

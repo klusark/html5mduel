@@ -1,30 +1,31 @@
 
-var menu = require("./menu");
-var canvas = require("./canvas");
-var Scale = require("./scale");
-var gm = require("./gamemanager");
-var io = require("socket.io-client");
+/*var menu = require("./menu");
+var io = require("socket.io-client");*/
+import { Scale } from "./scale";
+import { Canvas } from "./canvas";
+import { GameManager } from "./gamemanager";
 
-function getRandomInt(min, max) {
+function getRandomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-var gameToJoin = location.hash;
+/*var gameToJoin = location.hash;
 
 if (gameToJoin == "") {
 	gameToJoin = getRandomInt(1000, 5000);
 	location.hash = gameToJoin;
 }
+*/
 
 
 
 
+window.onload = function() {
+	let canvas = new Canvas();
+	let scale = new Scale();
 
-window.onload = function()
-{
-
-	canvas.canvas.DocumentLoaded();
-	Scale.scale.SetScale(3);
+	canvas.DocumentLoaded();
+	scale.SetScale(3);
 	//var m = new menu.Menu();
 	//m.Init();
 	/*canvas.DocumentLoaded();
@@ -34,8 +35,8 @@ window.onload = function()
 
 	game.init();*/
 
-	var g = new gm.GameManager();
-	socket = io('http://mduel.teichroeb.net:8000');
+	var g = new GameManager();
+	/*socket = io('http://mduel.teichroeb.net:8000');
 	//socket.on('connection', function (socket) {
 		console.log("connect");
 		socket.emit("joingame", gameToJoin);
@@ -53,5 +54,5 @@ window.onload = function()
 			g.getGame().SetBubbleDisabled(true);
 		});
 	//});
-
+	*/
 };

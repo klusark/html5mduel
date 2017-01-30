@@ -5,6 +5,7 @@ import { Log } from "./log";
 import { Sound } from "./sound";
 import { Rope } from "./rope";
 import { Powerup } from "./powerup";
+import { BigSplash } from "./effect";
 
 export class Player {
 	animations: any = {};
@@ -146,7 +147,7 @@ export class Player {
 		}
 	}
 
-	Update = function(deltaT: number) {
+	Update(deltaT: number) {
 
 		if (this.currentPowerup && this.currentPowerup.Update){
 			this.currentPowerup.Update(deltaT);
@@ -158,7 +159,7 @@ export class Player {
 
 		if (this.y > 160 && !this.dead){
 			this.dead = true;
-			this.game.CreateEffect(this.effect.BigSplash, this.x, 200-40);
+			this.game.CreateEffect(BigSplash, this.x, 200-40);
 		}
 		if (this.x < 0-this.currentBounds.GetX() || this.x > 300){
 			this.x = this.x < 0-this.currentBounds.GetX() ? 0 : 300;
@@ -230,8 +231,11 @@ export class Player {
 				this.runningLeft = false;
 			}
 
-			if(!this.isRolling) {
-				this.xVelocity = this.RUNSPEED * (this.runningRight-this.runningLeft);
+			if (!this.isRolling) {
+				/* TODO: This isn't grea */
+				var r = this.runningRight ? 1 : 0;
+				var l = this.runningLeft ? 1 : 0;
+				this.xVelocity = this.RUNSPEED * (r - l);
 			}
 
 			/*if(!isCrouched && !isRolling){
@@ -823,7 +827,7 @@ export class Player {
 		return  {x: this.x, y: this.y, xVelocity: this.xVelocity, yVelocity: this.yVelocity};
 	};
 	
-	Deserialize = function(data: any) {
+	Deserialize(data: any) {
 		this.x = data.x;
 		this.y = data.y;
 		this.xVelocity = data.xVelocity;

@@ -22,6 +22,8 @@ export abstract class Powerup {
 	}
 	ChangeFrom(): void {
 	}
+	Use(): void {
+	}
 
 }
 
@@ -50,7 +52,12 @@ class PowerupGun extends Powerup {
 
 	Use() {
 		if (this.inPlayer && this.ammo && !this.firing && this.player.IsIdle()){
-			this.player.InterruptAnimation(this.gundown, true, function(){this.CheckForKill();this.owner.InterruptAnimation(this.gunup, true, function(){this.firing=false;});}.bind(this));
+			this.player.InterruptAnimation(this.gundown, true, () => {
+				this.CheckForKill();
+				this.player.InterruptAnimation(this.gunup, true,() => {
+					this.firing=false;
+				});
+			});
 			this.ammo -= 1;
 			this.firing = true;
 		}

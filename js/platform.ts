@@ -26,33 +26,33 @@ export class Platform {
 		this.bounds_ = new Bounds(0, 0, this.numPlatforms * 16, 8);
 	}
 
-	Draw = function() {
+	Draw() {
 		for (let i = 0; i < this.numPlatforms; i += 1){
 			this.platform.Draw(i*16 + this.x + 1, this.y);
 		}
 	};
 
-	GetNumPlatforms = function() {
+	GetNumPlatforms() {
 		return this.numPlatforms;
 	};
 
-	GetEnd = function() {
+	GetEnd() {
 		return this.numPlatforms * 16 + this.x - 3;
 	};
 
-	GetY = function() {
+	GetY() {
 		return this.y;
 	};
 
-	GetX = function() {
+	GetX() {
 		return this.x;
 	};
 
-	GetCurrentBounds = function() {
+	GetCurrentBounds() {
 		return this.bounds_;
 	};
 
-	Destroy = function(xpos: number) {
+	Destroy(xpos: number) {
 		xpos = Math.floor(xpos);
 		var dist = xpos - this.x,
 		x1 = (dist - dist%16)+this.x+32,
@@ -72,11 +72,11 @@ export class Platform {
 
 	};
 
-	Serialize = function() {
+	Serialize() {
 		return  {x: this.x, y: this.y, numPlatforms: this.numPlatforms};
 	};
 	
-	Deserialize = function(data: any) {
+	Deserialize(data: any) {
 		this.x = data.x;
 		this.y = data.y;
 		this.numPlatforms = data.numPlatforms;

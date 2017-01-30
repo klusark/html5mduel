@@ -1,6 +1,4 @@
-/*global window*/
-
-var sound = require("./sound");
+/*var sound = require("./sound");
 var canvas = require("./canvas");
 var powerupmanager = require("./powerupmanager");
 var level = require("./level");
@@ -12,55 +10,61 @@ var mallow = require("./mallow");
 var bubble = require("./bubble");
 var log = require("./log");
 var platform = require("./platform");
-var rope = require("./rope");
+var rope = require("./rope");*/
 
 /*TODO:
  * bug with interupt animation in player that the player could come out of a death animation
  *
  * */
 
-/**
- * @constructor
- */
-function Game(time) {
-	var platforms, ropes, players, mallows,
-	emitters, effects, bubbles, entities,
-	debug,
-	gameOver = false,
+export class Game {
+	platforms;
+	ropes;
+	players;
+	mallows;
+	emitters;
+	effects;
+	bubbles;
+	entities;
+	debug;
+	gameOver = false;
 	/*selector,
 	inSelectMode,*/
 
-	gameInterval,
-	loadingInterval,
+	gameInterval;
+	loadingInterval;
 
-	nextBubbleTime,
-	level_,
-	scale = 1,
-	FPS = 60,
-	maxBubbles = 3,
-	maxTimeBetweenBubbles = 3000,
-	powerups,
-	gameEndTime = 0,
-	winner,
-	lastTime = time.Get(),
+	nextBubbleTime;
+	level_;
+	scale = 1;
+	FPS = 60;
+	maxBubbles = 3;
+	maxTimeBetweenBubbles = 3000;
+	powerups;
+	gameEndTime = 0;
+	winner;
+	lastTime = time.Get();
 	bubbleDisabled = false;
 
-	if (typeof document !== 'undefined') {
-		document.onkeyup = function(e){this.OnKeyUp(e, true);}.bind(this);
-		document.onkeydown = function(e){this.OnKeyDown(e, true);}.bind(this);
+
+	constructor (time) {
+		if (typeof document !== 'undefined') {
+			document.onkeyup = function(e){this.OnKeyUp(e, true);}.bind(this);
+			document.onkeydown = function(e){this.OnKeyDown(e, true);}.bind(this);
+		}
+
+		sound.sound.Preload("buzz");
 	}
 
-	sound.sound.Preload("buzz");
-
-	this.getTime = function() {
+	getTime() {
 		return time.Get();
 	}
 
-	this.CreateEffect = function(name, x, y) {
+	CreateEffect(name, x, y) {
 		effects.push(new name(x, y));
 	};
 
-	this.Draw = function() {
+	Draw() {
 		canvas.canvas.Clear();
 		/*if (this.InSelectMode()){
 			selector.Draw();
@@ -78,7 +82,7 @@ function Game(time) {
 		//}
 	};
 
-	function ArrayDraw(array) {
+	private ArrayDraw(array) {
 		var i;
 		for (i = 0; i < array.length; i += 1){
 			if (array[i].Draw){
@@ -87,19 +91,19 @@ function Game(time) {
 		}
 	}
 
-	this.GetRopes = function() {
+	GetRopes = function() {
 		return ropes;
 	};
 
-	this.GetPlatforms = function() {
+	GetPlatforms = function() {
 		return platforms;
 	};
 
-	this.GetWinner = function() {
+	GetWinner = function() {
 		return winner;
 	};
 
-	this.Update = function() {
+	Update = function() {
 		var currentTime = time.Get();
 		var deltaT = (currentTime - lastTime)/1000;
 		/*if (this.InSelectMode()){
@@ -153,12 +157,12 @@ function Game(time) {
 		lastTime = currentTime;
 	};
 
-	this.GetGameEndTime = function() {
+	GetGameEndTime = function() {
 		return gameEndTime;
 	};
 
 	//this collisions system kind of sucks... but it works for mduel
-	this.GetCollitionsOf = function(entity) {
+	GetCollitionsOf = function(entity) {
 		var other = this.GetOponentOf(entity);
 
 		if (this.DoesCollide(entity,other)){
@@ -170,7 +174,7 @@ function Game(time) {
 		}
 	};
 
-	this.DoesCollide = function(entity, other) {
+	DoesCollide = function(entity, other) {
 		var entitybounds = entity.GetCurrentBounds(),
 		otherbounds = other.GetCurrentBounds();
 		return  entity.GetX()+entitybounds.GetX() + entitybounds.GetWidth() > other.GetX()+otherbounds.GetX() &&
@@ -179,7 +183,7 @@ function Game(time) {
 				entity.GetY()+entitybounds.GetY() < other.GetY()+otherbounds.GetY()+otherbounds.GetHeight();
 	};
 
-	this.UpdateBubbles = function(deltaT) {
+	UpdateBubbles = function(deltaT) {
 
 		for(var i = 0; i < bubbles.length; i += 1){
 			bubbles[i].Update(deltaT);
@@ -235,7 +239,7 @@ function Game(time) {
 		}
 	};
 
-	function SetNextBubbleTime() {
+	private SetNextBubbleTime() {
 		nextBubbleTime = time.Get() + Math.random() * maxTimeBetweenBubbles;
 	}
 
@@ -243,7 +247,7 @@ function Game(time) {
 		return inSelectMode;
 	};*/
 
-	function ArrayUpdate(array, deltaT) {
+	private ArrayUpdate(array, deltaT) {
 		for (var i = 0; i < array.length; i += 1){
 			array[i].Update(deltaT);
 		}
@@ -259,13 +263,13 @@ function Game(time) {
 	};*/
 
 
-	this.Restart = function() {
+	Restart = function() {
 		window.clearInterval(gameInterval);
 
 		this.init();
 	};
 
-	this.init = function() {
+	init = function() {
 		canvas.canvas.Clear();
 
 
@@ -327,12 +331,12 @@ function Game(time) {
 		loadingInterval = setInterval(CheckLoadedInterval.bind(this), 25);
 	};
 
-	this.End = function() {
+	End = function() {
 		//Clean stuff up
 		clearInterval(gameInterval);
 	};
 
-	function CheckLoadedInterval() {
+	private CheckLoadedInterval() {
 		if (this.IsLoaded()){
 			clearInterval(loadingInterval);
 			this.FinishLoading();
@@ -341,20 +345,20 @@ function Game(time) {
 
 
 
-	this.FinishLoading = function() {
+	FinishLoading = function() {
 		sound.sound.Play("buzz");
 		gameInterval = setInterval(function(){this.Update();this.Draw();}.bind(this), 1000 / FPS);
 	};
 
-	this.IsLoaded = function() {
+	IsLoaded = function() {
 		return imagemanager.image.IsLoaded();
 	};
 
-	this.MakeFloor = function(x1,x2,y) {
+	MakeFloor = function(x1,x2,y) {
 		level_.MakeFloor(x1, x2, y);
 	};
 
-	this.IsOnGround = function(yb, ya, entity) {
+	IsOnGround(yb, ya, entity) {
 		if (ya < yb){
 			return;
 		}
@@ -552,8 +556,3 @@ function Game(time) {
 		}
 	};
 }
-
-
-module.exports = {
-  Game: Game
-};

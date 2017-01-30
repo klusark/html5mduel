@@ -4,6 +4,7 @@
         "module": "commonjs",
         "sourceMap": true,
         "allowJs": true,
+        "noImplicitAny": true,
         "outDir": "./built"
     },
     "include": [

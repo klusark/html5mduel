@@ -1,75 +1,74 @@
-var animation = require("./animation");
-var bounds = require("./bounds");
-var log = require("./log");
+/*var log = require("./log");
 var effect = require("./effect");
-var sound = require("./sound");
+var sound = require("./sound");*/
 
-/**
- * @constructor
- */
-function Player(x, y, img, game){
-	var animations = [],
-	keyCodes = [],
-	keys = [],
-	keysLastFrame = [],
+import { Animation } from "./animation";
+import { Bounds } from "./bounds";
+import { Game } from "./game";
 
-	currentAnimation,
+export class Player {
+	animations = Animation[];
+	keyCodes = [];
+	keys = [];
+	keysLastFrame = [];
 
-	flipped = false,
+	currentAnimation;
 
-	yVelocity = 0,
-	yMaxVelocity = 180,
-	xVelocity = 0,
-	yAcceleration = 500,
-	gravityEnabled = true,
-	onGround = false,
-	isCrouched = false,
-	isRolling = false,
-	isOnRope = false,
-	wasOnGround = false,
-	falling = false,
-	runningRight = false,
-	runningLeft = false,
-	wasRunningLeft = false,
-	wasRunningRight = false,
-	isCrouchingUp = false,
-	pushed = false,
-	wasCrouched = false,
-	justUncrouched = false,
-	dead = false,
-	isWinning = false,
-	isJumpingUp = false,
-	isJumping = false,
-	interuptInput = false,
-	wasRolling = false,
-	wasOnRope = false,
-	dontCollide = false,
-	interruptAnimationInput = false,
-	interruptAnimation = false,
-	interruptAnimationCallback,
-	isIdle = false,
-	isDisolving = false,
-	draw = true,
-	isExploding = false,
+	flipped = false;
 
-	standingBounds = new bounds.Bounds(6, 1, 10, 23),
-	crouchingBounds = new bounds.Bounds(6, 10, 10, 14),
-	fallingBounds = new bounds.Bounds(6, 1, 10, 23),
-	currentBounds = standingBounds,
+	yVelocity = 0;
+	yMaxVelocity = 180;
+	xVelocity = 0;
+	yAcceleration = 500;
+	gravityEnabled = true;
+	onGround = false;
+	isCrouched = false;
+	isRolling = false;
+	isOnRope = false;
+	wasOnGround = false;
+	falling = false;
+	runningRight = false;
+	runningLeft = false;
+	wasRunningLeft = false;
+	wasRunningRight = false;
+	isCrouchingUp = false;
+	pushed = false;
+	wasCrouched = false;
+	justUncrouched = false;
+	dead = false;
+	isWinning = false;
+	isJumpingUp = false;
+	isJumping = false;
+	interuptInput = false;
+	wasRolling = false;
+	wasOnRope = false;
+	dontCollide = false;
+	interruptAnimationInput = false;
+	interruptAnimation = false;
+	interruptAnimationCallback;
+	isIdle = false;
+	isDisolving = false;
+	draw = true;
+	isExploding = false;
 
-	currentRope,
+	standingBounds = new Bounds(6, 1, 10, 23);
+	crouchingBounds = new Bounds(6, 10, 10, 14);
+	fallingBounds = new Bounds(6, 1, 10, 23);
+	currentBounds = this.standingBounds;
 
-	currentPowerup,
+	currentRope;
 
-	RUNSPEED = 60,
-	PUSHEDSPEED = 60,
-	ROLLSPEED = 60,
-	CLIMBSPEED = 60,
-	JUMPYVELOCITY = -170,
-	JUMPXVELOCITY = 60,
+	currentPowerup;
+
+	RUNSPEED = 60;
+	PUSHEDSPEED = 60;
+	ROLLSPEED = 60;
+	CLIMBSPEED = 60;
+	JUMPYVELOCITY = -170;
+	JUMPXVELOCITY = 60;
 	EXPLODEVELOCITY = -1000;
 
-	animations.run = new animation.Animation(25, 0, 100, 4, 24, 24);
+	/*this.animations.run = new animation.Animation(25, 0, 100, 4, 24, 24);
 
 	animations.idle = new animation.Animation(25, 100, 100, 1, 24, 24);
 
@@ -132,16 +131,20 @@ function Player(x, y, img, game){
 	keys.left = false;
 	keys.up = false;
 	keys.down = false;
-	keys.use = false;
+	keys.use = false;*/
 
+	constructor (x: number, y: number, img: HTMLImageElement, game: Game) {
 
-	this.Draw = function(){
+		this.SetAnimation(this.animations.idle);
+	}
+
+	Draw() {
 		if (draw && currentAnimation){
 			currentAnimation.Draw(img, x, y);
 		}
 	};
 
-	this.Update = function(deltaT) {
+	Update = function(deltaT) {
 
 		if (currentPowerup && currentPowerup.Update){
 			currentPowerup.Update(deltaT);
@@ -319,7 +322,7 @@ function Player(x, y, img, game){
 
 	};
 
-	this.Collide = function(other, ignore) {
+	Collide(other, ignore) {
 		if (pushed || dontCollide){
 			return;
 		}
@@ -407,14 +410,14 @@ function Player(x, y, img, game){
 		}
 	};
 
-	this.StartJumpUp = function() {
+	StartJumpUp() {
 		yVelocity = JUMPYVELOCITY;
 		onGround = false;
 		isJumpingUp = true;
 		this.SetAnimation(animations.jumpup);
 	};
 
-	this.StartJump = function() {
+	StartJump() {
 		onGround = false;
 		yVelocity = JUMPYVELOCITY;
 		isJumping = true;
@@ -422,7 +425,7 @@ function Player(x, y, img, game){
 		this.SetAnimation(animations.jump);
 	};
 
-	this.Bounce = function(forward) {
+	Bounce(forward) {
 		pushed = true;
 		if (forward) {
 			xVelocity = (flipped ? -PUSHEDSPEED : PUSHEDSPEED);
@@ -433,7 +436,7 @@ function Player(x, y, img, game){
 		}
 	};
 
-	this.CollectPowerup = function(powerup) {
+	CollectPowerup(powerup) {
 		if (isWinning || dead){
 			return;
 		}
@@ -446,21 +449,21 @@ function Player(x, y, img, game){
 
 	};
 
-	this.Disolve = function() {
+	Disolve() {
 		isDisolving = true;
 		xVelocity = 0;
 		yVelocity = 0;
 		this.SetAnimation(animations.disolve);
 	};
 
-	this.Disolve2 = function() {
+	Disolve2() {
 		isDisolving = true;
 		xVelocity = 0;
 		yVelocity = 0;
 		this.SetAnimation(animations.disolve2);
 	};
 
-	this.Explode = function() {
+	Explode() {
 		isExploding = true;
 		xVelocity = 0;
 		yVelocity = EXPLODEVELOCITY;
@@ -468,7 +471,7 @@ function Player(x, y, img, game){
 		sound.sound.Play("buzz");
 	};
 
-	this.InterruptAnimation = function(name, controls, callback) {
+	InterruptAnimation(name, controls, callback) {
 		interruptAnimationInput = controls;
 		interuptInput = controls;
 		interruptAnimation = true;
@@ -476,26 +479,26 @@ function Player(x, y, img, game){
 		interruptAnimationCallback = callback;
 	};
 
-	this.DisableAnimationInterrupt = function() {
+	DisableAnimationInterrupt() {
 		interruptAnimationInput = false;
 		interuptInput = false;
 		interruptAnimation = false;
 		interruptAnimationCallback = false;
 	};
 
-	this.SetImage = function(image) {
+	SetImage(image) {
 		img = image;
 	};
 
-	this.GetImage = function() {
+	GetImage() {
 		return img;
 	};
 
-	this.IsInPositionToWin = function() {
+	IsInPositionToWin() {
 		return (onGround || isOnRope) && !(isJumpingUp || isJumping || falling || isRolling || pushed);
 	};
 
-	this.Win = function() {
+	Win() {
 
 		if (isOnRope){
 			this.SetAnimation(animations.ropewin);
@@ -508,44 +511,44 @@ function Player(x, y, img, game){
 		currentAnimation.Update(x, y);
 	};
 
-	this.IsWinning = function() {
+	IsWinning() {
 		return isWinning;
 	};
 
-	this.SetDraw = function(ndraw) {
+	SetDraw(ndraw) {
 		draw = ndraw;
 	};
 
-	this.GetAnimations = function() {
+	GetAnimations() {
 		return animations;
 	};
 
-	this.DontCollide = function() {
+	DontCollide() {
 		dontCollide = true;
 	};
 
-	this.DoCollide = function() {
+	DoCollide() {
 		dontCollide = false;
 	};
 
-	this.IsPushed = function() {
+	IsPushed() {
 		return pushed;
 	};
 
-	this.WasOnGround = function() {
+	WasOnGround() {
 		return wasOnGround;
 	};
 
-	this.IsOnGround = function() {
+	IsOnGround() {
 		return onGround;
 	};
 
-	this.IsOnRope = function(){
+	IsOnRope(){
 		return isOnRope;
 	};
 
 
-	this.WasOnRope = function() {
+	WasOnRope() {
 		return wasOnRope;
 	};
 
@@ -638,7 +641,7 @@ function Player(x, y, img, game){
 		interuptInput = interupt;
 	};
 
-	this.SetAnimation = function(name){
+	SetAnimation(name){
 		if(isWinning || !name){
 			return;
 		}
@@ -818,17 +821,10 @@ function Player(x, y, img, game){
 		return  {x: x, y: y, xVelocity: xVelocity, yVelocity: yVelocity};
 	};
 	
-	this.Deserialize = function(data) {
+	Deserialize = function(data) {
 		x = data.x;
 		y = data.y;
 		xVelocity = data.xVelocity;
 		yVelocity = data.yVelocity;
 	};
-
-	// TODO: don't put code here
-	this.SetAnimation(animations.idle);
 }
-
-module.exports = {
-  Player: Player
-};

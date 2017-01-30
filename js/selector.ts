@@ -1,7 +1,5 @@
-/**
- * @constructor
- */
-function Selector(x, y, scale){
+export class Selector {
+
 	img = new Image()
 
 	var lastUpdateTime = core.GetTime()
@@ -21,6 +19,9 @@ function Selector(x, y, scale){
 	var colours = 5
 	var url = "http://html5mduel.appspot.com/generate?sample&m="+scale+"&c="
 	img.src = url + colour
+
+	constructor (x, y, scale) {
+	}
 
 	this.Draw = function(){
 

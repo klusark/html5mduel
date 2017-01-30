@@ -1,32 +1,28 @@
 
 interface ScaleCallbackT { (size: number): void }
 
-class ScaleT {
+export class Scale {
 
-	scale: number;
-    callbacks: ScaleCallbackT[];
+	static scale: number;
+    static callbacks: ScaleCallbackT[];
 
-	ScaleCallback(callback: ScaleCallbackT) {
-		this.callbacks.push(callback);
+	public ScaleCallback(callback: ScaleCallbackT): void {
+		Scale.callbacks.push(callback);
 	}
 
 	SetScale(_scale: number) {
 		if (_scale < 1 || _scale > 10){
 			return;
 		}
-		this.scale = _scale;
-		for (var i = 0; i < this.callbacks.length; i += 1){
-			this.callbacks[i](this.scale);
+		Scale.scale = _scale;
+		for (var i = 0; i < Scale.callbacks.length; i += 1){
+			Scale.callbacks[i](Scale.scale);
 		}
 	}
 
-	GetScale() {
-		return scale;
+	GetScale(): number {
+		return Scale.scale;
 	}
 }
-
-let scale = new ScaleT();
-
-export = scale
 
 

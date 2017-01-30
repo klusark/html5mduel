@@ -4,24 +4,17 @@
 	console = {};
 	console.log = function(i){};
 }*/
-/**
- * @constructor
- */
-function Log() {
-	var debug = false;
 
-	DebugLog(message) {
+export class Log {
+	debug = false;
+
+	DebugLog(message: string) {
 		//if (debug) {
 			console.log(message);
 		//}
-	};
+	}
 
-	Log(message) {
+	Log(message: string) {
 		console.log(message);
-	};
+	}
 }
-
-module.exports = {
-  Log: Log,
-  log: new Log()
-};

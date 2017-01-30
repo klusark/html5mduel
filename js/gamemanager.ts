@@ -14,7 +14,7 @@ class PlayerInfo {
 
 export class GameManager {
 	time = new Time();
-	players: PlayerInfo[];
+	players: PlayerInfo[] = [];
 	updateInterval: number;
 	firstRound = true;
 	betweenRounds = true;
@@ -30,7 +30,7 @@ export class GameManager {
 		this.players[1] = new PlayerInfo("Player 2");
 		this.updateInterval = setInterval(() => this.Update, 10);
 	}
-	
+
 	getGame() {
 		return this.game;
 	};

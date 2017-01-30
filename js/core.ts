@@ -24,7 +24,7 @@ import { Powerup } from "./powerup";
 export class Game {
 	platforms: Platform[];
 	ropes: Rope[];
-	players: Player[];
+	players: Player[] = [];
 	mallows: Mallow[];
 	emitters: Emitter[];
 	effects: Effect[];

@@ -9,6 +9,9 @@ export class Scale {
     static callbacks: ScaleCallbackT[];
 
 	public ScaleCallback(callback: ScaleCallbackT): void {
+        if (Scale.callbacks === undefined) {
+            Scale.callbacks = [];
+        }
 		Scale.callbacks.push(callback);
 	}
 

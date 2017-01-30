@@ -6,124 +6,124 @@ import { Game } from "./core";
 import { Player } from "./player";
 
 export class Bubble {
-	imagemanager = new ImageManager();
-	img = this.imagemanager.GetSpritesImg();
+    imagemanager = new ImageManager();
+    img = this.imagemanager.GetSpritesImg();
 
-	animation_ = new Animation(25, 336, 200, 3, 16, 16);
+    animation_ = new Animation(25, 336, 200, 3, 16, 16);
 
-	powerup: Powerup;
+    powerup: Powerup;
 
-	done = false;
+    done = false;
 
-	currentBounds = new Bounds(0, 0, 16, 16);
-	name: string;
+    currentBounds = new Bounds(0, 0, 16, 16);
+    name: string;
 
-	constructor (private x: number, private y: number, private xVelocity: number, private yVelocity: number, private game: Game) {
-	}
+    constructor (private x: number, private y: number, private xVelocity: number, private yVelocity: number, private game: Game) {
+    }
 
-	SetCurrentPowerup(npowerup: any) {
-		//this.powerup = npowerup.powerup;
-		//this.name = npowerup.name;
-	}
+    SetCurrentPowerup(npowerup: any) {
+        //this.powerup = npowerup.powerup;
+        //this.name = npowerup.name;
+    }
 
-	Draw() {
-		this.animation_.Draw(this.img, this.x, this.y);
-		//this.powerup.Draw(this.x+2, this.y+2);
-	}
+    Draw() {
+        this.animation_.Draw(this.img, this.x, this.y);
+        //this.powerup.Draw(this.x+2, this.y+2);
+    }
 
-	Update(deltaT: number) {
+    Update(deltaT: number) {
         deltaT *= 5;
-		var ya = this.y+ deltaT*this.yVelocity;
+        var ya = this.y+ deltaT*this.yVelocity;
 
-		this.x += deltaT*this.xVelocity;
-		if (this.powerup && this.powerup.CollidePlatform){
-			var platform = this.game.IsOnGround(this.y, ya, this);
-			if (platform){
-				this.powerup.CollidePlatform(platform);
-			}
-		}
-		this.y = ya;
-		if (this.powerup && this.powerup.Update){
-			this.powerup.Update(deltaT);
-		}
+        this.x += deltaT*this.xVelocity;
+        if (this.powerup && this.powerup.CollidePlatform){
+            var platform = this.game.IsOnGround(this.y, ya, this);
+            if (platform){
+                this.powerup.CollidePlatform(platform);
+            }
+        }
+        this.y = ya;
+        if (this.powerup && this.powerup.Update){
+            this.powerup.Update(deltaT);
+        }
 
-		if (this.y > 163){
-			this.y = 163;
-			this.yVelocity *= -1;
-		} else if (this.y < -2) {
-			this.y = -2;
-			this.yVelocity *= -1;
-		}
-		if (this.x > 306) {
-			this.x = 306;
-			this.xVelocity *= -1;
-		} else if (this.x < -2) {
-			this.x = -2;
-			this.xVelocity *= -1;
-		}
+        if (this.y > 163){
+            this.y = 163;
+            this.yVelocity *= -1;
+        } else if (this.y < -2) {
+            this.y = -2;
+            this.yVelocity *= -1;
+        }
+        if (this.x > 306) {
+            this.x = 306;
+            this.xVelocity *= -1;
+        } else if (this.x < -2) {
+            this.x = -2;
+            this.xVelocity *= -1;
+        }
 
-		this.animation_.Update(deltaT);
-	}
+        this.animation_.Update(deltaT);
+    }
 
-	CollidePlayer(player: Player) {
-		if (this.powerup && this.powerup.CollidePlayer){
-			this.powerup.CollidePlayer(player);
-		}
-	}
+    CollidePlayer(player: Player) {
+        if (this.powerup && this.powerup.CollidePlayer){
+            this.powerup.CollidePlayer(player);
+        }
+    }
 
-	SetImage(image: HTMLImageElement){
-		this.img = image;
-	}
+    SetImage(image: HTMLImageElement){
+        this.img = image;
+    }
 
-	GetY(){
-		return this.y;
-	}
+    GetY(){
+        return this.y;
+    }
 
-	GetX(){
-		return this.x;
-	}
+    GetX(){
+        return this.x;
+    }
 
-	GetXVelocity() {
-		return this.xVelocity;
-	}
+    GetXVelocity() {
+        return this.xVelocity;
+    }
 
-	GetYVelocity() {
-		return this.yVelocity;
-	}
+    GetYVelocity() {
+        return this.yVelocity;
+    }
 
-	SetY(ny: number) {
-		this.y = ny;
-	}
+    SetY(ny: number) {
+        this.y = ny;
+    }
 
-	SetX(nx: number) {
-		this.x = nx;
-	}
+    SetX(nx: number) {
+        this.x = nx;
+    }
 
-	IsDone() {
-		return this.done;
-	}
+    IsDone() {
+        return this.done;
+    }
 
-	SetDone(nDone: boolean) {
-		this.done = nDone;
-	}
+    SetDone(nDone: boolean) {
+        this.done = nDone;
+    }
 
-	GetCurrentBounds() {
-		return this.currentBounds;
-	}
+    GetCurrentBounds() {
+        return this.currentBounds;
+    }
 
-	Serialize() {
-		return  {x: this.x, y: this.y, xVelocity: this.xVelocity, yVelocity: this.yVelocity, name: this.name};
-	}
+    Serialize() {
+        return  {x: this.x, y: this.y, xVelocity: this.xVelocity, yVelocity: this.yVelocity, name: this.name};
+    }
 
-	Deserialize(data: any) {
-		this.x = data.x;
-		this.y = data.y;
-		this.xVelocity = data.xVelocity;
-		this.yVelocity = data.yVelocity;
-		this.name = data.name;
-	}
+    Deserialize(data: any) {
+        this.x = data.x;
+        this.y = data.y;
+        this.xVelocity = data.xVelocity;
+        this.yVelocity = data.yVelocity;
+        this.name = data.name;
+    }
 
-	GetPowerupName() {
-		return this.name;
-	}
+    GetPowerupName() {
+        return this.name;
+    }
 }

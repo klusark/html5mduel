@@ -2,26 +2,26 @@ import { ImageManager} from "./imagemanager";
 import { StaticImage } from "./staticimage";
 
 export class Emitter {
-	emitter: StaticImage;
+    emitter: StaticImage;
 
-	constructor(private x: number, private y: number, type: number) {
-		let img = new ImageManager().GetSpritesImg();
-		this.emitter = new StaticImage(img, type*16+type+92, 9, 16, 16);
-	}
+    constructor(private x: number, private y: number, type: number) {
+        let img = new ImageManager().GetSpritesImg();
+        this.emitter = new StaticImage(img, type*16+type+92, 9, 16, 16);
+    }
 
-	Draw() {
-		this.emitter.Draw(this.x, this.y);
-	};
+    Draw() {
+        this.emitter.Draw(this.x, this.y);
+    };
 
-	Update() {
+    Update() {
 
-	};
+    };
 
-	GetY() {
-		return this.y;
-	};
+    GetY() {
+        return this.y;
+    };
 
-	GetX() {
-		return this.x;
-	};
+    GetX() {
+        return this.x;
+    };
 }

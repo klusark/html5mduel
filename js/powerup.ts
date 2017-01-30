@@ -1,12 +1,9 @@
 
-/*var animation = require("./animation");
-var effect = require("./effect");
-var bounds = require("./bounds");*/
 import { StaticImage } from "./staticimage";
 import { ImageManager } from "./imagemanager";
 import { Animation } from "./animation";
 import { Player } from "./player";
-import { Bubble } from "./Bubble";
+import { Bubble } from "./bubble";
 import { Game } from "./core";
 import { Sound } from "./sound";
 import { Platform } from "./platform";

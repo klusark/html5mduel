@@ -22,7 +22,7 @@ export class Level {
 	constructor(private game: Game) {
 	}
 
-	private MakeFloor(x1: number, x2: number, y: number) {
+	MakeFloor(x1: number, x2: number, y: number) {
 		this.game.AddPlatform(new Platform(x1,y, (x2-x1)/this.BLOCK_SIZE, this.game));
 	};
 

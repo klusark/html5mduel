@@ -14,7 +14,7 @@ export class Animation {
 	reversed = false;
 
 	// only usefull if repeat is off
-	isAnimationDone = false;
+	isAnimationDone: boolean = false;
 
 	canvas: Canvas;
 
@@ -44,54 +44,54 @@ export class Animation {
 			}
 
 		}
-	};
+	}
 
-	IsAnimationDone = function() {
+	IsAnimationDone(): boolean {
 		return this.isAnimationDone;
-	};
+	}
 
-	ChangeTo = function(bflipped: boolean) {
+	ChangeTo(bflipped: boolean) {
 		this.timeCount = 0;
 		this.flipped = bflipped;
 		this.frame = 0;
 		this.isAnimationDone = false;
 		this.reverse = this.startReverse;
-	};
+	}
 
-	Repeat = function(shouldRepeat: boolean) {
+	Repeat(shouldRepeat: boolean) {
 		this.repeat = shouldRepeat;
-	};
+	}
 
-	Reverse = function(shouldReverse: boolean) {
+	Reverse(shouldReverse: boolean) {
 		this.reverse = shouldReverse;
 		this.startReverse = shouldReverse;
-	};
+	}
 
-	SetXOffset = function(offset: number) {
+	SetXOffset(offset: number) {
 		this.xOffset = offset;
-	};
+	}
 
-	SetFrame = function(framenum: number) {
+	SetFrame(framenum: number) {
 		this.frame = framenum;
-	};
+	}
 
-	GetNumLoops = function() {
+	GetNumLoops() {
 		return this.numLoops;
-	};
+	}
 
-	ReverseOnFinish = function(rof: boolean) {
+	ReverseOnFinish(rof: boolean) {
 		this.reverseOnFinish = rof;
-	};
+	}
 
-	SetFlipped = function(f: boolean) {
+	SetFlipped(f: boolean) {
 		this.flipped = f;
-	};
+	}
 
-	Draw = function(image: HTMLImageElement, x: number, y: number) {
+	Draw(image: HTMLImageElement, x: number, y: number) {
 		var sx = this.frame*this.w + this.frame + this.startX;
 		if (this.reverse){
 			sx = this.startX + (this.numFrames-1)*this.w + this.numFrames - (this.frame*this.w + this.frame + 1);
 		}
-		this.canvas.DrawImage(image,  sx, (this.flipped * this.flippedYOffset), this.w, this.h, x, y, this.w, this.h);
-	};
+		this.canvas.DrawImage(image,  sx, this.flipped ? this.flippedYOffset: 0, this.w, this.h, x, y, this.w, this.h);
+	}
 }

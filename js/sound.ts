@@ -1,5 +1,9 @@
+interface Thing{
+    [key: string]: HTMLAudioElement;
+}
 export class Sound {
-	sounds: { [key:string]: HTMLAudioElement};
+	sounds: Thing = {};
+
 
 	Preload(name: string) {
 		if (typeof Audio !== 'undefined') {

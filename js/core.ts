@@ -11,7 +11,7 @@ import { Log } from "./log";
 import { Level } from "./level";
 import { PowerupManager } from "./powerupmanager";
 import { ImageManager } from "./imagemanager";
-import { Effect, GreenSmoke } from "./effect";
+import { Effect, GreenSmoke, BubbleDisolve, PurpleSmoke } from "./effect";
 import { Mallow } from "./mallow";
 import { Powerup } from "./powerup";
 
@@ -50,14 +50,14 @@ export class Game {
 	bubbleDisabled = false;
 	canvas = new Canvas();
 	log = new Log();
-	imagemanager = new ImageManager();
+	imagemanager: ImageManager = new ImageManager();
 	scale = new Scale();
 
 
 	constructor(private time: Time) {
 		if (typeof document !== 'undefined') {
-			document.onkeyup = function(e: KeyboardEvent){this.OnKeyUp(e, true);}.bind(this);
-			document.onkeydown = function(e: KeyboardEvent){this.OnKeyDown(e, true);}.bind(this);
+			document.onkeyup = (e: KeyboardEvent) => this.OnKeyUp(e);
+			document.onkeydown = (e: KeyboardEvent) => this.OnKeyDown(e);
 		}
 
 		new Sound().Preload("buzz");
@@ -164,12 +164,12 @@ export class Game {
 		this.lastTime = currentTime;
 	};
 
-	GetGameEndTime = function() {
+	GetGameEndTime() {
 		return this.gameEndTime;
 	};
 
 	//this collisions system kind of sucks... but it works for mduel
-	GetCollitionsOf = function(entity: any /*TODO*/) {
+	GetCollitionsOf(entity: any /*TODO*/) {
 		var other = this.GetOponentOf(entity);
 
 		if (this.DoesCollide(entity,other)){
@@ -181,7 +181,7 @@ export class Game {
 		}
 	};
 
-	DoesCollide = function(entity: any, other: any /*TODO*/) {
+	DoesCollide(entity: any, other: any /*TODO*/) {
 		var entitybounds = entity.GetCurrentBounds(),
 		otherbounds = other.GetCurrentBounds();
 		return  entity.GetX()+entitybounds.GetX() + entitybounds.GetWidth() > other.GetX()+otherbounds.GetX() &&
@@ -190,7 +190,7 @@ export class Game {
 				entity.GetY()+entitybounds.GetY() < other.GetY()+otherbounds.GetY()+otherbounds.GetHeight();
 	};
 
-	UpdateBubbles = function(deltaT: number) {
+	UpdateBubbles(deltaT: number) {
 
 		for(var i = 0; i < this.bubbles.length; i += 1){
 			this.bubbles[i].Update(deltaT);
@@ -201,7 +201,7 @@ export class Game {
 				this.bubbles[i].CollidePlayer(this.players[1]);
 			}
 			if (this.bubbles[i].IsDone()){
-				this.CreateEffect(this.effect.BubbleDisolve, this.bubbles[i].GetX(), this.bubbles[i].GetY());
+				this.CreateEffect(BubbleDisolve, this.bubbles[i].GetX(), this.bubbles[i].GetY());
 				this.bubbles.splice(i, 1);
 				i -= 1;
 				if (this.bubbles.length < this.maxBubbles){
@@ -237,10 +237,10 @@ export class Game {
 			if (Math.random()>0.5){
 				yVelocity *= -1;
 			}
-			newBubble = new this.bubble.Bubble(x, y, xVelocity, yVelocity, this);
+			newBubble = new Bubble(x, y, xVelocity, yVelocity, this);
 			newBubble.SetCurrentPowerup(this.powerups.GetRandomPowerup(newBubble));
 			this.bubbles.push(newBubble);
-			this.CreateEffect(this.effect.PurpleSmoke, ex, ey);
+			this.CreateEffect(PurpleSmoke, ex, ey);
 			this.SetNextBubbleTime();
 
 		}
@@ -333,7 +333,7 @@ export class Game {
 		this.emitters.push(new Emitter(152, 0, 1));
 		this.emitters.push(new Emitter(320-16, 92, 2));
 
-		this.loadingInterval = setInterval(this.CheckLoadedInterval.bind(this), 25);
+		this.loadingInterval = setInterval(() => this.CheckLoadedInterval(), 25);
 	};
 
 	End() {
@@ -352,14 +352,14 @@ export class Game {
 
 	FinishLoading() {
 		new Sound().Play("buzz");
-		this.gameInterval = setInterval(function(){this.Update();this.Draw();}.bind(this), 1000 / this.FPS);
+		this.gameInterval = setInterval(() => {this.Update();this.Draw();}, 1000 / this.FPS);
 	};
 
-	IsLoaded = function() {
-		return this.imagemanager.image.IsLoaded();
+	IsLoaded() {
+		return this.imagemanager.IsLoaded();
 	};
 
-	MakeFloor = function(x1: number, x2: number, y: number) {
+	MakeFloor(x1: number, x2: number, y: number) {
 		this.level_.MakeFloor(x1, x2, y);
 	};
 

@@ -7,10 +7,10 @@ import { Rope } from "./rope";
 import { Powerup } from "./powerup";
 
 export class Player {
-	animations: any;
-	keyCodes: any;
-	keys: any;
-	keysLastFrame: any;
+	animations: any = {};
+	keyCodes: any = {};
+	keys: any = {};
+	keysLastFrame: any = {};
 
 	currentAnimation: Animation;
 
@@ -144,7 +144,7 @@ export class Player {
 		if (this.draw && this.currentAnimation){
 			this.currentAnimation.Draw(this.img, this.x, this.y);
 		}
-	};
+	}
 
 	Update = function(deltaT: number) {
 
@@ -604,47 +604,47 @@ export class Player {
 
 	SetX(nx: number) {
 		this.x = nx;
-	};
+	}
 
 	DisableGravity() {
 		this.gravityEnabled = false;
-	};
+	}
 
 	EnableGravity() {
 		this.gravityEnabled = true;
-	};
+	}
 
 	SetFlipped(nf: boolean) {
 		this.flipped = nf;
 		this.currentAnimation.SetFlipped(this.flipped);
-	};
+	}
 
 	IsFlipped() {
 		return this.flipped;
-	};
+	}
 
 	IsDead(){
 		return this.dead;
-	};
+	}
 
 	IsCrouched() {
 		return this.isCrouched;
-	};
+	}
 
 	IsJumpingUp() {
 		return this.isJumpingUp;
-	};
+	}
 
 	IsJumping() {
 		return this.isJumping;
-	};
+	}
 
 	SetInteruptInput(interupt: boolean){
 		this.interuptInput = interupt;
-	};
+	}
 
 	SetAnimation(animation: Animation){
-		if(this.isWinning || !name){
+		if(this.isWinning || !animation){
 			return;
 		}
 		/*if (name !== 'idle'){
@@ -656,7 +656,7 @@ export class Player {
 		}*/
 		this.currentAnimation = animation;
 		this.currentAnimation.ChangeTo(this.flipped);
-	};
+	}
 
 	GetKeys() {
 		return this.keys;

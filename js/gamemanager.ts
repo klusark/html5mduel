@@ -28,7 +28,7 @@ export class GameManager {
 	constructor() {
 		this.players[0] = new PlayerInfo("Player 1");
 		this.players[1] = new PlayerInfo("Player 2");
-		this.updateInterval = setInterval(() => this.Update, 10);
+		this.updateInterval = setInterval(() => this.Update(), 10);
 	}
 
 	getGame() {

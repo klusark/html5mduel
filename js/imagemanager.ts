@@ -2,26 +2,33 @@ import { Scale } from "./scale";
 
 /*if (typeof Image === 'undefined') {
 	Image = function() {
-		this.complete = true;
+		ImageManager.complete = true;
 	};
 }*/
 
 export class ImageManager {
-	player1Img = new Image();
-	player2Img = new Image();
-	spritesImg = new Image();
+	static player1Img = new Image();
+	static player2Img = new Image();
+	static spritesImg = new Image();
 
-	//make this not needed.
-	lightningImg = new Image();
-	scale: Scale;
+	//make ImageManager not needed.
+	static lightningImg = new Image();
+	static scale: Scale;
+    static initialized: boolean = false;
+    //url: string = "http://mduel.teichroeb.net:5000/";
+    url: string = "http://10.0.0.3:5001/";
 
 	constructor() {
-		this.scale = new Scale();
-		this.scale.ScaleCallback((scale: number) => {this.ScaleChange(scale);} );
+        if (!ImageManager.initialized) {
+            ImageManager.initialized = true;
+            ImageManager.scale = new Scale();
+            ImageManager.scale.ScaleCallback((scale: number) => {this.ScaleChange(scale);} );
+            this.ScaleChange(1);
+        }
 	}
 
-	/*if (this.IsOnAppEngine()){
-		this.SetScale(scale)
+	/*if (ImageManager.IsOnAppEngine()){
+		ImageManager.SetScale(scale)
 	}else{
 		player1Img.src = "/images/player.png"
 		player2Img.src = "/images/player.png"
@@ -29,34 +36,34 @@ export class ImageManager {
 	}*/
 	ScaleChange(scale: number): void {
 
-		var base = "http://mduel.teichroeb.net:5000/generate?m="+scale+"&c=",
+		var base = this.url + "generate?m="+scale+"&c=",
 		// TODO: Fix local storage
 		colour0 = /*window.localStorage.colour0 ||*/ 0,
 		colour1 = /*window.localStorage.colour1 ||*/ 1;
-		this.player1Img.src = base + colour0;
-		this.player2Img.src = base + colour1;
-		this.lightningImg.src = base + "4";
-		this.spritesImg.src = "http://mduel.teichroeb.net:5000/generate?s&m="+scale;
+		ImageManager.player1Img.src = base + colour0;
+		ImageManager.player2Img.src = base + colour1;
+		ImageManager.lightningImg.src = base + "4";
+		ImageManager.spritesImg.src = this.url + "generate?s&m="+scale;
 	};
 
 	GetSpritesImg(): HTMLImageElement {
-		return this.spritesImg;
+		return ImageManager.spritesImg;
 	};
 
 	GetPlayer1Img(): HTMLImageElement {
-		return this.player1Img;
+		return ImageManager.player1Img;
 	};
 
 	GetPlayer2Img(): HTMLImageElement  {
-		return this.player2Img;
+		return ImageManager.player2Img;
 	};
 
 	Get1000vImg(): HTMLImageElement  {
-		return this.lightningImg;
+		return ImageManager.lightningImg;
 	};
 
 	IsLoaded(): boolean {
-		return this.player1Img.complete && this.player2Img.complete && this.spritesImg.complete;
+		return ImageManager.player1Img.complete && ImageManager.player2Img.complete && ImageManager.spritesImg.complete;
 	};
 }
 

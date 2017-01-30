@@ -1,16 +1,16 @@
-var Scale = require("./scale");
+import { scale } from "./scale";
 
-/**
- * @constructor
- */
-function Canvas() {
-	var ctx,
-	_canvas,
-	scale;
+class Canvas {
+	ctx: any;
+	_canvas: any;
+	scale: number;
 
-	Scale.scale.ScaleCallback(function(scale){this.ScaleChange(scale);}.bind(this));
+    constructor() {
 
-	this.DocumentLoaded = function() {
+        scale.ScaleCallback((scale: number) => {this.ScaleChange(scale);});
+    }
+
+	DocumentLoaded(): void {
 		_canvas = document.getElementById('canvas');
 		ctx = _canvas.getContext('2d');
 
@@ -22,7 +22,7 @@ function Canvas() {
 		this.Clear();
 	};
 
-	this.DrawImage = function(image, sx, sy, sw, sh, dx, dy, dw, dh) {
+	DrawImage(image, sx, sy, sw, sh, dx, dy, dw, dh): void {
 		if (!ctx || !image || !image.complete){
 			return;
 		}
@@ -30,39 +30,39 @@ function Canvas() {
 		ctx.drawImage(image, sx*scale, sy*scale, sw*scale, sh*scale, Math.round(dx*scale), Math.round(dy*scale), dw*scale, dh*scale);
 	};
 
-	this.FillRect = function(x, y, w, h) {
+	FillRect(x, y, w, h) {
 		if (!ctx){
 			return;
 		}
 		ctx.fillRect(x*scale, y*scale, w*scale, h*scale);
 	};
 
-	this.FillText = function(text, x, y) {
+	FillText(text, x, y) {
 		if (!ctx){
 			return;
 		}
 		ctx.fillText(text, x*scale, y*scale);
 	};
 
-	this.FillStyle = function(style) {
+	FillStyle(style) {
 		if (ctx){
 			ctx.fillStyle = style;
 		}
 	};
 
-	this.setFont = function(font) {
+	setFont(font) {
 		if (ctx){
 			ctx.font = font;
 		}
 	};
 
-	this.setTextAlign = function(align) {
+	setTextAlign(align) {
 		if (ctx){
 			ctx.textAlign = align;
 		}
 	};
 
-	this.Clear = function() {
+	Clear() {
 		if (!ctx){
 			return;
 		}
@@ -70,7 +70,7 @@ function Canvas() {
 		ctx.fillRect(0, 0, _canvas.width, _canvas.height);
 	};
 
-	this.ScaleChange = function(_scale) {
+	ScaleChange(_scale: number) {
 		scale = _scale;
 		_canvas.width = 320*scale;
 		_canvas.height = 200*scale;
@@ -88,7 +88,7 @@ function Canvas() {
 		*/
 	};
 
-	this.GetContext = function() {
+	GetContext() {
 		return ctx;
 	};
 }

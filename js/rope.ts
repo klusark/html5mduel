@@ -1,20 +1,19 @@
 import { Canvas } from "./canvas";
-import { ImageManager } from "./imagemanager";
 import { StaticImage } from "./staticimage";
+import { Game } from "./core";
 
 export class Rope {
-    imagemanager = new ImageManager();
     canvas = new Canvas();
 
     ropeTop: StaticImage;
 
-    constructor (private x: number, private y: number, private length: number) {
+    constructor (private x: number, private y: number, private length: number, game: Game) {
 
         this.length -= 2;
 
         this.y -= 2;
 
-        let img = this.imagemanager.GetSpritesImg();
+        let img = game.GetImageManager().GetSpritesImg();
         this.ropeTop = new StaticImage(img, 143, 9, 5, 5);
     }
 

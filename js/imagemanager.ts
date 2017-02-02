@@ -18,11 +18,10 @@ export class ImageManager {
     // url: string = "http://mduel.teichroeb.net:5000/";
     url: string = "http://10.0.0.3:5001/";
 
-    constructor() {
+    constructor( private scale: Scale) {
         if (!ImageManager.initialized) {
             ImageManager.initialized = true;
-            ImageManager.scale = new Scale();
-            ImageManager.scale.ScaleCallback((scale: number) => {this.ScaleChange(scale); } );
+            this.scale.ScaleCallback((scale: number) => {this.ScaleChange(scale); } );
             this.ScaleChange(1);
         }
     }

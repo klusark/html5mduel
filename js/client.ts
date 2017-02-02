@@ -33,7 +33,7 @@ window.onload = function() {
 
     game.init();*/
 
-    new GameManager();
+    new GameManager(canvas, scale);
     /*socket = io('http://mduel.teichroeb.net:8000');
     //socket.on('connection', function (socket) {
         console.log("connect");

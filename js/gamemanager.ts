@@ -22,10 +22,8 @@ export class GameManager {
     gameOver = false;
     maxScore = 3;
     game: Game;
-    canvas = new Canvas();
-    scale = new Scale();
 
-    constructor() {
+    constructor(private canvas: Canvas, private scale: Scale) {
         this.players[0] = new PlayerInfo("Player 1");
         this.players[1] = new PlayerInfo("Player 2");
         this.updateInterval = setInterval(() => this.Update(), 10);
@@ -88,7 +86,7 @@ export class GameManager {
             if (this.lastRoundEnd /*+ 2000*/ < ttime) {
                 this.betweenRounds = false;
                 this.time.StartTime();
-                this.game = new Game(this.time);
+                this.game = new Game(this.time, this.canvas, this.scale);
                 this.game.init();
             }
         } else if (this.game) {

@@ -159,7 +159,7 @@ export class Player {
 
         if (this.y > 160 && !this.dead) {
             this.dead = true;
-            this.game.CreateEffect(BigSplash, this.x, 200 - 40);
+            this.game.AddEffect(new BigSplash(this.x, 200 - 40, this.game));
         }
         if (this.x < 0 - this.currentBounds.GetX() || this.x > 300) {
             this.x = this.x < 0 - this.currentBounds.GetX() ? 0 : 300;

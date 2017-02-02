@@ -1,4 +1,3 @@
-import { ImageManager } from "./imagemanager";
 import { StaticImage } from "./staticimage";
 import { Bounds } from "./bounds";
 import { Game } from "./core";
@@ -6,24 +5,12 @@ import { Sound } from "./sound";
 import { BlackSmoke } from "./effect";
 
 export class Platform {
-    imagemanager = new ImageManager();
+    private bounds: Bounds;
+    private platform: StaticImage;
 
-    img = this.imagemanager.GetSpritesImg();
-
-    platform = new StaticImage(this.img, 143, 0, 14, 8);
-    numPlatforms: number;
-
-    bounds_: Bounds;
-    x: number;
-    y: number;
-    game: Game;
-
-    constructor(x: number, y: number, numPlatforms: number, game: Game) {
-        this.numPlatforms = numPlatforms;
-        this.x = x;
-        this.y = y;
-        this.game = game;
-        this.bounds_ = new Bounds(0, 0, this.numPlatforms * 16, 8);
+    constructor(private x: number, private y: number, private numPlatforms: number, private game: Game) {
+        this.bounds = new Bounds(0, 0, this.numPlatforms * 16, 8);
+        this.platform = new StaticImage(game.GetImageManager().GetSpritesImg(), 143, 0, 14, 8);
     }
 
     Draw() {
@@ -49,7 +36,7 @@ export class Platform {
     };
 
     GetCurrentBounds() {
-        return this.bounds_;
+        return this.bounds;
     };
 
     Destroy(xpos: number) {
@@ -61,10 +48,10 @@ export class Platform {
             this.game.MakeFloor((dist - dist % 16) + this.x + 32, this.GetNumPlatforms() * 16 + this.x, this.y);
         }
         // TODO: make this have an effect for each platform that is destroyed
-        this.game.CreateEffect(BlackSmoke, xpos, this.y - 10);
+        this.game.AddEffect(new BlackSmoke(xpos, this.y - 10, this.game));
 
         this.numPlatforms = (dist - dist % 16) / 16;
-        this.bounds_ = new Bounds(0, 0, this.numPlatforms * 16, 8);
+        this.bounds = new Bounds(0, 0, this.numPlatforms * 16, 8);
         if (this.numPlatforms === 0) {
             this.game.RemovePlatform(this);
         }

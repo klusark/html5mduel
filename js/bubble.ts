@@ -1,4 +1,3 @@
-import { ImageManager } from "./imagemanager";
 import { Animation } from "./animation";
 import { Bounds } from "./bounds";
 import { Powerup } from "./powerup";
@@ -6,8 +5,7 @@ import { Game } from "./core";
 import { Player } from "./player";
 
 export class Bubble {
-    private imagemanager = new ImageManager();
-    private img = this.imagemanager.GetSpritesImg();
+    private img: HTMLImageElement;
 
     private animation_ = new Animation(25, 336, 200, 3, 16, 16);
 
@@ -19,6 +17,7 @@ export class Bubble {
     private name: string;
 
     constructor (private x: number, private y: number, private xVelocity: number, private yVelocity: number, private game: Game) {
+        this.img = this.game.GetImageManager().GetSpritesImg();
     }
 
     SetCurrentPowerup(npowerup: any) {

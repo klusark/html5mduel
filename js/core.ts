@@ -47,27 +47,30 @@ export class Game {
     winner: number;
     lastTime = this.time.Get();
     bubbleDisabled = false;
-    canvas = new Canvas();
     log = new Log();
-    imagemanager: ImageManager = new ImageManager();
-    scale = new Scale();
+    imagemanager: ImageManager;
 
 
-    constructor(private time: Time) {
+    constructor(private time: Time, private canvas: Canvas, private scale: Scale) {
         if (typeof document !== "undefined") {
             document.onkeyup = (e: KeyboardEvent) => this.OnKeyUp(e);
             document.onkeydown = (e: KeyboardEvent) => this.OnKeyDown(e);
         }
+        this.imagemanager = new ImageManager(this.scale);
 
         new Sound().Preload("buzz");
+    }
+
+    GetImageManager() {
+        return this.imagemanager;
     }
 
     getTime() {
         return this.time.Get();
     }
 
-    CreateEffect(name: any /*TODO*/, x: number, y: number) {
-        this.effects.push(new name(x, y));
+    AddEffect(effect: Effect) {
+        this.effects.push(effect);
     };
 
     Draw() {
@@ -191,15 +194,16 @@ export class Game {
     UpdateBubbles(deltaT: number) {
 
         for (let i = 0; i < this.bubbles.length; i += 1) {
-            this.bubbles[i].Update(deltaT);
+            let bubble = this.bubbles[i];
+            bubble.Update(deltaT);
 
             if (this.DoesCollide(this.bubbles[i], this.players[0])) {
-                this.bubbles[i].CollidePlayer(this.players[0]);
+                bubble.CollidePlayer(this.players[0]);
             } else if (this.DoesCollide(this.bubbles[i], this.players[1])) {
-                this.bubbles[i].CollidePlayer(this.players[1]);
+                bubble.CollidePlayer(this.players[1]);
             }
             if (this.bubbles[i].IsDone()) {
-                this.CreateEffect(BubbleDisolve, this.bubbles[i].GetX(), this.bubbles[i].GetY());
+                this.AddEffect(new BubbleDisolve(bubble.GetX(), bubble.GetY(), this));
                 this.bubbles.splice(i, 1);
                 i -= 1;
                 if (this.bubbles.length < this.maxBubbles) {
@@ -238,7 +242,7 @@ export class Game {
             newBubble = new Bubble(x, y, xVelocity, yVelocity, this);
             newBubble.SetCurrentPowerup(this.powerups.GetRandomPowerup(newBubble));
             this.bubbles.push(newBubble);
-            this.CreateEffect(PurpleSmoke, ex, ey);
+            this.AddEffect(new PurpleSmoke(ex, ey, this));
             this.SetNextBubbleTime();
 
         }
@@ -278,7 +282,7 @@ export class Game {
         this.canvas.Clear();
 
 
-        let params, frame, i;
+        let params, frame;
 
         this.platforms = [];
         this.ropes = [];
@@ -315,21 +319,21 @@ export class Game {
         this.players[1].SetFlipped(true);
 
 
-        this.CreateEffect(GreenSmoke, 28, 144);
-        this.CreateEffect(GreenSmoke, 268, 144);
+        this.AddEffect(new GreenSmoke(28, 144, this));
+        this.AddEffect(new GreenSmoke(268, 144, this));
 
         frame = 0;
-        for (i = 0; i < 20; i += 1) {
-            this.mallows.push(new Mallow(i * 16, 176, frame));
+        for (let i = 0; i < 20; i += 1) {
+            this.mallows.push(new Mallow(i * 16, 176, frame, this));
             frame += 1;
             if (frame === 4) {
                 frame = 0;
             }
         }
 
-        this.emitters.push(new Emitter(0, 92, 0));
-        this.emitters.push(new Emitter(152, 0, 1));
-        this.emitters.push(new Emitter(320 - 16, 92, 2));
+        this.emitters.push(new Emitter(0, 92, 0, this));
+        this.emitters.push(new Emitter(152, 0, 1, this));
+        this.emitters.push(new Emitter(320 - 16, 92, 2, this));
 
         this.loadingInterval = setInterval(() => this.CheckLoadedInterval(), 25);
     };

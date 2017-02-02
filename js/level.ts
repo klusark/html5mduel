@@ -27,7 +27,7 @@ export class Level {
     };
 
     private MakeRope(x: number, y1: number, y2: number) {
-        this.game.AddRope(new Rope(x, y1, y2 - y1));
+        this.game.AddRope(new Rope(x, y1, y2 - y1, this.game));
     };
 
     private rand() {

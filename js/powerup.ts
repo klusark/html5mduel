@@ -1,6 +1,5 @@
 
 import { StaticImage } from "./staticimage";
-import { ImageManager } from "./imagemanager";
 import { Animation } from "./animation";
 import { Player } from "./player";
 import { Bubble } from "./bubble";
@@ -28,8 +27,7 @@ export abstract class Powerup {
 }
 
 export class PowerupGun extends Powerup {
-    imagemanager = new ImageManager();
-    image = new StaticImage(this.imagemanager.GetSpritesImg(), 284, 0, 12, 12);
+    image: StaticImage;
 
     ammo = 5;
     firing = false;
@@ -38,13 +36,10 @@ export class PowerupGun extends Powerup {
     gunup = new Animation(25, 450, 100, 2, 24, 24);
     other: Player;
     player: Player;
-    bubble: Bubble;
-    game: Game;
 
-    constructor (bubble: Bubble, game: Game) {
+    constructor (private bubble: Bubble, private game: Game) {
         super();
-        this.bubble = bubble;
-        this.game = game;
+        this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 284, 0, 12, 12);
         this.gundown.Repeat(false);
         this.gunup.Repeat(false);
         this.gunup.Reverse(true);

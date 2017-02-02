@@ -10,15 +10,15 @@ export class PowerupManager {
     }
 
     RegisterPowerupType(p: any) {
-        let test = new p();
-        if (test.image) {
+        // let test = new p();
+        // if (test.image) {
             this.registerdPowerups.push(p);
             // TODO: Local storage on node
             this.selectedPowerups.push(p);
             /*if (localStorage[name] !== "disabled") {
                 selectedPowerups.push(name);
             }*/
-        }
+        // }
     };
 
     ReigisterPowerups() {

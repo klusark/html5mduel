@@ -7,23 +7,18 @@ import { Scale } from "./scale";
 }*/
 
 export class ImageManager {
-    static player1Img = new Image();
-    static player2Img = new Image();
-    static spritesImg = new Image();
+    private player1Img = new Image();
+    private player2Img = new Image();
+    private spritesImg = new Image();
 
     // make ImageManager not needed.
-    static lightningImg = new Image();
-    static scale: Scale;
-    static initialized: boolean = false;
-    // url: string = "http://mduel.teichroeb.net:5000/";
-    url: string = "http://10.0.0.3:5001/";
+    private lightningImg = new Image();
+    // private url: string = "http://mduel.teichroeb.net:5000/";
+    private url: string = "http://10.0.0.3:5001/";
 
-    constructor( private scale: Scale) {
-        if (!ImageManager.initialized) {
-            ImageManager.initialized = true;
-            this.scale.ScaleCallback((scale: number) => {this.ScaleChange(scale); } );
-            this.ScaleChange(1);
-        }
+    constructor(private scale: Scale) {
+        this.scale.ScaleCallback((scale: number) => {this.ScaleChange(scale); } );
+        this.ScaleChange(1);
     }
 
     /*if (ImageManager.IsOnAppEngine()){
@@ -39,30 +34,30 @@ export class ImageManager {
         // TODO: Fix local storage
         colour0 = /*window.localStorage.colour0 ||*/ 0,
         colour1 = /*window.localStorage.colour1 ||*/ 1;
-        ImageManager.player1Img.src = base + colour0;
-        ImageManager.player2Img.src = base + colour1;
-        ImageManager.lightningImg.src = base + "4";
-        ImageManager.spritesImg.src = this.url + "generate?s&m=" + scale;
+        this.player1Img.src = base + colour0;
+        this.player2Img.src = base + colour1;
+        this.lightningImg.src = base + "4";
+        this.spritesImg.src = this.url + "generate?s&m=" + scale;
     };
 
     GetSpritesImg(): HTMLImageElement {
-        return ImageManager.spritesImg;
+        return this.spritesImg;
     };
 
     GetPlayer1Img(): HTMLImageElement {
-        return ImageManager.player1Img;
+        return this.player1Img;
     };
 
     GetPlayer2Img(): HTMLImageElement  {
-        return ImageManager.player2Img;
+        return this.player2Img;
     };
 
     Get1000vImg(): HTMLImageElement  {
-        return ImageManager.lightningImg;
+        return this.lightningImg;
     };
 
     IsLoaded(): boolean {
-        return ImageManager.player1Img.complete && ImageManager.player2Img.complete && ImageManager.spritesImg.complete;
+        return this.player1Img.complete && this.player2Img.complete && this.spritesImg.complete;
     };
 }
 

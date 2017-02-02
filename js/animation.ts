@@ -16,8 +16,6 @@ export class Animation {
     // only usefull if repeat is off
     private isAnimationDone: boolean = false;
 
-    private canvas: Canvas = new Canvas();
-
     constructor (private flippedYOffset: number, private startX: number, private frameTime: number, private numFrames: number, private w: number, private h: number) {
     }
 
@@ -86,11 +84,11 @@ export class Animation {
         this.flipped = f;
     }
 
-    Draw(image: HTMLImageElement, x: number, y: number) {
+    Draw(image: HTMLImageElement, x: number, y: number, canvas: Canvas) {
         let sx = this.frame * this.w + this.frame + this.startX;
         if (this.reverse) {
             sx = this.startX + (this.numFrames - 1) * this.w + this.numFrames - (this.frame * this.w + this.frame + 1);
         }
-        this.canvas.DrawImage(image,  sx, this.flipped ? this.flippedYOffset : 0, this.w, this.h, x, y, this.w, this.h);
+        canvas.DrawImage(image,  sx, this.flipped ? this.flippedYOffset : 0, this.w, this.h, x, y, this.w, this.h);
     }
 }

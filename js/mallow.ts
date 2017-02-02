@@ -1,6 +1,7 @@
 import { StaticImage } from "./staticimage";
 import { Animation } from "./animation";
 import { Game } from "./core";
+import { Canvas } from "./canvas";
 
 export class Mallow {
     img: HTMLImageElement;
@@ -14,9 +15,9 @@ export class Mallow {
         this.mallowTopAnimation.SetFrame(frame);
     }
 
-    Draw() {
-        this.mallowBottom.Draw(this.x, this.y + 8);
-        this.mallowTopAnimation.Draw(this.img, this.x, this.y);
+    Draw(canvas: Canvas) {
+        this.mallowBottom.Draw(this.x, this.y + 8, canvas);
+        this.mallowTopAnimation.Draw(this.img, this.x, this.y, canvas);
     }
 
     Update(deltaT: number) {

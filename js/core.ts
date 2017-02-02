@@ -13,6 +13,7 @@ import { PowerupManager } from "./powerupmanager";
 import { ImageManager } from "./imagemanager";
 import { Effect, GreenSmoke, BubbleDisolve, PurpleSmoke } from "./effect";
 import { Mallow } from "./mallow";
+import { Entity } from "./entity";
 
 
 /*TODO:
@@ -91,11 +92,9 @@ export class Game {
         // }
     };
 
-    private ArrayDraw(array: any[]) {
+    private ArrayDraw(array: Entity[]) {
         for (let i = 0; i < array.length; i += 1) {
-            if (array[i].Draw) {
-                array[i].Draw();
-            }
+            array[i].Draw(this.canvas);
         }
     }
 

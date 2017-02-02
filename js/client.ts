@@ -19,8 +19,8 @@ if (gameToJoin == "") {
 
 
 window.onload = function() {
-    let canvas = new Canvas();
     let scale = new Scale();
+    let canvas = new Canvas(scale);
 
     canvas.DocumentLoaded();
     scale.SetScale(1);

@@ -7,10 +7,9 @@ export class Button {
     selectedColour = "rgb(14,97,54)";
     unselectedColour = "rgb(146,97,0)";
     backgroundColour = "rgb(0,0,0)";
-    canvas = new Canvas();
-    scale = new Scale();
 
-    constructor (private x: number, private y: number, private w: number, private h: number, private text: string, private onclick: any/*TODO*/) {
+    constructor (private x: number, private y: number, private w: number, private h: number,
+                    private text: string, private onclick: any/*TODO*/, private scale: Scale, private canvas: Canvas) {
     }
 
     Select() {

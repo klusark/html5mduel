@@ -3,6 +3,7 @@ import { Bounds } from "./bounds";
 import { Powerup } from "./powerup";
 import { Game } from "./core";
 import { Player } from "./player";
+import { Canvas } from "./canvas";
 
 export class Bubble {
     private img: HTMLImageElement;
@@ -25,9 +26,9 @@ export class Bubble {
         this.name = npowerup.name;
     }
 
-    Draw() {
-        this.animation_.Draw(this.img, this.x, this.y);
-        this.powerup.Draw(this.x + 2, this.y + 2);
+    Draw(canvas: Canvas) {
+        this.animation_.Draw(this.img, this.x, this.y, canvas);
+        this.powerup.Draw(this.x + 2, this.y + 2, canvas);
     }
 
     Update(deltaT: number) {

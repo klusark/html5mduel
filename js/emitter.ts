@@ -1,5 +1,6 @@
 import { StaticImage } from "./staticimage";
 import { Game } from "./core";
+import { Canvas } from "./canvas";
 
 export class Emitter {
     private emitter: StaticImage;
@@ -9,8 +10,8 @@ export class Emitter {
         this.emitter = new StaticImage(img, type * 16 + type + 92, 9, 16, 16);
     }
 
-    Draw() {
-        this.emitter.Draw(this.x, this.y);
+    Draw(canvas: Canvas) {
+        this.emitter.Draw(this.x, this.y, canvas);
     };
 
     Update() {

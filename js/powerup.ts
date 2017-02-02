@@ -6,11 +6,12 @@ import { Bubble } from "./bubble";
 import { Game } from "./core";
 import { Sound } from "./sound";
 import { Platform } from "./platform";
+import { Canvas} from "./canvas";
 
 export abstract class Powerup {
-    image: StaticImage;
-    Draw(x: number, y: number) {
-        this.image.Draw(x, y);
+    protected image: StaticImage;
+    Draw(x: number, y: number, canvas: Canvas) {
+        this.image.Draw(x, y, canvas);
     }
     CollidePlayer(player: Player): boolean {
         return true;
@@ -27,8 +28,6 @@ export abstract class Powerup {
 }
 
 export class PowerupGun extends Powerup {
-    image: StaticImage;
-
     ammo = 5;
     firing = false;
     inPlayer = false;

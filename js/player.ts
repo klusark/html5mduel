@@ -6,6 +6,7 @@ import { Sound } from "./sound";
 import { Rope } from "./rope";
 import { Powerup } from "./powerup";
 import { BigSplash } from "./effect";
+import { Canvas } from "./canvas";
 
 export class Player {
     animations: any = {};
@@ -141,9 +142,9 @@ export class Player {
         this.SetAnimation(this.animations.idle);
     }
 
-    Draw() {
+    Draw(canvas: Canvas) {
         if (this.draw && this.currentAnimation) {
-            this.currentAnimation.Draw(this.img, this.x, this.y);
+            this.currentAnimation.Draw(this.img, this.x, this.y, canvas);
         }
     }
 

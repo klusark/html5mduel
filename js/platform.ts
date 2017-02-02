@@ -3,6 +3,7 @@ import { Bounds } from "./bounds";
 import { Game } from "./core";
 import { Sound } from "./sound";
 import { BlackSmoke } from "./effect";
+import { Canvas } from "./canvas";
 
 export class Platform {
     private bounds: Bounds;
@@ -13,9 +14,9 @@ export class Platform {
         this.platform = new StaticImage(game.GetImageManager().GetSpritesImg(), 143, 0, 14, 8);
     }
 
-    Draw() {
+    Draw(canvas: Canvas) {
         for (let i = 0; i < this.numPlatforms; i += 1) {
-            this.platform.Draw(i * 16 + this.x + 1, this.y);
+            this.platform.Draw(i * 16 + this.x + 1, this.y, canvas);
         }
     };
 

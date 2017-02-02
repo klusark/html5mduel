@@ -1,5 +1,6 @@
 import { Animation } from "./animation";
 import { Game } from "./core";
+import { Canvas } from "./canvas";
 
 export class Effect {
     private img: HTMLImageElement;
@@ -10,9 +11,9 @@ export class Effect {
         this.img = game.GetImageManager().GetSpritesImg();
     }
 
-    Draw() {
+    Draw(canvas: Canvas) {
         if (this.draw) {
-            this.currentAnimation.Draw(this.img, this.x, this.y);
+            this.currentAnimation.Draw(this.img, this.x, this.y, canvas);
         }
     };
 

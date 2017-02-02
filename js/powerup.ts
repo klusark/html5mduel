@@ -96,6 +96,9 @@ export class PowerupGun extends Powerup {
     };
 
 }
+export function getPowerups() {
+    return [ PowerupGun ];
+}
 /*
 function PowerupSkull(owner){
     this.image = new staticimage.StaticImage(imagemanager.image.GetSpritesImg(), 258, 0, 12, 12);

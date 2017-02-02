@@ -1,45 +1,36 @@
 import { Game } from "./core";
 import { Bubble } from "./bubble";
+import { getPowerups } from "./powerup";
 
 export class PowerupManager {
-    registerdPowerups: string[];
-    selectedPowerups: string[];
-    game: Game;
+    registerdPowerups: any[] = [];
+    selectedPowerups: any[] = [];
 
-    constructor(game: Game) {
-        this.game = game;
+    constructor(private game: Game) {
     }
 
-    RegisterPowerupType(name: string) {
-        /*if (powerup[name]){
-            var test = new powerup[name]();
-            if (test.image){
-                this.registerdPowerups.push(name);
-                // TODO: Local storage on node
-                this.selectedPowerups.push(name);
-                /*if (localStorage[name] !== "disabled") {
-                    selectedPowerups.push(name);
-                }*//*
-            }
-        }*/
+    RegisterPowerupType(p: any) {
+        let test = new p();
+        if (test.image) {
+            this.registerdPowerups.push(p);
+            // TODO: Local storage on node
+            this.selectedPowerups.push(p);
+            /*if (localStorage[name] !== "disabled") {
+                selectedPowerups.push(name);
+            }*/
+        }
     };
 
     ReigisterPowerups() {
-        /*var p, v;
-        for (p in powerup){
-            if (!p){
-                continue;
-            }
-            v = p.match("Powerup");
-            if (v && v.length && v[0] === "Powerup"){
-                this.RegisterPowerupType(p);
-            }
-        }*/
+        let powerup = getPowerups();
+        for (let p in powerup) {
+            this.RegisterPowerupType(powerup[p]);
+        }
     };
 
     GetRandomPowerup(bubble: Bubble) {
-        /*var name = this.selectedPowerups[Math.floor(Math.random() * this.selectedPowerups.length)];
-        return {name: name, powerup: new powerup[name](bubble, this.game)};*/
+        let name = this.selectedPowerups[Math.floor(Math.random() * this.selectedPowerups.length)];
+        return {name: name, powerup: new name(bubble, this.game)};
     };
 
     CreatePowerupByName(name: string, bubble: Bubble) {

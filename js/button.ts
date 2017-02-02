@@ -9,20 +9,8 @@ export class Button {
     backgroundColour = "rgb(0,0,0)";
     canvas = new Canvas();
     scale = new Scale();
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-    text: string;
-    onclick: any/*TODO*/;
 
-    constructor (x: number, y: number, w: number, h: number, text: string, onclick: any/*TODO*/) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-        this.text = text;
-        this.onclick = onclick;
+    constructor (private x: number, private y: number, private w: number, private h: number, private text: string, private onclick: any/*TODO*/) {
     }
 
     Select() {

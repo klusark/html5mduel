@@ -22,7 +22,7 @@ export class Rope {
         this.ropeTop.Draw(this.x, this.y);
 
         this.canvas.FillStyle("rgb(146,97,0)");
-        this.canvas.FillRect(this.x + 2, this.y + 5, 1, length);
+        this.canvas.FillRect(this.x + 2, this.y + 5, 1, this.length);
     }
 
     Update() {

@@ -22,17 +22,16 @@ export class Bubble {
     }
 
     SetCurrentPowerup(npowerup: any) {
-        // this.powerup = npowerup.powerup;
-        // this.name = npowerup.name;
+        this.powerup = npowerup.powerup;
+        this.name = npowerup.name;
     }
 
     Draw() {
         this.animation_.Draw(this.img, this.x, this.y);
-        // this.powerup.Draw(this.x+2, this.y+2);
+        this.powerup.Draw(this.x + 2, this.y + 2);
     }
 
     Update(deltaT: number) {
-        deltaT *= 5;
         let ya = this.y + deltaT * this.yVelocity;
 
         this.x += deltaT * this.xVelocity;

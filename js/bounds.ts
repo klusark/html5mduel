@@ -1,13 +1,5 @@
 export class Bounds {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-    constructor(x: number, y: number, w: number, h: number) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+    constructor(private x: number, private y: number, private w: number, private h: number) {
     }
     GetX() {
         return this.x;

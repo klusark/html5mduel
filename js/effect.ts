@@ -1,68 +1,12 @@
 import { ImageManager } from "./imagemanager";
 import { Animation } from "./animation";
 
-export function GreenSmoke(x: number, y: number) {
-    let greenSmoke = new Animation(null, 0, 100, 3, 24, 24);
-    greenSmoke.Repeat(false);
-
-    return new Effect(x, y, greenSmoke);
-}
-export function PurpleSmoke(x: number, y: number) {
-    let purpleSmoke = new Animation(null, 437, 100, 3, 24, 24);
-    purpleSmoke.Repeat(false);
-
-    return new Effect(x, y, purpleSmoke);
-}
-export function BlackSmoke(x: number, y: number) {
-    let blackSmoke = new Animation(null, 512, 100, 4, 24, 24);
-    blackSmoke.Repeat(false);
-
-    return new Effect(x, y, blackSmoke);
-}
-export function BubbleDisolve(x: number, y: number) {
-    let bubbleDisolve = new Animation(null, 387, 100, 2, 24, 24);
-    bubbleDisolve.Repeat(false);
-
-    return new Effect(x, y, bubbleDisolve);
-}
-export function BigSplash(x: number, y: number) {
-    let bigSplash = new Animation(null, 158, 100, 4, 24, 24);
-    bigSplash.Repeat(false);
-
-    return new Effect(x, y, bigSplash);
-}
-export function SmallSplash(x: number, y: number) {
-    let smallSplash = new Animation(null, 687, 100, 3, 24, 24);
-    smallSplash.Repeat(false);
-
-    return new Effect(x, y, smallSplash);
-}
-export function Explode(x: number, y: number) {
-    let explode = new Animation(null, 612, 100, 3, 24, 24);
-    explode.Repeat(false);
-
-    return new Effect(x, y, explode);
-}
-export function Lightning(x: number, y: number) {
-    let lightning = new Animation(null, 762, 100, 2, 24, 24);
-    lightning.Repeat(false);
-
-    return new Effect(x, y, lightning);
-}
-
 export class Effect {
-    img = new ImageManager().GetSpritesImg();
-    currentAnimation: Animation;
+    private img = new ImageManager().GetSpritesImg();
 
-    draw = true;
-    x: number;
-    y: number;
+    private draw = true;
 
-
-    constructor(x: number, y: number, type: Animation) {
-        this.x = x;
-        this.y = y;
-        this.currentAnimation = type;
+    constructor(private x: number, private y: number, private currentAnimation: Animation) {
     }
 
     Draw() {
@@ -92,3 +36,68 @@ export class Effect {
     };
 
 }
+
+export class GreenSmoke extends Effect {
+    constructor(x: number, y: number) {
+        let greenSmoke = new Animation(null, 0, 100, 3, 24, 24);
+        greenSmoke.Repeat(false);
+        super(x, y, greenSmoke);
+    }
+}
+
+export class PurpleSmoke extends Effect {
+    constructor(x: number, y: number) {
+        let purpleSmoke = new Animation(null, 437, 100, 3, 24, 24);
+        purpleSmoke.Repeat(false);
+        super(x, y, purpleSmoke);
+    }
+}
+
+export class BlackSmoke extends Effect {
+    constructor(x: number, y: number) {
+        let blackSmoke = new Animation(null, 512, 100, 4, 24, 24);
+        blackSmoke.Repeat(false);
+        super(x, y, blackSmoke);
+    }
+}
+
+export class BubbleDisolve extends Effect {
+    constructor(x: number, y: number) {
+        let bubbleDisolve = new Animation(null, 387, 100, 2, 24, 24);
+        bubbleDisolve.Repeat(false);
+        super(x, y, bubbleDisolve);
+    }
+}
+
+export class BigSplash extends Effect {
+    constructor(x: number, y: number) {
+        let bigSplash = new Animation(null, 158, 100, 4, 24, 24);
+        bigSplash.Repeat(false);
+        super(x, y, bigSplash);
+    }
+}
+
+export class SmallSplash extends Effect {
+    constructor(x: number, y: number) {
+        let smallSplash = new Animation(null, 687, 100, 3, 24, 24);
+        smallSplash.Repeat(false);
+        super(x, y, smallSplash);
+    }
+}
+
+export class Explode extends Effect {
+    constructor(x: number, y: number) {
+        let explode = new Animation(null, 612, 100, 3, 24, 24);
+        explode.Repeat(false);
+        super(x, y, explode);
+    }
+}
+
+export class Lighting extends Effect {
+    constructor(x: number, y: number) {
+        let lightning = new Animation(null, 762, 100, 2, 24, 24);
+        lightning.Repeat(false);
+        super(x, y, lightning);
+    }
+}
+

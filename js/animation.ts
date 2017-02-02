@@ -2,24 +2,23 @@ import { Canvas } from "./canvas";
 
 export class Animation {
 
-    timeCount = 0;
-    frame = 0;
-    repeat = true;
-    startReverse = false;
-    reverse = false;
-    xOffset = 0;
-    flipped = false;
-    numLoops = 0;
-    reverseOnFinish = false;
-    reversed = false;
+    private timeCount = 0;
+    private frame = 0;
+    private repeat = true;
+    private startReverse = false;
+    private reverse = false;
+    private xOffset = 0;
+    private flipped = false;
+    private numLoops = 0;
+    private reverseOnFinish = false;
+    private reversed = false;
 
     // only usefull if repeat is off
-    isAnimationDone: boolean = false;
+    private isAnimationDone: boolean = false;
 
-    canvas: Canvas;
+    private canvas: Canvas = new Canvas();
 
     constructor (private flippedYOffset: number, private startX: number, private frameTime: number, private numFrames: number, private w: number, private h: number) {
-        this.canvas = new Canvas();
     }
 
     Update(deltaT: number) {

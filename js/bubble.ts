@@ -6,17 +6,17 @@ import { Game } from "./core";
 import { Player } from "./player";
 
 export class Bubble {
-    imagemanager = new ImageManager();
-    img = this.imagemanager.GetSpritesImg();
+    private imagemanager = new ImageManager();
+    private img = this.imagemanager.GetSpritesImg();
 
-    animation_ = new Animation(25, 336, 200, 3, 16, 16);
+    private animation_ = new Animation(25, 336, 200, 3, 16, 16);
 
-    powerup: Powerup;
+    private powerup: Powerup;
 
-    done = false;
+    private done = false;
 
-    currentBounds = new Bounds(0, 0, 16, 16);
-    name: string;
+    private currentBounds = new Bounds(0, 0, 16, 16);
+    private name: string;
 
     constructor (private x: number, private y: number, private xVelocity: number, private yVelocity: number, private game: Game) {
     }

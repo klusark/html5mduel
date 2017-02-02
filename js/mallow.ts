@@ -4,9 +4,9 @@ import { Game } from "./core";
 import { Canvas } from "./canvas";
 
 export class Mallow {
-    img: HTMLImageElement;
-    mallowBottom: StaticImage;
-    mallowTopAnimation: Animation;
+    private img: HTMLImageElement;
+    private mallowBottom: StaticImage;
+    private mallowTopAnimation: Animation;
 
     constructor(private x: number, private y: number, frame: number, game: Game) {
         this.img = game.GetImageManager().GetSpritesImg();

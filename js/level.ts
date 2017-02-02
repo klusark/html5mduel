@@ -4,20 +4,20 @@ import { Platform } from "./platform";
 
 export class Level {
     // TODO: redo all of this code to make a more fair level generator
-    HIGH_FLOOR_Y = 40;
-    HIGH_FLOOR_X = 48;
-    HIGH_FLOOR_LENGTH = 4;
-    LOW_FLOOR_LENGTH = 4;
-    LOW_FLOOR_X = 24;
-    LOW_FLOOR_Y = 168;
-    FLOOR_Y_INT = 32;
-    MAX_GAP = 3;
-    BLOCK_SIZE = 16;
-    SCREEN_WIDTH = 320;
-    MIN_FLOOR_LENGTH = 2;
-    MAX_FLOOR_LENGTH = 6;
-    MIN_DIST_FROM_EDGE = 7;
-    ROPE_X_INT = 32;
+    private HIGH_FLOOR_Y = 40;
+    private HIGH_FLOOR_X = 48;
+    private HIGH_FLOOR_LENGTH = 4;
+    private LOW_FLOOR_LENGTH = 4;
+    private LOW_FLOOR_X = 24;
+    private LOW_FLOOR_Y = 168;
+    private FLOOR_Y_INT = 32;
+    private MAX_GAP = 3;
+    private BLOCK_SIZE = 16;
+    private SCREEN_WIDTH = 320;
+    private MIN_FLOOR_LENGTH = 2;
+    private MAX_FLOOR_LENGTH = 6;
+    private MIN_DIST_FROM_EDGE = 7;
+    private ROPE_X_INT = 32;
 
     constructor(private game: Game) {
     }

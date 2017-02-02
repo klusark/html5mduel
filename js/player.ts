@@ -9,14 +9,14 @@ import { BigSplash } from "./effect";
 import { Canvas } from "./canvas";
 
 export class Player {
-    animations: any = {};
-    keyCodes: any = {};
-    keys: any = {};
-    keysLastFrame: any = {};
+    private animations: any = {};
+    private keyCodes: any = {};
+    private keys: any = {};
+    private keysLastFrame: any = {};
 
-    currentAnimation: Animation;
+    private currentAnimation: Animation;
 
-    flipped = false;
+    private flipped = false;
 
     yVelocity = 0;
     yMaxVelocity = 180;

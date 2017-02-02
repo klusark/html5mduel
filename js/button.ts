@@ -2,11 +2,11 @@ import { Canvas } from "./canvas";
 import { Scale } from "./scale";
 
 export class Button {
-    selected = false;
-    boarder = 2;
-    selectedColour = "rgb(14,97,54)";
-    unselectedColour = "rgb(146,97,0)";
-    backgroundColour = "rgb(0,0,0)";
+    private selected = false;
+    private boarder = 2;
+    private selectedColour = "rgb(14,97,54)";
+    private unselectedColour = "rgb(146,97,0)";
+    private backgroundColour = "rgb(0,0,0)";
 
     constructor (private x: number, private y: number, private w: number, private h: number,
                     private text: string, private onclick: any/*TODO*/, private scale: Scale, private canvas: Canvas) {

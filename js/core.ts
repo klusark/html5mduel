@@ -14,6 +14,7 @@ import { ImageManager } from "./imagemanager";
 import { Effect, GreenSmoke, BubbleDisolve, PurpleSmoke } from "./effect";
 import { Mallow } from "./mallow";
 import { Entity } from "./entity";
+import { Bounds } from "./bounds";
 
 
 /*TODO:
@@ -21,35 +22,41 @@ import { Entity } from "./entity";
  *
  * */
 
+interface Collidable {
+    GetX(): number;
+    GetY(): number;
+    GetCurrentBounds(): Bounds;
+}
+
 export class Game {
-    platforms: Platform[];
-    ropes: Rope[];
-    players: Player[] = [];
-    mallows: Mallow[];
-    emitters: Emitter[];
-    effects: Effect[];
-    bubbles: Bubble[];
-    entities: any[] /*TODO*/;
-    debug: boolean;
-    gameOver = false;
+    private platforms: Platform[];
+    private ropes: Rope[];
+    private players: Player[] = [];
+    private mallows: Mallow[];
+    private emitters: Emitter[];
+    private effects: Effect[];
+    private bubbles: Bubble[];
+    private entities: Entity[];
+    private debug: boolean;
+    private gameOver = false;
     /*selector,
     inSelectMode,*/
 
-    gameInterval: number;
-    loadingInterval: number;
+    private gameInterval: number;
+    private loadingInterval: number;
 
-    nextBubbleTime: number;
-    level_: Level;
-    FPS = 60;
-    maxBubbles = 3;
-    maxTimeBetweenBubbles = 3000;
-    powerups: PowerupManager;
-    gameEndTime = 0;
-    winner: number;
-    lastTime = this.time.Get();
-    bubbleDisabled = false;
-    log = new Log();
-    imagemanager: ImageManager;
+    private nextBubbleTime: number;
+    private level_: Level;
+    private FPS = 60;
+    private maxBubbles = 3;
+    private maxTimeBetweenBubbles = 3000;
+    private powerups: PowerupManager;
+    private gameEndTime = 0;
+    private winner: number;
+    private lastTime = this.time.Get();
+    private bubbleDisabled = false;
+    private log = new Log();
+    private imagemanager: ImageManager;
 
 
     constructor(private time: Time, private canvas: Canvas, private scale: Scale) {
@@ -169,7 +176,7 @@ export class Game {
     };
 
     // this collisions system kind of sucks... but it works for mduel
-    GetCollitionsOf(entity: any /*TODO*/) {
+    GetCollitionsOf(entity: Player) {
         let other = this.GetOponentOf(entity);
 
         if (this.DoesCollide(entity, other)) {
@@ -181,7 +188,7 @@ export class Game {
         }
     };
 
-    DoesCollide(entity: any, other: any /*TODO*/) {
+    DoesCollide(entity: Collidable, other: Player) {
         let entitybounds = entity.GetCurrentBounds(),
         otherbounds = other.GetCurrentBounds();
         return  entity.GetX() + entitybounds.GetX() + entitybounds.GetWidth() > other.GetX() + otherbounds.GetX() &&
@@ -255,7 +262,7 @@ export class Game {
         return inSelectMode;
     };*/
 
-    private ArrayUpdate(array: any[], deltaT: number) {
+    private ArrayUpdate(array: Entity[], deltaT: number) {
         for (let i = 0; i < array.length; i += 1) {
             array[i].Update(deltaT);
         }
@@ -349,20 +356,18 @@ export class Game {
         }
     }
 
-
-
     FinishLoading() {
         new Sound().Play("buzz");
         this.gameInterval = setInterval(() => {this.Update(); this.Draw(); }, 1000 / this.FPS);
-    };
+    }
 
     IsLoaded() {
         return this.imagemanager.IsLoaded();
-    };
+    }
 
     MakeFloor(x1: number, x2: number, y: number) {
         this.level_.MakeFloor(x1, x2, y);
-    };
+    }
 
     IsOnGround(yb: number, ya: number, entity: any/*TODO*/) {
         if (ya < yb) {
@@ -389,21 +394,21 @@ export class Game {
             return platform;
         }
         return undefined;
-    };
+    }
 
     AddPlatform(ent: Platform) {
         this.platforms.push(ent);
-    };
+    }
 
     AddRope(ent: Rope) {
         this.ropes.push(ent);
-    };
+    }
 
-    AddEntity(entity: any /* TODO */) {
+    AddEntity(entity: Entity) {
         this.entities.push(entity);
-    };
+    }
 
-    RemoveEntity(entity: any /*TODO*/) {
+    RemoveEntity(entity: Entity) {
         let i;
         for (i = 0; i < this.entities.length; i += 1) {
             if (this.entities[i] === entity) {
@@ -411,9 +416,9 @@ export class Game {
                 return;
             }
         }
-    };
+    }
 
-    GetEntityCollisionsOf(entity: Player) {
+    /*GetEntityCollisionsOf(entity: Player) {
         let collisions = [], i;
         for (i = 0; i < this.entities.length; i += 1) {
             if (this.DoesCollide(this.entities[i], entity)) {
@@ -421,7 +426,7 @@ export class Game {
             }
         }
         return collisions;
-    };
+    };*/
 
     RemovePlatform(entity: Platform) {
         let i;

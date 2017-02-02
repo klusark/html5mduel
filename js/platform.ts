@@ -18,27 +18,30 @@ export class Platform {
         for (let i = 0; i < this.numPlatforms; i += 1) {
             this.platform.Draw(i * 16 + this.x + 1, this.y, canvas);
         }
-    };
+    }
+
+    Update(deltaT: number) {
+    }
 
     GetNumPlatforms() {
         return this.numPlatforms;
-    };
+    }
 
     GetEnd() {
         return this.numPlatforms * 16 + this.x - 3;
-    };
+    }
 
     GetY() {
         return this.y;
-    };
+    }
 
     GetX() {
         return this.x;
-    };
+    }
 
     GetCurrentBounds() {
         return this.bounds;
-    };
+    }
 
     Destroy(xpos: number) {
         xpos = Math.floor(xpos);
@@ -58,16 +61,15 @@ export class Platform {
         }
         new Sound().Play("buzz");
 
-    };
+    }
 
     Serialize() {
         return  {x: this.x, y: this.y, numPlatforms: this.numPlatforms};
-    };
+    }
 
     Deserialize(data: any) {
         this.x = data.x;
         this.y = data.y;
         this.numPlatforms = data.numPlatforms;
-    };
-
+    }
 }

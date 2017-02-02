@@ -1,8 +1,8 @@
 export class Time {
-    startTime: number;
-    timeStarted: boolean;
-    stoppedTime: number;
-    timescale: number;
+    private startTime: number;
+    private timeStarted: boolean;
+    private stoppedTime: number;
+    private timescale: number;
 
     constructor() {
         this.timescale = 1;

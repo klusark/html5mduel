@@ -13,15 +13,15 @@ class PlayerInfo {
 }
 
 export class GameManager {
-    time = new Time();
-    players: PlayerInfo[] = [];
-    updateInterval: number;
-    firstRound = true;
-    betweenRounds = true;
-    lastRoundEnd = this.time.Get();
-    gameOver = false;
-    maxScore = 3;
-    game: Game;
+    private time = new Time();
+    private players: PlayerInfo[] = [];
+    private updateInterval: number;
+    private firstRound = true;
+    private betweenRounds = true;
+    private lastRoundEnd = this.time.Get();
+    private gameOver = false;
+    private maxScore = 3;
+    private game: Game;
 
     constructor(private canvas: Canvas, private scale: Scale) {
         this.players[0] = new PlayerInfo("Player 1");

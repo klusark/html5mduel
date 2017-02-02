@@ -188,7 +188,7 @@ export class Game {
         }
     };
 
-    DoesCollide(entity: Collidable, other: Player) {
+    DoesCollide(entity: Collidable, other: Collidable) {
         let entitybounds = entity.GetCurrentBounds(),
         otherbounds = other.GetCurrentBounds();
         return  entity.GetX() + entitybounds.GetX() + entitybounds.GetWidth() > other.GetX() + otherbounds.GetX() &&

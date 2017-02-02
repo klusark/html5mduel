@@ -8,11 +8,19 @@ import { Powerup } from "./powerup";
 import { BigSplash } from "./effect";
 import { Canvas } from "./canvas";
 
+class KeyCodes {
+    right: number;
+    left: number;
+    up: number;
+    down: number;
+    use: number;
+}
+
 export class Player {
     private animations: any = {};
-    private keyCodes: any = {};
-    private keys: any = {};
-    private keysLastFrame: any = {};
+    private keyCodes = new KeyCodes();
+    private keys = new KeyCodes();
+    private keysLastFrame = new KeyCodes();
 
     private currentAnimation: Animation;
 
@@ -47,7 +55,7 @@ export class Player {
     dontCollide = false;
     interruptAnimationInput = false;
     interruptAnimation = false;
-    interruptAnimationCallback: any /*TODO*/;
+    interruptAnimationCallback: () => void;
     isIdle = false;
     isDisolving = false;
     draw = true;
@@ -133,11 +141,11 @@ export class Player {
         this.keyCodes.down = 83;
         this.keyCodes.use = 81;
 
-        this.keys.right = false;
-        this.keys.left = false;
-        this.keys.up = false;
-        this.keys.down = false;
-        this.keys.use = false;
+        this.keys.right = 0;
+        this.keys.left = 0;
+        this.keys.up = 0;
+        this.keys.down = 0;
+        this.keys.use = 0;
 
         this.SetAnimation(this.animations.idle);
     }
@@ -478,7 +486,7 @@ export class Player {
         new Sound().Play("buzz");
     };
 
-    InterruptAnimation(animation: Animation, controls: boolean, callback: any /*TODO*/) {
+    InterruptAnimation(animation: Animation, controls: boolean, callback: () => void) {
         this.interruptAnimationInput = controls;
         this.interuptInput = controls;
         this.interruptAnimation = true;
@@ -490,7 +498,7 @@ export class Player {
         this.interruptAnimationInput = false;
         this.interuptInput = false;
         this.interruptAnimation = false;
-        this.interruptAnimationCallback = false;
+        this.interruptAnimationCallback = null;
     };
 
     SetImage(image: HTMLImageElement) {
@@ -673,48 +681,48 @@ export class Player {
         }
         if (keyCode === this.keyCodes.right ) {
             this.log.DebugLog("KeyDown Right");
-            this.keys.right = true;
+            this.keys.right = 1;
         } else if (keyCode === this.keyCodes.left ) {
             this.log.DebugLog("KeyDown Left");
-            this.keys.left = true;
+            this.keys.left = 1;
         } else if (keyCode === this.keyCodes.down ) {
             this.log.DebugLog("KeyDown Down");
-            this.keys.down = true;
+            this.keys.down = 1;
         } else if (keyCode === this.keyCodes.up ) {
             this.log.DebugLog("KeyDown Up");
-            this.keys.up = true;
+            this.keys.up = 1;
         } else if (keyCode === this.keyCodes.use ) {
             this.log.DebugLog("KeyDown Up");
-            this.keys.use = true;
+            this.keys.use = 1;
         }
     };
 
     KeyUp(keyCode: number) {
         if (keyCode === this.keyCodes.right ) {
             this.log.DebugLog("KeyUp Right");
-            this.keys.right = false;
+            this.keys.right = 0;
         } else if (keyCode === this.keyCodes.left) {
             this.log.DebugLog("KeyUp Left");
-            this.keys.left = false;
+            this.keys.left = 0;
         } else if (keyCode === this.keyCodes.down) {
             this.log.DebugLog("KeyUp Down");
-            this.keys.down = false;
+            this.keys.down = 0;
         } else if (keyCode === this.keyCodes.up) {
             this.log.DebugLog("KeyUp Up");
-            this.keys.up = false;
+            this.keys.up = 0;
         } else if (keyCode === this.keyCodes.use) {
             this.log.DebugLog("KeyUp Up");
-            this.keys.use = false;
+            this.keys.use = 0;
         }
 
     };
 
     DisableInput() {
-        this.keys.right = false;
-        this.keys.left = false;
-        this.keys.up = false;
-        this.keys.down = false;
-        this.keys.use = false;
+        this.keys.right = 0;
+        this.keys.left = 0;
+        this.keys.up = 0;
+        this.keys.down = 0;
+        this.keys.use = 0;
     };
 
     UpdateKeysLastFrame() {

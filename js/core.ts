@@ -369,7 +369,7 @@ export class Game {
         this.level_.MakeFloor(x1, x2, y);
     }
 
-    IsOnGround(yb: number, ya: number, entity: any/*TODO*/) {
+    IsOnGround(yb: number, ya: number, entity: Collidable) {
         if (ya < yb) {
             return undefined;
         }

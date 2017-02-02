@@ -341,10 +341,10 @@ export class Player {
         if (this.pushed || this.dontCollide) {
             return;
         }
-        let thiscollide = false,
+        /*let thiscollide = false,
         othercollide = false,
-        dontMove;
-        if (this.currentPowerup && this.currentPowerup.CollidePlayer) {
+        dontMove;*/
+        /*TODO WHAT? if (this.currentPowerup && this.currentPowerup.CollidePlayer) {
             thiscollide = this.currentPowerup.CollidePlayer(other);
         }
         if (other.GetCurrentPowerup() && other.GetCurrentPowerup().CollidePlayer) {
@@ -352,7 +352,7 @@ export class Player {
         }
         if (thiscollide || othercollide) {
             return;
-        }
+        }*/
 
         if (this.isOnRope || this.wasOnRope || other.IsOnRope() || other.WasOnRope()) {
             if ((this.isOnRope || this.wasOnRope) && (other.IsOnRope() || other.WasOnRope())) {
@@ -376,7 +376,7 @@ export class Player {
             }
         } else if ((other.IsRolling()) && this.wasOnGround && !this.isCrouched && !this.isRolling) {
             this.log.Log("type 1");
-            dontMove = this.xVelocity === 0 && other.IsRolling();
+            let dontMove = this.xVelocity === 0 && other.IsRolling();
             this.Bounce(true);
             this.StartFall(false);
             if (dontMove) {
@@ -449,7 +449,7 @@ export class Player {
             this.xVelocity = (this.flipped ? this.PUSHEDSPEED : -this.PUSHEDSPEED);
             this.SetAnimation(this.animations.pushedbackward);
         }
-    };
+    }
 
     CollectPowerup(powerup: Powerup) {
         if (this.isWinning || this.dead) {
@@ -460,16 +460,18 @@ export class Player {
         }
 
         this.currentPowerup = powerup;
+    }
 
-
-    };
+    DropPowerup() {
+        this.currentPowerup = null;
+    }
 
     Disolve() {
         this.isDisolving = true;
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.SetAnimation(this.animations.disolve);
-    };
+    }
 
     Disolve2() {
         this.isDisolving = true;

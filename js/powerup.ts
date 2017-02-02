@@ -7,10 +7,10 @@ import { Sound } from "./sound";
 import { Platform } from "./platform";
 import { Canvas} from "./canvas";
 import { Bounds } from "./bounds";
-import { Explode } from "./effect";
+import { Explode, GreenSmoke, SmallSplash } from "./effect";
 
 export function getPowerups() {
-    return [ PowerupGun, PowerupSkull, PowerupInvis, PowerupMine, PowerupHook ];
+    return [ PowerupGun, PowerupSkull, PowerupInvis, PowerupMine, PowerupHook, PowerupTeleport, PowerupNade ];
 }
 
 export abstract class Powerup {
@@ -339,111 +339,123 @@ function PowerupDestroy(owner, game) {
         }
     }
 }
-
-function Nade(x, y, owner, direction, game) {
-    var img = game.GetImageManager().GetSpritesImg(),
-    bounds_ = new Bounds(0, 0, 5, 4),
-    animation_ = new StaticImage(img, 300, 18, 5, 4),
-    xVelocity = direction ? -70 : 70,
-    yVelocity = -150,
+*/
+class Nade {
+    bounds = new Bounds(0, 0, 5, 4);
+    animation: StaticImage;
+    xVelocity: number;
+    yVelocity = -150;
     yAcceleration = 350;
 
-    Draw() {
-        animation_.Draw(x, y);
+    constructor(private x: number, private y: number, owner: Player, direction: boolean, private game: Game) {
+        let img = game.GetImageManager().GetSpritesImg();
+        this.animation = new StaticImage(img, 300, 18, 5, 4),
+        this.xVelocity = direction ? -70 : 70;
     }
 
-    Update(deltaT) {
-        var ya, platform;
+    Draw(canvas: Canvas) {
+        this.animation.Draw(this.x, this.y, canvas);
+    }
 
-        x += xVelocity * deltaT;
-        yVelocity += yAcceleration * deltaT;
-        ya = y + yVelocity * deltaT;
-        platform = game.IsOnGround(y, ya, this);
+    Update(deltaT: number) {
+        this.x += this.xVelocity * deltaT;
+        this.yVelocity += this.yAcceleration * deltaT;
+        let ya = this.y + this.yVelocity * deltaT;
+        let platform = this.game.IsOnGround(this.y, ya, this);
 
-        if (platform){
-            platform.Destroy(x);
-            game.RemoveEntity(this);
+        if (platform) {
+            platform.Destroy(this.x);
+            this.game.RemoveEntity(this);
         }
-        y = ya;
-        //make sure it is fully off the screen before it is removed
-        if (x < -5 || x > 320){
-            game.RemoveEntity(this);
-            return;
-        }
-        if (y > 180){
-            game.RemoveEntity(this);
-            game.CreateEffect(effect.SmallSplash, x - 11, y - 20);
-            return;
+        this.y = ya;
+        // make sure it is fully off the screen before it is removed
+        if (this.x < -5 || this.x > 320) {
+            this.game.RemoveEntity(this);
+        } else if (this.y > 180) {
+            this.game.RemoveEntity(this);
+            this.game.AddEffect(new SmallSplash(this.x - 11, this.y - 20, this.game));
         }
     }
 
     GetX() {
-        return x;
+        return this.x;
     }
 
     GetY() {
-        return y;
+        return this.y;
     }
 
     GetCurrentBounds() {
-        return bounds;
+        return this.bounds;
     }
 }
 
-function PowerupNade(owner, game) {
-    this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 297, 13, 12, 12);
-    var used = false,
-    inPlayer = false,
+class PowerupNade extends Powerup {
+    used = false;
+    inPlayer = false;
     thrownade = new Animation(25, 1000, 100, 2, 24, 24);
-    thrownade.Repeat(false);
-    Use() {
-        if (!inPlayer || used || !owner.IsIdle()){
-            return;
-        }
-        used = true;
-        owner.InterruptAnimation(thrownade, true, function(){this.ThrowNade();}.bind(this));
+    player: Player;
+
+    constructor(private bubble: Bubble, private game: Game) {
+        super();
+        this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 297, 13, 12, 12);
+        this.thrownade.Repeat(false);
     }
 
-    CollidePlayer(player) {
-        if (!inPlayer) {
-            owner.SetDone(true);
-            owner = player;
-            player.CollectPowerup(this);
-            inPlayer = true;
+    Use() {
+        if (!this.inPlayer || this.used || !this.player.IsIdle()) {
+            return;
+        }
+        this.used = true;
+        this.player.InterruptAnimation(this.thrownade, true, () => {
+            this.ThrowNade();
+        });
+    }
+
+    CollidePlayer(player: Player) {
+        if (!this.inPlayer) {
+            this.bubble.SetDone(true);
+            this.player = player;
+            this.player.CollectPowerup(this);
+            this.inPlayer = true;
         }
     }
 
     ThrowNade() {
-        var xoff = owner.IsFlipped() ? 0 : 20;
-        game.AddEntity(new Nade(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()), owner, owner.IsFlipped(), game));
+        let xoff = this.player.IsFlipped() ? 0 : 20;
+        this.game.AddEntity(new Nade(Math.floor(this.player.GetX() + xoff), Math.floor(this.player.GetY()), this.player, this.player.IsFlipped(), this.game));
     }
 }
 
-function PowerupTeleport(owner, game) {
-    function EmptyImage(){
-        this.Draw=function(dx, dy){
-        };
+/*class EmptyImage {
+    Draw(dx: number, dy: number, canvas: Canvas) {
     }
-    this.image = new EmptyImage();
-    //this probably needs some work
+}*/
+class PowerupTeleport extends Powerup {
+    // TODO: this probably needs some work
+    // image = new EmptyImage();
 
-    CollidePlayer(player) {
-        game.CreateEffect(effect.GreenSmoke, player.GetX(), player.GetY());
-        player.SetX(Math.floor(Math.random()*320));
-        player.SetY(Math.floor(Math.random()*120));
+    constructor(private bubble: Bubble, private game: Game) {
+        super();
+    }
+
+    CollidePlayer(player: Player) {
+        this.game.AddEffect(new GreenSmoke(player.GetX(), player.GetY(), this.game));
+        player.SetX(Math.floor(Math.random() * 320));
+        player.SetY(Math.floor(Math.random() * 120));
         player.StartFall(true);
-        owner.SetDone(true);
-        player.CollectPowerup(false);
+        this.bubble.SetDone(true);
+        player.DropPowerup();
         new Sound().Play("buzz");
 
     }
 }
-
+/*
 function PowerupChute(owner) {
     this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 310, 13, 12, 12);
-    var inPlayer = false,
-    active = false,
-    v = 40,
+    inPlayer = false;
+    active = false;
+    v = 40;
     chute = new Animation(25, 1100, 1, 1, 24, 24);
     chute.Repeat(false);
     Use() {
@@ -509,7 +521,7 @@ function PowerupChute(owner) {
 
 function Powerup1000v(owner, game) {
     this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 258, 13, 12, 12);
-    var inPlayer = false,
+    inPlayer = false;
     img = game.GetImageManager().Get1000vImg(),
 
     orrigImg;
@@ -554,12 +566,15 @@ function Powerup1000v(owner, game) {
         owner.SetImage(orrigImg);
     };
 }
-
-function PowerupBoots(owner) {
-    this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 297, 0, 12, 12);
-    var inPlayer = false,
-    inAir = false,
+class PowerupBoots extends Powerup {
+    inPlayer = false;
+    inAir = false;
     wasInAir = false;
+
+    constructor() {
+        super();
+        this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 297, 0, 12, 12);
+    }
 
     CollidePlayer(player) {
         if (!inPlayer) {
@@ -587,6 +602,7 @@ function PowerupBoots(owner) {
 
 }
 */
+
 class HookColide {
     constructor(private owner: Player) {
     }

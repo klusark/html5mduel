@@ -15,6 +15,7 @@ export function getPowerups() {
 
 export abstract class Powerup {
     protected image: StaticImage;
+    protected player: Player;
     Draw(x: number, y: number, canvas: Canvas) {
         if (this.image) {
             this.image.Draw(x, y, canvas);
@@ -48,13 +49,13 @@ class GunCollisionCheck {
 }
 
 class PowerupGun extends Powerup {
-    ammo = 5;
-    firing = false;
-    inPlayer = false;
-    gundown = new Animation(25, 450, 100, 2, 24, 24);
-    gunup = new Animation(25, 450, 100, 2, 24, 24);
-    other: Player;
-    player: Player;
+    private ammo = 5;
+    private firing = false;
+    private inPlayer = false;
+    private gundown = new Animation(25, 450, 100, 2, 24, 24);
+    private gunup = new Animation(25, 450, 100, 2, 24, 24);
+    private other: Player;
+
 
     constructor(private bubble: Bubble, private game: Game) {
         super();
@@ -113,11 +114,10 @@ class PowerupSkull extends Powerup {
 }
 
 class PowerupInvis extends Powerup {
-    invis = false;
-    disabled = false;
-    nextAllowedTime = 0;
-    inPlayer = false;
-    player: Player;
+    private invis = false;
+    private disabled = false;
+    private nextAllowedTime = 0;
+    private inPlayer = false;
 
     constructor(private bubble: Bubble, private game: Game) {
         super();
@@ -156,9 +156,9 @@ class PowerupInvis extends Powerup {
 }
 
 class Mine {
-    bounds = new Bounds(0, 0, 1, 1);
-    isMine = true;
-    other: Player;
+    private bounds = new Bounds(0, 0, 1, 1);
+    // private isMine = true;
+    private other: Player;
 
 
     constructor(private x: number, private y: number, private owner: Player, private game: Game) {
@@ -199,7 +199,6 @@ class Mine {
 class PowerupMine extends Powerup {
     private used = false;
     private inPlayer = false;
-    private player: Player;
 
     constructor(private bubble: Bubble, private game: Game) {
         super();
@@ -234,12 +233,12 @@ class PowerupMine extends Powerup {
 }
 
 class Puck {
-    img: HTMLImageElement;
-    other: Player;
-    bounds = new Bounds(0, 0, 5, 2);
-    animation = new Animation(0, 310, 200, 2, 12, 12);
-    xVelocity: number;
-    yVelocity = 70;
+    private img: HTMLImageElement;
+    private other: Player;
+    private bounds = new Bounds(0, 0, 5, 2);
+    private animation = new Animation(0, 310, 200, 2, 12, 12);
+    private xVelocity: number;
+    private yVelocity = 70;
 
     constructor(private x: number, private y: number, private owner: Player, direction: Boolean, private game: Game) {
         this.img = game.GetImageManager().GetSpritesImg();
@@ -303,10 +302,9 @@ class Puck {
 }
 
 class PowerupNukepuck extends Powerup {
-    used = false;
-    inPlayer = false;
-    throwpuck = new Animation(25, 1050, 100, 2, 24, 24);
-    player: Player;
+    private used = false;
+    private inPlayer = false;
+    private throwpuck = new Animation(25, 1050, 100, 2, 24, 24);
 
     constructor(private bubble: Bubble, private game: Game) {
         super();
@@ -356,11 +354,11 @@ class PowerupDestroy extends Powerup {
 }
 
 class Nade {
-    bounds = new Bounds(0, 0, 5, 4);
-    animation: StaticImage;
-    xVelocity: number;
-    yVelocity = -150;
-    yAcceleration = 350;
+    private bounds = new Bounds(0, 0, 5, 4);
+    private animation: StaticImage;
+    private xVelocity: number;
+    private yVelocity = -150;
+    private yAcceleration = 350;
 
     constructor(private x: number, private y: number, owner: Player, direction: boolean, private game: Game) {
         let img = game.GetImageManager().GetSpritesImg();
@@ -406,10 +404,9 @@ class Nade {
 }
 
 class PowerupNade extends Powerup {
-    used = false;
-    inPlayer = false;
-    thrownade = new Animation(25, 1000, 100, 2, 24, 24);
-    player: Player;
+    private used = false;
+    private inPlayer = false;
+    private thrownade = new Animation(25, 1000, 100, 2, 24, 24);
 
     constructor(private bubble: Bubble, private game: Game) {
         super();
@@ -467,11 +464,10 @@ class PowerupTeleport extends Powerup {
 }
 
 class PowerupChute extends Powerup {
-    inPlayer = false;
-    active = false;
-    v = 40;
-    chute = new Animation(25, 1100, 1, 1, 24, 24);
-    player: Player;
+    private inPlayer = false;
+    private active = false;
+    private v = 40;
+    private chute = new Animation(25, 1100, 1, 1, 24, 24);
 
     constructor(private bubble: Bubble, game: Game) {
         super();
@@ -540,13 +536,11 @@ class PowerupChute extends Powerup {
 }
 
 class Powerup1000v extends Powerup {
+    private inPlayer = false;
+    private img: HTMLImageElement;
 
-    inPlayer = false;
-    img: HTMLImageElement;
-
-    orrigImg: HTMLImageElement;
-    player: Player;
-    Is1000V: boolean = true;
+    private orrigImg: HTMLImageElement;
+    // private Is1000V: boolean = true;
 
     constructor(private bubble: Bubble, private game: Game) {
         super();
@@ -596,10 +590,10 @@ class Powerup1000v extends Powerup {
 }
 
 class PowerupBoots extends Powerup {
-    inPlayer = false;
-    inAir = false;
-    wasInAir = false;
-    player: Player;
+    /* TODO: Are these needed?
+    private inAir = false;
+    private wasInAir = false; */
+    private inPlayer = false;
 
     constructor(private bubble: Bubble, game: Game) {
         super();
@@ -647,10 +641,9 @@ class HookColide {
 }
 
 class PowerupHook extends Powerup {
-    inPlayer = false;
-    active = false;
-    hook = new Animation(25, 1200, 100, 2, 24, 24);
-    player: Player;
+    private inPlayer = false;
+    private active = false;
+    private hook = new Animation(25, 1200, 100, 2, 24, 24);
 
     constructor(private bubble: Bubble, private game: Game) {
         super();

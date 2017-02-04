@@ -23,7 +23,7 @@ window.onload = function() {
     let canvas = new Canvas(scale);
 
     canvas.DocumentLoaded();
-    scale.SetScale(1);
+    scale.SetScale(3);
     // var m = new menu.Menu();
     // m.Init();
     /*canvas.DocumentLoaded();

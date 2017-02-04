@@ -18,7 +18,7 @@ export class ImageManager {
 
     constructor(private scale: Scale) {
         this.scale.ScaleCallback((scale: number) => {this.ScaleChange(scale); } );
-        this.ScaleChange(1);
+        this.ScaleChange(scale.GetScale());
     }
 
     /*if (ImageManager.IsOnAppEngine()){

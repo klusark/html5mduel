@@ -95,7 +95,7 @@ export class Explode extends Effect {
     }
 }
 
-export class Lighting extends Effect {
+export class Lightning extends Effect {
     constructor(x: number, y: number, game: Game) {
         let lightning = new Animation(null, 762, 100, 2, 24, 24);
         lightning.Repeat(false);

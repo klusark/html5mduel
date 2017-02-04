@@ -7,16 +7,18 @@ import { Sound } from "./sound";
 import { Platform } from "./platform";
 import { Canvas} from "./canvas";
 import { Bounds } from "./bounds";
-import { Explode, GreenSmoke, SmallSplash } from "./effect";
+import { Explode, GreenSmoke, SmallSplash, Lightning } from "./effect";
 
 export function getPowerups() {
-    return [ PowerupGun, PowerupSkull, PowerupInvis, PowerupMine, PowerupHook, PowerupTeleport, PowerupNade ];
+    return [ PowerupGun, PowerupSkull, PowerupInvis, PowerupMine, PowerupHook, PowerupTeleport, PowerupNade, PowerupDestroy, PowerupNukepuck, PowerupChute, Powerup1000v, PowerupBoots ];
 }
 
 export abstract class Powerup {
     protected image: StaticImage;
     Draw(x: number, y: number, canvas: Canvas) {
-        this.image.Draw(x, y, canvas);
+        if (this.image) {
+            this.image.Draw(x, y, canvas);
+        }
     }
     CollidePlayer(player: Player): void {
     }
@@ -231,115 +233,128 @@ class PowerupMine extends Powerup {
     }
 }
 
-/*
-function Puck(x, y, owner, direction, game) {
-    var img = game.GetImageManager().GetSpritesImg(),
-    other = game.GetOponentOf(owner),
-    bounds_ = new Bounds(0, 0, 5, 2),
-    animation_ = new Animation(0, 310, 200, 2, 12, 12),
-    xVelocity = direction ? -90 : 90,
+class Puck {
+    img: HTMLImageElement;
+    other: Player;
+    bounds = new Bounds(0, 0, 5, 2);
+    animation = new Animation(0, 310, 200, 2, 12, 12);
+    xVelocity: number;
     yVelocity = 70;
 
-    Draw() {
-        animation_.Draw(img, x-4, y-6);
+    constructor(private x: number, private y: number, private owner: Player, direction: Boolean, private game: Game) {
+        this.img = game.GetImageManager().GetSpritesImg();
+        this.other =  game.GetOponentOf(owner);
+        this.xVelocity = direction ? -90 : 90;
     }
 
-    Update(deltaT) {
-        var ya, platform, collision, entities, i;
-        animation_.Update();
-        x += xVelocity * deltaT;
-        ya = y + yVelocity * deltaT;
-        platform = game.IsOnGround(y, ya, this);
+    Draw(canvas: Canvas) {
+        this.animation.Draw(this.img, this.x - 4, this.y - 6, canvas);
+    }
+
+    Update(deltaT: number) {
+        this.animation.Update(deltaT);
+        this.x += this.xVelocity * deltaT;
+        let ya = this.y + this.yVelocity * deltaT;
+        let platform = this.game.IsOnGround(this.y, ya, this);
         if (!platform) {
-            y = ya;
+            this.y = ya;
         } else {
-            y = platform.GetY()-2;
+            this.y = platform.GetY() - 2;
         }
-        collision = game.DoesCollide(this, owner) ? owner : game.DoesCollide(this, other) ? other : undefined;
-        if (collision){
+        let collision = this.game.DoesCollide(this, this.owner) ? this.owner : this.game.DoesCollide(this, this.other) ? this.other : undefined;
+        if (collision) {
             collision.Explode();
-            game.CreateEffect(effect.Explode, x-11, y-20);
-            game.RemoveEntity(this);
+            this.game.AddEffect(new Explode(this.x - 11, this.y - 20, this.game));
+            this.game.RemoveEntity(this);
             return;
         }
 
-        entities = game.GetEntityCollisionsOf(this);
+        let entities: any[] = []; // TODO this.game.GetEntityCollisionsOf(this);
 
-        for (i = 0; i < entities.length; i += 1) {
+        for (let i = 0; i < entities.length; i += 1) {
             if (entities[i].isMine) {
                 entities[i].Explode();
             }
         }
 
-        //make sure it is fully off the screen before it is removed
-        if (x < -5 || x > 320){
-            game.RemoveEntity(this);
+        // make sure it is fully off the screen before it is removed
+        if (this.x < -5 || this.x > 320) {
+            this.game.RemoveEntity(this);
             return;
         }
-        if (y > 180){
-            game.RemoveEntity(this);
-            game.CreateEffect(effect.SmallSplash, x-11, y-20);
+        if (this.y > 180) {
+            this.game.RemoveEntity(this);
+            this.game.AddEffect(new SmallSplash(this.x - 11, this.y - 20, this.game));
             return;
         }
     }
 
     GetX() {
-        return x;
+        return this.x;
     }
 
     GetY() {
-        return y;
+        return this.y;
     }
 
     GetCurrentBounds() {
-        return bounds_;
+        return this.bounds;
     }
 }
 
-function PowerupNukepuck(owner, game) {
-    this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 310, 0, 12, 12);
-    var used = false,
-    inPlayer = false,
+class PowerupNukepuck extends Powerup {
+    used = false;
+    inPlayer = false;
     throwpuck = new Animation(25, 1050, 100, 2, 24, 24);
-    throwpuck.Repeat(false);
+    player: Player;
+
+    constructor(private bubble: Bubble, private game: Game) {
+        super();
+        this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 310, 0, 12, 12);
+        this.throwpuck.Repeat(false);
+    }
     Use() {
-        if (!inPlayer || used || !owner.IsIdle()){
+        if (!this.inPlayer || this.used || !this.player.IsIdle()) {
             return;
         }
-        used = true;
-        owner.InterruptAnimation(throwpuck, true, function(){this.ThrowPuck();}.bind(this));
+        this.used = true;
+        this.player.InterruptAnimation(this.throwpuck, true, () => {
+            this.ThrowPuck();
+        });
     }
 
-    CollidePlayer(player) {
-        if (!inPlayer) {
-            owner.SetDone(true);
-            owner = player;
-            player.CollectPowerup(this);
-            inPlayer = true;
+    CollidePlayer(player: Player) {
+        if (!this.inPlayer) {
+            this.bubble.SetDone(true);
+            this.player = player;
+            this.player.CollectPowerup(this);
+            this.inPlayer = true;
         }
     }
 
     ThrowPuck() {
-        var xoff = owner.IsFlipped() ? 0 : 20;
-        game.AddEntity(new Puck(Math.floor(owner.GetX()+xoff), Math.floor(owner.GetY()+22), owner, owner.IsFlipped(), game));
+        let xoff = this.player.IsFlipped() ? 0 : 20;
+        this.game.AddEntity(new Puck(Math.floor(this.player.GetX() + xoff), Math.floor(this.player.GetY() + 22), this.player, this.player.IsFlipped(), this.game));
     }
 }
 
-function PowerupDestroy(owner, game) {
-    this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 284, 13, 12, 12);
-
+class PowerupDestroy extends Powerup {
+    constructor(private owner: Bubble, private game: Game) {
+        super();
+        this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 284, 13, 12, 12);
+    }
     Update() {
-        var platforms = game.GetPlatforms(), i;
-        for (i = 0; i < platforms.length; i += 1){
-            if (game.DoesCollide(owner, platforms[i])){
-                platforms[i].Destroy(owner.GetX());
-                owner.SetDone(true);
+        let platforms = this.game.GetPlatforms(), i;
+        for (i = 0; i < platforms.length; i += 1) {
+            if (this.game.DoesCollide(this.owner, platforms[i])) {
+                platforms[i].Destroy(this.owner.GetX());
+                this.owner.SetDone(true);
                 return;
             }
         }
     }
 }
-*/
+
 class Nade {
     bounds = new Bounds(0, 0, 5, 4);
     animation: StaticImage;
@@ -450,158 +465,172 @@ class PowerupTeleport extends Powerup {
 
     }
 }
-/*
-function PowerupChute(owner) {
-    this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 310, 13, 12, 12);
+
+class PowerupChute extends Powerup {
     inPlayer = false;
     active = false;
     v = 40;
     chute = new Animation(25, 1100, 1, 1, 24, 24);
-    chute.Repeat(false);
+    player: Player;
+
+    constructor(private bubble: Bubble, game: Game) {
+        super();
+        this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 310, 13, 12, 12);
+        this.chute.Repeat(false);
+    }
+
     Use() {
-        if (!inPlayer || owner.IsOnGround() || owner.IsOnRope() || owner.GetYVelocity() < 0){
+        if (!this.inPlayer || this.player.IsOnGround() || this.player.IsOnRope() || this.player.GetYVelocity() < 0) {
             return;
         }
         this.Animate();
-        active = true;
-        owner.DisableGravity();
-        v = owner.IsFlipped() ? -40 : 40;
-        if (owner.GetXVelocity() === 0){
-            v = 0;
+        this.active = true;
+        this.player.DisableGravity();
+        this.v = this.player.IsFlipped() ? -40 : 40;
+        if (this.player.GetXVelocity() === 0) {
+            this.v = 0;
         }
-    };
+    }
 
     Update() {
-        if (active) {
-            var keys = owner.GetKeys();
-            owner.SetYVelocity(40);
-            owner.SetXVelocity(v);
+        if (this.active) {
+            let keys = this.player.GetKeys();
+            this.player.SetYVelocity(40);
+            this.player.SetXVelocity(this.v);
 
-            v = keys.right ? 40 : keys.left ? -40 : v;
-            owner.SetFlipped(v < 0);
+            this.v = keys.right ? 40 : keys.left ? -40 : this.v;
+            this.player.SetFlipped(this.v < 0);
         }
-    };
+    }
 
     ChangeFrom() {
         this.Disable();
-        owner = false;
-    };
+    }
 
-    CollidePlayer(player) {
-        if (!inPlayer) {
-            owner.SetDone(true);
-            owner = player;
+    CollidePlayer(player: Player) {
+        if (!this.inPlayer) {
+            this.bubble.SetDone(true);
+            this.player = player;
             player.CollectPowerup(this);
-            inPlayer = true;
+            this.inPlayer = true;
         }
-    };
+    }
 
     Disable() {
-        owner.DisableAnimationInterrupt();
-        owner.EnableGravity();
-        if (active){
-            owner.StartFall(true);
+        this.player.DisableAnimationInterrupt();
+        this.player.EnableGravity();
+        if (this.active) {
+            this.player.StartFall(true);
         }
-        active = false;
+        this.active = false;
 
-    };
+    }
 
-    CollidePlatform(platform) {
-        if (!inPlayer || !active){
+    CollidePlatform(platform: Platform) {
+        if (!this.inPlayer || !this.active) {
             return;
         }
 
         this.Disable();
-    };
+    }
 
     Animate() {
-        owner.InterruptAnimation(chute, true);
-    };
+        this.player.InterruptAnimation(this.chute, true, () => {});
+    }
 }
 
-function Powerup1000v(owner, game) {
-    this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 258, 13, 12, 12);
+class Powerup1000v extends Powerup {
+
     inPlayer = false;
-    img = game.GetImageManager().Get1000vImg(),
+    img: HTMLImageElement;
 
-    orrigImg;
+    orrigImg: HTMLImageElement;
+    player: Player;
+    Is1000V: boolean = true;
 
-    this.Is1000V = true;
-    CollidePlayer(player) {
-        if (!inPlayer) {
-            owner.SetDone(true);
-            owner = player;
-            player.CollectPowerup(this);
-            orrigImg = owner.GetImage();
-            inPlayer = true;
+    constructor(private bubble: Bubble, private game: Game) {
+        super();
+        this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 258, 13, 12, 12);
+        this.img = game.GetImageManager().Get1000vImg();
+    }
+
+    CollidePlayer(player: Player) {
+        if (!this.inPlayer) {
+            this.bubble.SetDone(true);
+            this.player = player;
+            this.player.CollectPowerup(this);
+            this.orrigImg = this.player.GetImage();
+            this.inPlayer = true;
         } else {
-            var otherPowerup = player.GetCurrentPowerup();
-            if (otherPowerup && otherPowerup.Is1000V){
-                owner.CollectPowerup(false);
-                player.CollectPowerup(false);
+            let otherPowerup = player.GetCurrentPowerup();
+            if (otherPowerup /* TODO && otherPowerup.Is1000V*/) {
+                this.player.DropPowerup();
+                player.DropPowerup();
                 return false;
             }
             player.SetYVelocity(-1000);
             player.SetXVelocity(100);
-            player.InterruptAnimation(owner.InterruptAnimation(owner.GetAnimations().explode, true));
+            // TODO: player.InterruptAnimation(this.player.InterruptAnimation(this.player.GetAnimations().explode, true, () => {}), () => {});
             player.StartFall(true);
-            owner.DontCollide();
-            game.CreateEffect(effect.Lightning, player.GetX(), player.GetY());
+            this.player.DontCollide();
+            this.game.AddEffect(new Lightning(player.GetX(), player.GetY(), this.game));
             return true;
         }
-    };
+        return false;
+    }
 
     Update() {
-        if (!inPlayer){
+        if (!this.inPlayer) {
             return;
         }
-        if (owner.GetImage() !== img){
-            owner.SetImage(img);
-        }else{
-            owner.SetImage(orrigImg);
+        if (this.player.GetImage() !== this.img) {
+            this.player.SetImage(this.img);
+        } else {
+            this.player.SetImage(this.orrigImg);
         }
-    };
+    }
 
     ChangeFrom() {
-        owner.SetImage(orrigImg);
-    };
+        this.player.SetImage(this.orrigImg);
+    }
 }
+
 class PowerupBoots extends Powerup {
     inPlayer = false;
     inAir = false;
     wasInAir = false;
+    player: Player;
 
-    constructor() {
+    constructor(private bubble: Bubble, game: Game) {
         super();
         this.image = new StaticImage(game.GetImageManager().GetSpritesImg(), 297, 0, 12, 12);
     }
 
-    CollidePlayer(player) {
-        if (!inPlayer) {
-            owner.SetDone(true);
-            owner = player;
+    CollidePlayer(player: Player) {
+        if (!this.inPlayer) {
+            this.bubble.SetDone(true);
+            this.player = player;
             player.CollectPowerup(this);
-            inPlayer = true;
+            this.inPlayer = true;
         }
     };
 
     Use() {
-        if (!inPlayer || !owner.IsOnGround()){
+        if (!this.inPlayer || !this.player.IsOnGround()) {
             return;
         }
-        if (owner.IsRunning() || owner.IsIdle()){
-            var keys = owner.GetKeys();
+        if (this.player.IsRunning() || this.player.IsIdle()) {
+            let keys = this.player.GetKeys();
             if (keys.right || keys.left) {
-                owner.StartJump();
+                this.player.StartJump();
             } else  {
-                owner.StartJumpUp();
+                this.player.StartJumpUp();
             }
-            owner.SetYVelocity(-230);
+            this.player.SetYVelocity(-230);
         }
     };
 
 }
-*/
 
 class HookColide {
     constructor(private owner: Player) {

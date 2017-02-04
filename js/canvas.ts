@@ -19,7 +19,7 @@ export class Canvas {
         this.ctx.mozImageSmoothingEnabled = false;
 
         this.Clear();
-    };
+    }
 
     DrawImage(image: HTMLImageElement, sx: number, sy: number, sw: number, sh: number, dx: number, dy: number, dw: number, dh: number): void {
         if (!this.ctx || !image || !image.complete) {
@@ -27,39 +27,39 @@ export class Canvas {
         }
 
         this.ctx.drawImage(image, sx * this.scale, sy * this.scale, sw * this.scale, sh * this.scale, Math.round(dx * this.scale), Math.round(dy * this.scale), dw * this.scale, dh * this.scale);
-    };
+    }
 
     FillRect(x: number, y: number, w: number, h: number) {
         if (!this.ctx) {
             return;
         }
         this.ctx.fillRect(x * this.scale, y * this.scale, w * this.scale, h * this.scale);
-    };
+    }
 
     FillText(text: string, x: number, y: number) {
         if (!this.ctx) {
             return;
         }
         this.ctx.fillText(text, x * this.scale, y * this.scale);
-    };
+    }
 
     FillStyle(style: string) {
         if (this.ctx) {
             this.ctx.fillStyle = style;
         }
-    };
+    }
 
     setFont(font: string) {
         if (this.ctx) {
             this.ctx.font = font;
         }
-    };
+    }
 
     setTextAlign(align: string) {
         if (this.ctx) {
             this.ctx.textAlign = align;
         }
-    };
+    }
 
     Clear() {
         if (!this.ctx) {
@@ -67,7 +67,7 @@ export class Canvas {
         }
         this.ctx.fillStyle = "rgb(0,0,0)";
         this.ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
-    };
+    }
 
     ScaleChange(_scale: number) {
         this.scale = _scale;
@@ -85,10 +85,10 @@ export class Canvas {
             ++scale
         var canvas = document.getElementById('canvas')
         */
-    };
+    }
 
     GetContext() {
         return this.ctx;
-    };
+    }
 }
 

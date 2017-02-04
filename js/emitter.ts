@@ -12,17 +12,17 @@ export class Emitter {
 
     Draw(canvas: Canvas) {
         this.emitter.Draw(this.x, this.y, canvas);
-    };
+    }
 
     Update() {
 
-    };
+    }
 
     GetY() {
         return this.y;
-    };
+    }
 
     GetX() {
         return this.x;
-    };
+    }
 }

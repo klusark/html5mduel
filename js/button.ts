@@ -14,15 +14,15 @@ export class Button {
 
     Select() {
         this.selected = true;
-    };
+    }
 
     Deselect() {
         this.selected = false;
-    };
+    }
 
     Click() {
         this.onclick();
-    };
+    }
 
     Draw() {
         this.canvas.FillStyle(this.selected ? this.selectedColour : this.unselectedColour);
@@ -36,6 +36,6 @@ export class Button {
         this.canvas.setFont(this.scale.GetScale() * 0.75 + "em 'Allerta'");
         this.canvas.setTextAlign("center");
         this.canvas.FillText(this.text, this.x + this.w / 2, this.y + 15);
-    };
+    }
 }
 

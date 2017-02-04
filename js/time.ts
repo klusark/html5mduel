@@ -11,15 +11,15 @@ export class Time {
 
     Get() {
         return this.timeStarted ? new Date().getTime() * this.timescale - this.startTime : this.stoppedTime;
-    };
+    }
 
     StartTime() {
         this.startTime = new Date().getTime() * this.timescale;
         this.timeStarted = true;
-    };
+    }
 
     StopTime() {
         this.stoppedTime = new Date().getTime() * this.timescale;
         this.timeStarted = false;
-    };
+    }
 }

@@ -15,7 +15,7 @@ export class Effect {
         if (this.draw) {
             this.currentAnimation.Draw(this.img, this.x, this.y, canvas);
         }
-    };
+    }
 
     Update(deltaT: number) {
         this.currentAnimation.Update(deltaT);
@@ -23,19 +23,19 @@ export class Effect {
             // handle the animation finishing
             this.draw = false;
         }
-    };
+    }
 
     IsDraw() {
         return this.draw;
-    };
+    }
 
     GetY() {
         return this.y;
-    };
+    }
 
     GetX() {
         return this.x;
-    };
+    }
 
 }
 

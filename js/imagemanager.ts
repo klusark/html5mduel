@@ -3,7 +3,7 @@ import { Scale } from "./scale";
 /*if (typeof Image === 'undefined') {
     Image = function() {
         ImageManager.complete = true;
-    };
+    }
 }*/
 
 export class ImageManager {
@@ -38,26 +38,26 @@ export class ImageManager {
         this.player2Img.src = base + colour1;
         this.lightningImg.src = base + "4";
         this.spritesImg.src = this.url + "generate?s&m=" + scale;
-    };
+    }
 
     GetSpritesImg(): HTMLImageElement {
         return this.spritesImg;
-    };
+    }
 
     GetPlayer1Img(): HTMLImageElement {
         return this.player1Img;
-    };
+    }
 
     GetPlayer2Img(): HTMLImageElement  {
         return this.player2Img;
-    };
+    }
 
     Get1000vImg(): HTMLImageElement  {
         return this.lightningImg;
-    };
+    }
 
     IsLoaded(): boolean {
         return this.player1Img.complete && this.player2Img.complete && this.spritesImg.complete;
-    };
+    }
 }
 

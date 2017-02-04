@@ -11,7 +11,7 @@ export class Sound {
             sound.src = "sound/" + name + ".ogg";
             this.sounds[name] = sound;
         }
-    };
+    }
 
     Play(name: string) {
         if (!this.sounds[name]) {
@@ -19,5 +19,5 @@ export class Sound {
             return;
         }
         this.sounds[name].play();
-    };
+    }
 }

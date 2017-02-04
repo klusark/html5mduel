@@ -19,24 +19,24 @@ export class PowerupManager {
                 selectedPowerups.push(name);
             }*/
         // }
-    };
+    }
 
     ReigisterPowerups() {
         let powerup = getPowerups();
         for (let p in powerup) {
             this.RegisterPowerupType(powerup[p]);
         }
-    };
+    }
 
     GetRandomPowerup(bubble: Bubble) {
         let name = this.selectedPowerups[Math.floor(Math.random() * this.selectedPowerups.length)];
         return {name: name, powerup: new name(bubble, this.game)};
-    };
+    }
 
     CreatePowerupByName(name: string, bubble: Bubble) {
         /*console.log(name);
-        return {name: name, powerup: new powerup[name](bubble, this.game)};*/
-    };
+        return {name: name, powerup: new powerup[name](bubble, this.game)}*/
+    }
 }
 
 

@@ -335,7 +335,7 @@ export class Player {
         this.wasRolling = this.isRolling;
         this.wasOnRope = this.isOnRope;
 
-    };
+    }
 
     Collide(other: Player) {
         if (this.pushed || this.dontCollide) {
@@ -423,14 +423,14 @@ export class Player {
         } else {
             this.log.Log("type 7");
         }
-    };
+    }
 
     StartJumpUp() {
         this.yVelocity = this.JUMPYVELOCITY;
         this.onGround = false;
         this.isJumpingUp = true;
         this.SetAnimation(this.animations.jumpup);
-    };
+    }
 
     StartJump() {
         this.onGround = false;
@@ -438,7 +438,7 @@ export class Player {
         this.isJumping = true;
         this.xVelocity = this.flipped ? -this.JUMPXVELOCITY : this.JUMPXVELOCITY;
         this.SetAnimation(this.animations.jump);
-    };
+    }
 
     Bounce(forward: boolean) {
         this.pushed = true;
@@ -478,7 +478,7 @@ export class Player {
         this.xVelocity = 0;
         this.yVelocity = 0;
         this.SetAnimation(this.animations.disolve2);
-    };
+    }
 
     Explode() {
         this.isExploding = true;
@@ -486,7 +486,7 @@ export class Player {
         this.yVelocity = this.EXPLODEVELOCITY;
         this.SetAnimation(this.animations.explode);
         new Sound().Play("buzz");
-    };
+    }
 
     InterruptAnimation(animation: Animation, controls: boolean, callback: () => void) {
         this.interruptAnimationInput = controls;
@@ -494,26 +494,26 @@ export class Player {
         this.interruptAnimation = true;
         this.SetAnimation(animation);
         this.interruptAnimationCallback = callback;
-    };
+    }
 
     DisableAnimationInterrupt() {
         this.interruptAnimationInput = false;
         this.interuptInput = false;
         this.interruptAnimation = false;
         this.interruptAnimationCallback = null;
-    };
+    }
 
     SetImage(image: HTMLImageElement) {
         this.img = image;
-    };
+    }
 
     GetImage() {
         return this.img;
-    };
+    }
 
     IsInPositionToWin() {
         return (this.onGround || this.isOnRope) && !(this.isJumpingUp || this.isJumping || this.falling || this.isRolling || this.pushed);
-    };
+    }
 
     Win() {
 
@@ -526,96 +526,96 @@ export class Player {
         this.xVelocity = 0;
         this.yVelocity = 0;
         /*this.currentAnimation.Update(this.x, this.y); TODO*/
-    };
+    }
 
     IsWinning() {
         return this.isWinning;
-    };
+    }
 
     SetDraw(ndraw: boolean) {
         this.draw = ndraw;
-    };
+    }
 
     GetAnimations() {
         return this.animations;
-    };
+    }
 
     DontCollide() {
         this.dontCollide = true;
-    };
+    }
 
     DoCollide() {
         this.dontCollide = false;
-    };
+    }
 
     IsPushed() {
         return this.pushed;
-    };
+    }
 
     WasOnGround() {
         return this.wasOnGround;
-    };
+    }
 
     IsOnGround() {
         return this.onGround;
-    };
+    }
 
     IsOnRope() {
         return this.isOnRope;
-    };
+    }
 
 
     WasOnRope() {
         return this.wasOnRope;
-    };
+    }
 
     IsRunning() {
         return (this.runningLeft || this.runningRight) && (!this.isRolling);
-    };
+    }
 
     IsRolling() {
         return this.isRolling;
-    };
+    }
 
     IsIdle() {
         return this.isIdle;
-    };
+    }
 
     WasRolling() {
         return this.wasRolling;
-    };
+    }
 
     GetCurrentPowerup() {
         return this.currentPowerup;
-    };
+    }
 
     GetY() {
         return this.y;
-    };
+    }
 
     GetX() {
         return this.x;
-    };
+    }
 
     GetXVelocity() {
         return this.xVelocity;
-    };
+    }
 
     GetYVelocity() {
         return this.yVelocity;
-    };
+    }
 
     SetXVelocity(v: number) {
         this.xVelocity = v;
-    };
+    }
 
     SetYVelocity(v: number) {
         this.yVelocity = v;
-    };
+    }
 
     SetY(ny: number) {
         this.y = ny;
-    };
+    }
 
     SetX(nx: number) {
         this.x = nx;
@@ -675,7 +675,7 @@ export class Player {
 
     GetKeys() {
         return this.keys;
-    };
+    }
 
     KeyDown(keyCode: number) {
         if (this.interuptInput) {
@@ -697,7 +697,7 @@ export class Player {
             this.log.DebugLog("KeyDown Up");
             this.keys.use = 1;
         }
-    };
+    }
 
     KeyUp(keyCode: number) {
         if (keyCode === this.keyCodes.right ) {
@@ -717,7 +717,7 @@ export class Player {
             this.keys.use = 0;
         }
 
-    };
+    }
 
     DisableInput() {
         this.keys.right = 0;
@@ -725,7 +725,7 @@ export class Player {
         this.keys.up = 0;
         this.keys.down = 0;
         this.keys.use = 0;
-    };
+    }
 
     UpdateKeysLastFrame() {
         this.keysLastFrame.right = this.keys.right;
@@ -733,7 +733,7 @@ export class Player {
         this.keysLastFrame.up = this.keys.up;
         this.keysLastFrame.down = this.keys.down;
         this.keysLastFrame.use = this.keys.use;
-    };
+    }
 
     SetKeys(up: number, down: number, left: number, right: number, use: number) {
         this.keyCodes.up = up;
@@ -741,7 +741,7 @@ export class Player {
         this.keyCodes.left = left;
         this.keyCodes.right = right;
         this.keyCodes.use = use;
-    };
+    }
 
     SimulateGravity(deltaT: number) {
 
@@ -782,7 +782,7 @@ export class Player {
         }
 
         this.y = ny;
-    };
+    }
 
     IsTouchingRope() {
 
@@ -798,7 +798,7 @@ export class Player {
         }
         this.currentRope = null;
         return false;
-    };
+    }
 
     StartFall(animate: boolean) {
         this.isOnRope = false;
@@ -811,7 +811,7 @@ export class Player {
         }
         this.currentBounds = this.fallingBounds;
 
-    };
+    }
 
     Land() {
         this.onGround = true;
@@ -829,20 +829,20 @@ export class Player {
 
         this.falling = false;
 
-    };
+    }
 
     GetCurrentBounds() {
         return this.currentBounds;
-    };
+    }
 
     Serialize() {
         return  {x: this.x, y: this.y, xVelocity: this.xVelocity, yVelocity: this.yVelocity};
-    };
+    }
 
     Deserialize(data: any) {
         this.x = data.x;
         this.y = data.y;
         this.xVelocity = data.xVelocity;
         this.yVelocity = data.yVelocity;
-    };
+    }
 }

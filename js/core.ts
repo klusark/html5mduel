@@ -79,7 +79,7 @@ export class Game {
 
     AddEffect(effect: Effect) {
         this.effects.push(effect);
-    };
+    }
 
     Draw() {
         this.canvas.Clear();
@@ -97,7 +97,7 @@ export class Game {
             // might need to place this somewhere else
             this.ArrayDraw(this.entities);
         // }
-    };
+    }
 
     private ArrayDraw(array: Entity[]) {
         for (let i = 0; i < array.length; i += 1) {
@@ -169,11 +169,11 @@ export class Game {
         // }
         this.GetCollitionsOf(this.players[0]);
         this.lastTime = currentTime;
-    };
+    }
 
     GetGameEndTime() {
         return this.gameEndTime;
-    };
+    }
 
     // this collisions system kind of sucks... but it works for mduel
     GetCollitionsOf(entity: Player) {
@@ -186,7 +186,7 @@ export class Game {
             entity.DoCollide();
             other.DoCollide();
         }
-    };
+    }
 
     DoesCollide(entity: Collidable, other: Collidable) {
         let entitybounds = entity.GetCurrentBounds(),
@@ -195,7 +195,7 @@ export class Game {
                 entity.GetX() + entitybounds.GetX() < other.GetX() + otherbounds.GetX() + otherbounds.GetWidth() &&
                 entity.GetY() + entitybounds.GetY() + entitybounds.GetHeight() > other.GetY() + otherbounds.GetY() &&
                 entity.GetY() + entitybounds.GetY() < other.GetY() + otherbounds.GetY() + otherbounds.GetHeight();
-    };
+    }
 
     UpdateBubbles(deltaT: number) {
 
@@ -252,7 +252,7 @@ export class Game {
             this.SetNextBubbleTime();
 
         }
-    };
+    }
 
     private SetNextBubbleTime() {
         this.nextBubbleTime = this.time.Get() + Math.random() * this.maxTimeBetweenBubbles;
@@ -260,7 +260,7 @@ export class Game {
 
     /*InSelectMode() {
         return inSelectMode;
-    };*/
+    }*/
 
     private ArrayUpdate(array: Entity[], deltaT: number) {
         for (let i = 0; i < array.length; i += 1) {
@@ -271,18 +271,18 @@ export class Game {
     /*ColourSelect() {
         inSelectMode = true;
         selector = new Selector(0, 0, scale);
-    };
+    }
 
     GetSelector() {
         return selector;
-    };*/
+    }*/
 
 
     Restart() {
         window.clearInterval(this.gameInterval);
 
         this.init();
-    };
+    }
 
     init() {
         this.canvas.Clear();
@@ -342,12 +342,12 @@ export class Game {
         this.emitters.push(new Emitter(320 - 16, 92, 2, this));
 
         this.loadingInterval = setInterval(() => this.CheckLoadedInterval(), 25);
-    };
+    }
 
     End() {
         // Clean stuff up
         clearInterval(this.gameInterval);
-    };
+    }
 
     private CheckLoadedInterval() {
         if (this.IsLoaded()) {
@@ -426,7 +426,7 @@ export class Game {
             }
         }
         return collisions;
-    };*/
+    }*/
 
     RemovePlatform(entity: Platform) {
         let i;
@@ -436,7 +436,7 @@ export class Game {
                 return;
             }
         }
-    };
+    }
 
     GetOponentOf(entity: Player): Player {
         if (entity === this.players[0]) {
@@ -445,7 +445,7 @@ export class Game {
             return this.players[0];
         }
         return undefined;
-    };
+    }
 
     IsOnAppEngine() {
         let loc = document.location.href;
@@ -453,7 +453,7 @@ export class Game {
             return true;
         }
         return false;
-    };
+    }
 
 
     OnKeyDown(event: KeyboardEvent/*, emit*/) {
@@ -465,7 +465,7 @@ export class Game {
             this.players[0].KeyDown(event.keyCode);
             this.players[1].KeyDown(event.keyCode);
         }
-    };
+    }
 
     OnKeyUp(event: KeyboardEvent/*, emit*/) {
         /*TODOif (typeof socket != "undefined" && emit) {
@@ -481,14 +481,14 @@ export class Game {
             this.players[0].KeyUp(event.keyCode);
             this.players[1].KeyUp(event.keyCode);
         }
-    };
+    }
 
     SetBubbleDisabled(val: boolean) {
         this.bubbleDisabled = val;
-    };
+    }
 
     /* TODOSerialize() {
-        var output = {};
+        var output = {}
 
         output.platforms = [];
         for (var i = 0; i < platforms.length; ++i) {
@@ -511,7 +511,7 @@ export class Game {
         }
 
         return output;
-    };
+    }
 
     Deserialize(data) {
 
@@ -556,5 +556,5 @@ export class Game {
         for (var i = 0; i < data.players.length; ++i) {
             this.players[i].Deserialize(data.players[i]);
         }
-    };*/
+    }*/
 }

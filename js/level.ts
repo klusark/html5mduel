@@ -24,11 +24,11 @@ export class Level {
 
     MakeFloor(x1: number, x2: number, y: number) {
         this.game.AddPlatform(new Platform(x1, y, (x2 - x1) / this.BLOCK_SIZE, this.game));
-    };
+    }
 
     private MakeRope(x: number, y1: number, y2: number) {
         this.game.AddRope(new Rope(x, y1, y2 - y1, this.game));
-    };
+    }
 
     private rand() {
         return Math.random() * 2147483648;
@@ -65,7 +65,7 @@ export class Level {
                 this.MakeFloor(Math.floor(cur_x1), Math.floor(cur_x2), Math.floor(cur_y));
             }
         }
-    };
+    }
 
     SetupRopes(platforms: Platform[], ropes: Rope[]) {
 
@@ -102,5 +102,5 @@ export class Level {
                 cur_x += this.ROPE_X_INT;
             }
         }
-    };
+    }
 }

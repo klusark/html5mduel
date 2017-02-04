@@ -39,13 +39,13 @@ class GunCollisionCheck {
     }
     GetX() {
         return this.owner.IsFlipped() ? this.owner.GetX() + 23 - 320 : this.owner.GetX() + 23;
-    };
+    }
     GetY() {
         return this.owner.GetY() + 8;
-    };
+    }
     GetCurrentBounds() {
         return new Bounds(0, 0, 320, 1);
-    };
+    }
 }
 
 class PowerupGun extends Powerup {
@@ -76,7 +76,7 @@ class PowerupGun extends Powerup {
             this.ammo -= 1;
             this.firing = true;
         }
-    };
+    }
 
     CollidePlayer(player: Player) {
         if (!this.inPlayer) {
@@ -96,7 +96,7 @@ class PowerupGun extends Powerup {
         if (this.game.DoesCollide(entity, this.other)) {
             this.other.Disolve();
         }
-    };
+    }
 
 }
 
@@ -607,7 +607,7 @@ class PowerupBoots extends Powerup {
             player.CollectPowerup(this);
             this.inPlayer = true;
         }
-    };
+    }
 
     Use() {
         if (!this.inPlayer || !this.player.IsOnGround()) {
@@ -622,7 +622,7 @@ class PowerupBoots extends Powerup {
             }
             this.player.SetYVelocity(-230);
         }
-    };
+    }
 
 }
 
@@ -631,13 +631,13 @@ class HookColide {
     }
     GetX() {
         return this.owner.IsFlipped() ? this.owner.GetX() + 5 : this.owner.GetX() + 19;
-    };
+    }
     GetY() {
         return this.owner.GetY() + 8;
-    };
+    }
     GetCurrentBounds() {
         return new Bounds(0, 0, 1, 1);
-    };
+    }
 }
 
 class PowerupHook extends Powerup {
@@ -680,7 +680,7 @@ class PowerupHook extends Powerup {
             }
         }
 
-    };
+    }
 
     CollidePlatform(platform: Platform) {
         if (!this.inPlayer || !this.active) {
@@ -688,15 +688,15 @@ class PowerupHook extends Powerup {
         }
 
         this.Disable();
-    };
+    }
 
     Disable() {
         this.active = false;
         this.player.DisableAnimationInterrupt();
-    };
+    }
 
     ChangeFrom() {
         this.Disable();
-    };
+    }
 }
 

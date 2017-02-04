@@ -3,7 +3,7 @@ var gm = require("./gamemanager");
 
 var io = require("socket.io");
 
-var managers = {};
+var managers = {}
 
 var socket = io(8000);
 socket.on("connection", function (socket) {

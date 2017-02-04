@@ -31,11 +31,11 @@ export class GameManager {
 
     getGame() {
         return this.game;
-    };
+    }
 
     IsGameOver() {
         return this.gameOver && this.time.Get() > this.lastRoundEnd + 3000;
-    };
+    }
 
     private Draw() {
         let text, name, s1, s2, other;

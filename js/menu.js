@@ -11,7 +11,7 @@ function Menu() {
     
     getManager() {
         return game;
-    };
+    }
 
     Init() {
         buttons[0] = new button.Button(110, 20, 100, 20, "Start Game", this.StartGame);
@@ -23,7 +23,7 @@ function Menu() {
         document.onkeyup = function(e){this.OnKeyUp(e);}.bind(this);
         document.onkeydown = function(e){this.OnKeyDown(e);}.bind(this);
         drawInterval = setInterval(UpdateMenu, 10);
-    };
+    }
 
     function UpdateMenu() {
         if (!game) {
@@ -46,7 +46,7 @@ function Menu() {
         //if (game) {
         //    game.OnKeyDown(event);
         //}
-    };
+    }
 
     OnKeyUp(event) {
         if (event.keyCode === 109) {
@@ -76,14 +76,14 @@ function Menu() {
         } else if (event.keyCode === 13) {
             buttons[currentButton].Click();
         }
-    };
+    }
 
     StartGame() {
         //clearInterval(drawInterval);
         game = new gamemanager.GameManager();
         //game = new Game();
         //game.init();
-    };
+    }
 }
 
 
@@ -91,4 +91,4 @@ function Menu() {
 
 module.exports = {
   Menu: Menu
-};
+}
